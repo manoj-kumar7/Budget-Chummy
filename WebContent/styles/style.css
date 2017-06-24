@@ -1,0 +1,306 @@
+html, body {
+	margin:0;
+	padding:0;
+	height:100%;
+	overflow: hidden;
+}
+
+.home-body{
+	margin:0;
+	padding:0;
+	height:100%;
+	overflow:hidden;
+}
+
+
+.left{
+	width: 15%;
+	height: 100%;
+	float: left;
+	overflow: hidden;
+}
+.center{
+	width: 65% !important;
+	height: 100% !important;
+	float:left;
+}
+.right{
+	width: 20% !important;
+	height: 100% !important;
+	float:left;
+	background: #eaeaea;
+}
+.right-content{
+	margin-left: 15px;
+}
+#accounts-heading{
+	height: 60px;
+    line-height: 60px;
+    font-size: 20px;
+}
+.logout{
+	z-index:99999999;
+	position:absolute;
+	left:1200px;
+	top:10px;
+}
+
+.add-income-img{
+	position:fixed;
+	top:550px;
+	width:80px;
+	height:80px;
+}
+.add-expense-img{
+	position:fixed;
+	top:550px;
+	left:150px;
+	width:80px;
+	height:80px;
+}
+.add-budget-img{
+	position:fixed;
+	top:550px;
+	left:300px;
+	width:80px;
+	height:80px;
+}
+
+.location-icon{
+	width:25px;
+	height:25px;
+}
+.location-icon:hover{
+	cursor:pointer;
+}
+.delete-user-icon{
+	width:25px;
+	height:25px;	
+}
+.delete-user-icon:hover{
+	cursor:pointer;
+}
+.add-icon{
+	width: 20px;
+	height: 20px;
+}
+.month-changer{
+	margin:auto;
+	width:100%;
+	position:relative;
+	height:60px;
+	text-align:center;
+	display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.left-icon{
+	display:inline-block;
+	height:50px;
+	width: 50px;
+	float:left;
+	text-align:center;
+}
+
+#selected_month{	
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	height:50px;
+	width:150px;
+	float:left;
+}
+
+.right-icon{
+	display:inline-block;
+	height:50px;
+	width: 50px;
+	float:left;	
+	text-align:center;
+}
+
+
+/* Style the tab */
+div.tab {
+    float: left;
+    background-color: #1a1a1a;
+	width: 100%;
+    height: 100%;
+}
+
+/* Style the buttons inside the tab */
+div.tab button {
+    display: block;
+    background-color: inherit;
+    color: black;
+    padding: 22px 16px;
+    width: 100%;
+    border: none;
+    outline: none;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+div.tab button:hover {
+    background-color: #aeadad;
+}
+
+/* Create an active/current "tab button" class */
+div.tab button.active {
+    background-color: #e8e7e7;
+}
+div.tab button.active .tab-title{
+    color: #000000;
+}
+/* Style the tab content */
+.page{
+	width :100%;
+	height: 100%;
+}
+
+.tab-title{
+	color: #737373;
+}
+
+
+
+/* chart container */
+
+#chartContainer{
+	position:absolute;
+	left:100px;
+}
+.canvasjs-chart-credit {
+   display: none;
+}
+
+.chart-space{
+	width: 100% !important;
+}
+.table-space{
+	width: 100% !important;
+	position: relative;
+	color: #000;
+	border-radius: 0.4em;
+	margin-bottom:10em;
+}
+.income-table-space{
+	top: 350px;
+}
+.expense-table-space{
+	top: 350px;
+}
+.users-table-space{
+	top: 20px;
+}
+.table th{
+	color: #dd5;
+}
+
+.users-account-details div{
+	display:inline-block;
+}
+#income-location-map{
+	height:300px;
+	width:100%;
+}
+.income-show-more{
+    text-align:center;
+    font-weight: bold;
+}
+.income-show-more span{
+    background-color:#d3d3d3;
+    padding: 3px;
+    cursor: pointer;
+}
+.income-additional-info-div{
+	display:none;
+}
+
+#expense-location-map{
+	height:300px;
+	width:100%;
+}
+.expense-show-more{
+    text-align:center;
+    font-weight: bold;
+}
+.expense-show-more span{
+    background-color:#d3d3d3;
+    padding: 3px;
+    cursor: pointer;
+}
+.expense-additional-info-div{
+	display:none;
+}
+#location-in-map{
+	width:100%;
+	height:300px;
+}
+
+/*Plus style starts */
+.plus {
+  display:none;
+  position: fixed;
+  top:80%;
+  left : 3%;
+  margin-left:1em;
+  z-index: 9999;
+  width: 80px;
+  height: 80px;
+  color: #f4d6d7;
+  border-radius: 50%;
+  border: none;
+  -webkit-transition: box-shadow 400ms cubic-bezier(0.2, 0, 0.7, 1), -webkit-transform 200ms cubic-bezier(0.2, 0, 0.7, 1);
+  transition: box-shadow 400ms cubic-bezier(0.2, 0, 0.7, 1), -webkit-transform 200ms cubic-bezier(0.2, 0, 0.7, 1);
+  transition: box-shadow 400ms cubic-bezier(0.2, 0, 0.7, 1), transform 200ms cubic-bezier(0.2, 0, 0.7, 1);
+  transition: box-shadow 400ms cubic-bezier(0.2, 0, 0.7, 1), transform 200ms cubic-bezier(0.2, 0, 0.7, 1), -webkit-transform 200ms cubic-bezier(0.2, 0, 0.7, 1);
+}
+.plus.income{
+	background: #43bf58;
+}
+.plus.expense{
+	background: #C9353B;
+}
+.plus.budget{
+	background: #368cb2;
+}
+.plus:after {
+  content: "+";
+  font-size: 4.5em;
+  line-height: 1.1em;
+}
+.plus.income:hover {
+  box-shadow: 0 0 1px 10px rgba(99, 181, 113, 0.4), 0 0 1px 17.5px rgba(99, 181, 113, 0.1), 0 0 1px 23px rgba(99, 181, 113, 0.1);
+}
+.plus.expense:hover {
+  box-shadow: 0 0 1px 10px rgba(138, 59, 88, 0.4), 0 0 1px 17.5px rgba(138, 59, 88, 0.1), 0 0 1px 23px rgba(138, 59, 88, 0.1);
+}
+.plus.budget:hover {
+  box-shadow: 0 0 1px 10px rgba(84, 167, 204, 0.4), 0 0 1px 17.5px rgba(84, 167, 204, 0.1), 0 0 1px 23px rgba(84, 167, 204, 0.1);
+}
+/*Plus style ends */
+
+#set-offline-code{
+	display: none;
+}
+
+
+/* Table style */
+.amount-col{
+	width: 5%;
+}
+.date-col,.tag-col,.description-col,.addedby-col,.addedon-col{
+	width: 13%;
+}
+
+
+.hint-text{
+    font-style: italic;
+    font-size: 14px;
+    color: #00f;
+}
