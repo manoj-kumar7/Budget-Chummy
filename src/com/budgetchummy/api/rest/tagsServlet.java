@@ -19,6 +19,8 @@ import javax.servlet.http.HttpSession;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.budgetchummy.api.util.APIConstants;
+
 /**
  * Servlet implementation class tagsServlet
  */
@@ -35,9 +37,9 @@ public class tagsServlet extends HttpServlet {
 
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
-		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
-		String user = "root";
-		String mysql_password = "YXStrl85124";
+		String url = APIConstants.MYSQL_URL;
+		String user = APIConstants.MYSQL_USERNAME;
+		String mysql_password = APIConstants.MYSQL_PASSWORD;
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -85,9 +87,9 @@ public class tagsServlet extends HttpServlet {
 		
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
-		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
-		String user = "root";
-		String mysql_password = "YXStrl85124";
+		String url = APIConstants.MYSQL_URL;
+		String user = APIConstants.MYSQL_USERNAME;
+		String mysql_password = APIConstants.MYSQL_PASSWORD;
 		String tag_name = request.getParameter("tag_name");
 		
 		try {

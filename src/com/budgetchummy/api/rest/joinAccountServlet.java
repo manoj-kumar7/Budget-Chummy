@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.budgetchummy.api.util.APIConstants;
+
 
 @WebServlet("/joinAccountServlet")
 public class joinAccountServlet extends HttpServlet {
@@ -46,9 +48,9 @@ public class joinAccountServlet extends HttpServlet {
 		String passcode_from_db = null,invitation_status=null;
 		String query = null;
 		
-		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
-		String user = "root";
-		String mysql_password = "YXStrl85124";
+		String url = APIConstants.MYSQL_URL;
+		String user = APIConstants.MYSQL_USERNAME;
+		String mysql_password = APIConstants.MYSQL_PASSWORD;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
@@ -92,7 +94,7 @@ public class joinAccountServlet extends HttpServlet {
 		}
 		if(passcode.equals(passcode_from_db))
 		{
-			String homeurl = new String("/home.jsp");
+			String homeurl = new String("/BudgetChummy/home.jsp");
 			response.setStatus(response.SC_MOVED_TEMPORARILY);
 	        response.setHeader("Location", homeurl);
 		}

@@ -23,6 +23,7 @@ import javax.servlet.http.HttpSession;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.budgetchummy.api.util.APIConstants;
 import com.budgetchummy.api.util.Datehelper;
 
 
@@ -41,9 +42,9 @@ public class incomeServlet extends HttpServlet {
 		String month = request.getParameter("month");
 		String year = request.getParameter("year");
 
-		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
-		String user = "root";
-		String mysql_password = "YXStrl85124";
+		String url = APIConstants.MYSQL_URL;
+		String user = APIConstants.MYSQL_USERNAME;
+		String mysql_password = APIConstants.MYSQL_PASSWORD;
 		long accid=-1;
 		
 		try {
@@ -137,9 +138,9 @@ public class incomeServlet extends HttpServlet {
 		String transaction_type = "income";
 		String additional_info = request.getParameter("income-additional-info");
 		
-		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
-		String user = "root";
-		String mysql_password = "YXStrl85124";
+		String url = APIConstants.MYSQL_URL;
+		String user = APIConstants.MYSQL_USERNAME;
+		String mysql_password = APIConstants.MYSQL_PASSWORD;
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -182,7 +183,7 @@ public class incomeServlet extends HttpServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		response.sendRedirect("home.jsp?page='"+page_name+"'");
+		response.sendRedirect("/BudgetChummy/home.jsp?page='"+page_name+"'");
 	}
 
 }

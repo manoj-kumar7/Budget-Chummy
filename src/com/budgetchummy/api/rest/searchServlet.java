@@ -22,6 +22,7 @@ import org.json.simple.parser.*;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import com.budgetchummy.api.util.APIConstants;
 import com.budgetchummy.api.util.Datehelper;
 
 @WebServlet("/searchServlet")
@@ -39,9 +40,9 @@ public class searchServlet extends HttpServlet {
 
 		long date = Datehelper.dateToEpoch(request.getParameter("date"));
 
-		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
-		String user = "root";
-		String mysql_password = "YXStrl85124";
+		String url = APIConstants.MYSQL_URL;
+		String user = APIConstants.MYSQL_USERNAME;
+		String mysql_password = APIConstants.MYSQL_PASSWORD;
 		long userid=-1;
 		long accid=-1;
 		

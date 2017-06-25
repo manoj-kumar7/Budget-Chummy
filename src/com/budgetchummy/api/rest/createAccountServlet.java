@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.budgetchummy.api.util.APIConstants;
 import com.budgetchummy.api.util.Datehelper;
 
 
@@ -47,9 +48,9 @@ public class createAccountServlet extends HttpServlet {
 		long userid=0,accountid=0;
 		long added_date=0;
 		
-		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
-		String user = "root";
-		String mysql_password = "YXStrl85124";
+		String url = APIConstants.MYSQL_URL;
+		String user = APIConstants.MYSQL_USERNAME;
+		String mysql_password = APIConstants.MYSQL_PASSWORD;
 		
 
 		try {
@@ -93,7 +94,7 @@ public class createAccountServlet extends HttpServlet {
 		}	
 		HttpSession session = request.getSession();
 		session.setAttribute("account_id",accountid);
-		String homeurl = new String("/home.jsp");
+		String homeurl = new String("/BudgetChummy/home.jsp");
 		response.setStatus(response.SC_MOVED_TEMPORARILY);
         response.setHeader("Location", homeurl);
 	}

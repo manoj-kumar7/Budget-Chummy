@@ -22,6 +22,8 @@ import javax.servlet.http.HttpSession;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.budgetchummy.api.util.APIConstants;
+
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.activation.*;
@@ -48,9 +50,9 @@ public class addUserServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		long userid=0,accid=0;
 		
-		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
-		String user = "root";
-		String mysql_password = "YXStrl85124";
+		String url = APIConstants.MYSQL_URL;
+		String user = APIConstants.MYSQL_USERNAME;
+		String mysql_password = APIConstants.MYSQL_PASSWORD;
 		String to = request.getParameter("add-user-input");
 		String authentication_type = request.getParameter("authentication_type");
 		String passcode=null;
@@ -140,14 +142,14 @@ public class addUserServlet extends HttpServlet {
 	          {
 		          message.setText("Hi "+to+"\n"+first_name+" has sent you an invitation to join his Budget Chummy account\n"+
                           "Click the below link to join\n"+
-        		          "/FirstPage.jsp?account_id="+accid+"&invitation_id="+invitationid+"\n"+
+        		          "/BudgetChummy/FirstPage.jsp?account_id="+accid+"&invitation_id="+invitationid+"\n"+
                           "Passcode : "+passcode);	        	  
 	          }
 	          else
 	          {
 		          message.setText("Hi "+to+"\n"+first_name+" has sent you an invitation to join his Budget Chummy account\n"+
                           "Click the below link to join\n"+
-        		          "/FirstPage.jsp?account_id="+accid+"&invitation_id="+invitationid);	        	  
+        		          "/BudgetChummy/FirstPage.jsp?account_id="+accid+"&invitation_id="+invitationid);	        	  
 	          }
 
 	          // Send message

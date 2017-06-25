@@ -251,22 +251,22 @@
 
 		    
 		    $('#income-tab').click(function(){
-		    	location.href="/home.jsp?page='income'";
+		    	location.href="/BudgetChummy/home.jsp?page='income'";
 		    });
 		    $('#expense-tab').click(function(){
-		    	location.href="/home.jsp?page='expense'";
+		    	location.href="/BudgetChummy/home.jsp?page='expense'";
 		    });	
 		    $('#budget-tab').click(function(){
-		    	location.href="/home.jsp?page='budget'";
+		    	location.href="/BudgetChummy/home.jsp?page='budget'";
 		    });
 		    $('#search-tab').click(function(){
-		    	location.href="/home.jsp?page='search'";
+		    	location.href="/BudgetChummy/home.jsp?page='search'";
 		    });
 		    $('.search-btn').click(function(){
 		    	search_ajax_call();
 		    });
 		    $('#users-tab').click(function(){
-		    	location.href="/home.jsp?page='users'";
+		    	location.href="/BudgetChummy/home.jsp?page='users'";
 		    });
 
 			$('.date-picker').datepicker({
@@ -461,7 +461,7 @@
 <%
 if(session.getAttribute("account_id") == null)
 {
-	response.sendRedirect("FirstPage.jsp");
+	response.sendRedirect("/BudgetChummy/FirstPage.jsp");
 }
 %>
 <div class="home-body">

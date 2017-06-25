@@ -11,11 +11,11 @@ $(document).ready(function(){
 	$("#login").click(function(){
 		if(<%=request.getParameter("account_id")%> == null || <%=request.getParameter("invitation_id")%> == null)
 		{
-			location.href="/login.jsp";
+			location.href="/BudgetChummy/login.jsp";
 		}
 		else
 		{
-			location.href="/login.jsp"+
+			location.href="/BudgetChummy/login.jsp"+
             "?account_id="+<%=request.getParameter("account_id")%>+
             "&invitation_id="+<%=request.getParameter("invitation_id")%>;
 		}
@@ -24,11 +24,11 @@ $(document).ready(function(){
 	$("#signup").click(function(){
 		if(<%=request.getParameter("account_id")%> == null || <%=request.getParameter("invitation_id")%> == null)
 		{
-			location.href="/signup.jsp";
+			location.href="/BudgetChummy/signup.jsp";
 		}
 		else
 		{
-			location.href="/signup.jsp"+
+			location.href="/BudgetChummy/signup.jsp"+
             "?account_id="+<%=request.getParameter("account_id")%>+
             "&invitation_id="+<%=request.getParameter("invitation_id")%>;
 		}
@@ -42,7 +42,7 @@ $(document).ready(function(){
 <%
 if(session.getAttribute("account_id") != null)
 {
-	response.sendRedirect("home.jsp");
+	response.sendRedirect("/BudgetChummy/home.jsp");
 }
 %>
 	<input type="button" name="Login" id="login" value="Login" class="login bc-btn">

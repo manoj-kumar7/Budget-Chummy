@@ -8,6 +8,8 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
+import com.budgetchummy.api.util.APIConstants;
+
 /**
  * Servlet implementation class loginServlet
  */
@@ -37,9 +39,9 @@ public class loginServlet extends HttpServlet
 		String invitation_id = request.getParameter("invitation_id");
 		boolean valid = false;
 
-		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
-		String user = "root";
-		String mysql_password = "YXStrl85124";
+		String url = APIConstants.MYSQL_URL;
+		String user = APIConstants.MYSQL_USERNAME;
+		String mysql_password = APIConstants.MYSQL_PASSWORD;
 		long userid=-1;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -78,13 +80,13 @@ public class loginServlet extends HttpServlet
 			session.setAttribute("user_id",userid);
 			if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
 			{
-				String homeurl = new String("/ChooseAccount.jsp");
+				String homeurl = new String("/BudgetChummy/ChooseAccount.jsp");
 				response.setStatus(response.SC_MOVED_TEMPORARILY);
 		        response.setHeader("Location", homeurl);				
 			}
 			else
 			{
-				String homeurl = new String("/AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
+				String homeurl = new String("/BudgetChummy/AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
 				response.setStatus(response.SC_MOVED_TEMPORARILY);
 		        response.setHeader("Location", homeurl);			
 		    }
@@ -94,13 +96,13 @@ public class loginServlet extends HttpServlet
 		{
 			if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
 			{
-				String backurl = new String("/login.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
+				String backurl = new String("/BudgetChummy/login.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
 				response.setStatus(response.SC_MOVED_TEMPORARILY);
 		        response.setHeader("Location", backurl);
 			}
 			else
 			{
-				String backurl = new String("/login.jsp");
+				String backurl = new String("/BudgetChummy/login.jsp");
 				response.setStatus(response.SC_MOVED_TEMPORARILY);
 		        response.setHeader("Location", backurl);
 			}

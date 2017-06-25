@@ -9,11 +9,11 @@
 <%
 if(session.getAttribute("account_id") != null)
 {
-	response.sendRedirect("home.jsp");
+	response.sendRedirect("/BudgetChummy/home.jsp");
 }
 else if(session.getAttribute("user_id") == null)
 {
-	response.sendRedirect("FirstPage.jsp");
+	response.sendRedirect("/BudgetChummy/FirstPage.jsp");
 }
 %>
 	<form action="/BudgetChummy/createAccountServlet" method="post">

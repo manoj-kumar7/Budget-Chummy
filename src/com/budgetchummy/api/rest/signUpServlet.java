@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.budgetchummy.api.util.APIConstants;
 import com.budgetchummy.api.util.Datehelper;
 
 import java.util.Date;
@@ -55,9 +56,9 @@ public class signUpServlet extends HttpServlet {
 		String invitation_id = request.getParameter("invitation_id");
 		long userid=0,added_date=0;
 		
-		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
-		String user = "root";
-		String mysql_password = "YXStrl85124";
+		String url = APIConstants.MYSQL_URL;
+		String user = APIConstants.MYSQL_USERNAME;
+		String mysql_password = APIConstants.MYSQL_PASSWORD;
 		
 
 		try {
@@ -99,13 +100,13 @@ public class signUpServlet extends HttpServlet {
 		
 		if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
 		{
-			String homeurl = new String("/CreateAccount.jsp");
+			String homeurl = new String("/BudgetChummy/CreateAccount.jsp");
 			response.setStatus(response.SC_MOVED_TEMPORARILY);
 	        response.setHeader("Location", homeurl);				
 		}
 		else
 		{
-			String homeurl = new String("/AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
+			String homeurl = new String("/BudgetChummy/AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
 			response.setStatus(response.SC_MOVED_TEMPORARILY);
 	        response.setHeader("Location", homeurl);
 		}
