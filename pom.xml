@@ -4,7 +4,7 @@
   <artifactId>BudgetChummy</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
-  <name>Budget chummy maven project</name>
+  <name>budgetchummy</name>
       <dependencies>
         <dependency>
 	    <groupId>javax.servlet</groupId>
