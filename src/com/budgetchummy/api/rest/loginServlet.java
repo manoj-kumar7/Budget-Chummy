@@ -37,9 +37,9 @@ public class loginServlet extends HttpServlet
 		String invitation_id = request.getParameter("invitation_id");
 		boolean valid = false;
 
-		String url = "jdbc:mysql://localhost:3306/budgetchummy";
+		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
 		String user = "root";
-		String mysql_password = "manoj";
+		String mysql_password = "YXStrl85124";
 		long userid=-1;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -78,13 +78,13 @@ public class loginServlet extends HttpServlet
 			session.setAttribute("user_id",userid);
 			if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
 			{
-				String homeurl = new String("http://localhost:8080/BudgetChummy/ChooseAccount.jsp");
+				String homeurl = new String("/ChooseAccount.jsp");
 				response.setStatus(response.SC_MOVED_TEMPORARILY);
 		        response.setHeader("Location", homeurl);				
 			}
 			else
 			{
-				String homeurl = new String("http://localhost:8080/BudgetChummy/AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
+				String homeurl = new String("/AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
 				response.setStatus(response.SC_MOVED_TEMPORARILY);
 		        response.setHeader("Location", homeurl);			
 		    }
@@ -94,13 +94,13 @@ public class loginServlet extends HttpServlet
 		{
 			if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
 			{
-				String backurl = new String("http://localhost:8080/BudgetChummy/login.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
+				String backurl = new String("/login.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
 				response.setStatus(response.SC_MOVED_TEMPORARILY);
 		        response.setHeader("Location", backurl);
 			}
 			else
 			{
-				String backurl = new String("http://localhost:8080/BudgetChummy/login.jsp");
+				String backurl = new String("/login.jsp");
 				response.setStatus(response.SC_MOVED_TEMPORARILY);
 		        response.setHeader("Location", backurl);
 			}

@@ -39,9 +39,9 @@ public class expenseServlet extends HttpServlet {
 		String month = request.getParameter("month");
 		String year = request.getParameter("year");
 
-		String url = "jdbc:mysql://localhost:3306/budgetchummy";
+		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
 		String user = "root";
-		String mysql_password = "manoj";
+		String mysql_password = "YXStrl85124";
 		long accid=-1;
 		
 		try {
@@ -136,9 +136,9 @@ public class expenseServlet extends HttpServlet {
 		String additional_info = request.getParameter("expense-additional-info");
 		
 		
-		String url = "jdbc:mysql://localhost:3306/budgetchummy";
+		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
 		String user = "root";
-		String mysql_password = "manoj";
+		String mysql_password = "YXStrl85124";
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");

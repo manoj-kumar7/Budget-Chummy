@@ -11,11 +11,11 @@ $(document).ready(function(){
 	$("#login").click(function(){
 		if(<%=request.getParameter("account_id")%> == null || <%=request.getParameter("invitation_id")%> == null)
 		{
-			window.location.href="http://localhost:8080/BudgetChummy/login.jsp";
+			location.href="/login.jsp";
 		}
 		else
 		{
-			window.location.href="http://localhost:8080/BudgetChummy/login.jsp"+
+			location.href="/login.jsp"+
             "?account_id="+<%=request.getParameter("account_id")%>+
             "&invitation_id="+<%=request.getParameter("invitation_id")%>;
 		}
@@ -24,11 +24,11 @@ $(document).ready(function(){
 	$("#signup").click(function(){
 		if(<%=request.getParameter("account_id")%> == null || <%=request.getParameter("invitation_id")%> == null)
 		{
-			window.location.href="http://localhost:8080/BudgetChummy/signup.jsp";
+			location.href="/signup.jsp";
 		}
 		else
 		{
-			window.location.href="http://localhost:8080/BudgetChummy/signup.jsp"+
+			location.href="/signup.jsp"+
             "?account_id="+<%=request.getParameter("account_id")%>+
             "&invitation_id="+<%=request.getParameter("invitation_id")%>;
 		}

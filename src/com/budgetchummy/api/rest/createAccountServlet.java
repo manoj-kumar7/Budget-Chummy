@@ -47,9 +47,9 @@ public class createAccountServlet extends HttpServlet {
 		long userid=0,accountid=0;
 		long added_date=0;
 		
-		String url = "jdbc:mysql://localhost:3306/budgetchummy";
+		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
 		String user = "root";
-		String mysql_password = "manoj";
+		String mysql_password = "YXStrl85124";
 		
 
 		try {
@@ -93,7 +93,7 @@ public class createAccountServlet extends HttpServlet {
 		}	
 		HttpSession session = request.getSession();
 		session.setAttribute("account_id",accountid);
-		String homeurl = new String("http://localhost:8080/BudgetChummy/home.jsp");
+		String homeurl = new String("/home.jsp");
 		response.setStatus(response.SC_MOVED_TEMPORARILY);
         response.setHeader("Location", homeurl);
 	}

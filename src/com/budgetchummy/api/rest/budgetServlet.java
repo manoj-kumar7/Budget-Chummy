@@ -79,9 +79,9 @@ public class budgetServlet extends HttpServlet {
 		float budget_amount = Float.parseFloat(request.getParameter("budget-amount"));
 		String budget_description = request.getParameter("budget-description");
 		
-		String url = "jdbc:mysql://localhost:3306/budgetchummy";
+		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
 		String user = "root";
-		String mysql_password = "manoj";
+		String mysql_password = "YXStrl85124";
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");

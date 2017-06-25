@@ -30,7 +30,7 @@ public class accountChosenServlet extends HttpServlet {
 		String page_name = request.getParameter("page_name");
 		HttpSession session = request.getSession();
 		session.setAttribute("account_id",acc_id);
-		String homeurl = new String("http://localhost:8080/BudgetChummy/home.jsp?page='"+page_name+"'");
+		String homeurl = new String("/home.jsp?page='"+page_name+"'");
 		response.setStatus(response.SC_MOVED_TEMPORARILY);
         response.setHeader("Location", homeurl);		
 

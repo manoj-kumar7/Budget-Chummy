@@ -55,9 +55,9 @@ public class signUpServlet extends HttpServlet {
 		String invitation_id = request.getParameter("invitation_id");
 		long userid=0,added_date=0;
 		
-		String url = "jdbc:mysql://localhost:3306/budgetchummy";
+		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
 		String user = "root";
-		String mysql_password = "manoj";
+		String mysql_password = "YXStrl85124";
 		
 
 		try {
@@ -99,13 +99,13 @@ public class signUpServlet extends HttpServlet {
 		
 		if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
 		{
-			String homeurl = new String("http://localhost:8080/BudgetChummy/CreateAccount.jsp");
+			String homeurl = new String("/CreateAccount.jsp");
 			response.setStatus(response.SC_MOVED_TEMPORARILY);
 	        response.setHeader("Location", homeurl);				
 		}
 		else
 		{
-			String homeurl = new String("http://localhost:8080/BudgetChummy/AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
+			String homeurl = new String("/AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
 			response.setStatus(response.SC_MOVED_TEMPORARILY);
 	        response.setHeader("Location", homeurl);
 		}

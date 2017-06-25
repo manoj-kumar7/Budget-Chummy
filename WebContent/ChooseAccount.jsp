@@ -17,7 +17,7 @@
 	$(document).ready(function(){
 		getAccounts_ajax_call();
 		$('#create-account').click(function(){
-			window.location.href="http://localhost:8080/BudgetChummy/CreateAccount.jsp";
+			location.href="/CreateAccount.jsp";
 		});
 		$(document).on('click','.accounts',function(){
 			var id = $(this).attr("id");

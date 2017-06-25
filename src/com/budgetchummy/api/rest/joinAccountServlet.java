@@ -46,9 +46,9 @@ public class joinAccountServlet extends HttpServlet {
 		String passcode_from_db = null,invitation_status=null;
 		String query = null;
 		
-		String url = "jdbc:mysql://localhost:3306/budgetchummy";
+		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
 		String user = "root";
-		String mysql_password = "manoj";
+		String mysql_password = "YXStrl85124";
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
@@ -92,7 +92,7 @@ public class joinAccountServlet extends HttpServlet {
 		}
 		if(passcode.equals(passcode_from_db))
 		{
-			String homeurl = new String("http://localhost:8080/BudgetChummy/home.jsp");
+			String homeurl = new String("/home.jsp");
 			response.setStatus(response.SC_MOVED_TEMPORARILY);
 	        response.setHeader("Location", homeurl);
 		}

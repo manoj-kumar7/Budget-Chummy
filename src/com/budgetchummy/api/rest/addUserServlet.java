@@ -48,9 +48,9 @@ public class addUserServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		long userid=0,accid=0;
 		
-		String url = "jdbc:mysql://localhost:3306/budgetchummy";
+		String url = "https://mysql32017-budgetchummy.cloud.cms500.com";
 		String user = "root";
-		String mysql_password = "manoj";
+		String mysql_password = "YXStrl85124";
 		String to = request.getParameter("add-user-input");
 		String authentication_type = request.getParameter("authentication_type");
 		String passcode=null;
@@ -140,14 +140,14 @@ public class addUserServlet extends HttpServlet {
 	          {
 		          message.setText("Hi "+to+"\n"+first_name+" has sent you an invitation to join his Budget Chummy account\n"+
                           "Click the below link to join\n"+
-        		          "http://localhost:8080/BudgetChummy/FirstPage.jsp?account_id="+accid+"&invitation_id="+invitationid+"\n"+
+        		          "/FirstPage.jsp?account_id="+accid+"&invitation_id="+invitationid+"\n"+
                           "Passcode : "+passcode);	        	  
 	          }
 	          else
 	          {
 		          message.setText("Hi "+to+"\n"+first_name+" has sent you an invitation to join his Budget Chummy account\n"+
                           "Click the below link to join\n"+
-        		          "http://localhost:8080/BudgetChummy/FirstPage.jsp?account_id="+accid+"&invitation_id="+invitationid);	        	  
+        		          "/FirstPage.jsp?account_id="+accid+"&invitation_id="+invitationid);	        	  
 	          }
 
 	          // Send message
