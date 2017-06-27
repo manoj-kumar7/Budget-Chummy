@@ -17,10 +17,10 @@ $(document).ready(function(){
 <%
 if(session.getAttribute("account_id") != null)
 {
-	response.sendRedirect("/BudgetChummy/home.jsp");
+	response.sendRedirect("home.jsp");
 }
 %>
-	<form action="/BudgetChummy/signUpServlet" method="post">
+	<form action="signUpServlet" method="post">
 		<label>First Name</label><input type="text" name="first_name" id="firstname" class="textbox name">
 		<label>Last Name</label><input type="text" name="last_name" id="lastname" class="textbox name">
 		<label>Email</label><input type="text" name="email" id="email" class="textbox email">

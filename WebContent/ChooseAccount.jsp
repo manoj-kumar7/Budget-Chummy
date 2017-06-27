@@ -17,7 +17,7 @@
 	$(document).ready(function(){
 		getAccounts_ajax_call();
 		$('#create-account').click(function(){
-			location.href="/BudgetChummy/CreateAccount.jsp";
+			location.href="CreateAccount.jsp";
 		});
 		$(document).on('click','.accounts',function(){
 			var id = $(this).attr("id");
@@ -33,14 +33,14 @@
 <%
 if(session.getAttribute("account_id") != null)
 {
-	response.sendRedirect("/BudgetChummy/home.jsp");
+	response.sendRedirect("home.jsp");
 }
 else if(session.getAttribute("user_id") == null)
 {
-	response.sendRedirect("/BudgetChummy/FirstPage.jsp");
+	response.sendRedirect("FirstPage.jsp");
 }
 %>
-<form id="accountChosenForm" action="/BudgetChummy/accountChosenServlet" method="post">
+<form id="accountChosenForm" action="accountChosenServlet" method="post">
 	<div id="accounts-list"></div>
 	<input type="button" id="create-account" class="btn" value="Create new Account">
 	<input type="hidden" id="account_id" name="account_id" />

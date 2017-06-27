@@ -30,7 +30,7 @@ public class logoutServlet extends HttpServlet {
 		session.removeAttribute("user_id");
 		session.removeAttribute("account_id");
 		session.invalidate();
-		response.sendRedirect("/BudgetChummy/FirstPage.jsp");
+		response.sendRedirect("FirstPage.jsp");
 	}
 
 }

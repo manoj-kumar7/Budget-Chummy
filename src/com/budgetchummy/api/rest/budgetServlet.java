@@ -108,7 +108,7 @@ public class budgetServlet extends HttpServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		response.sendRedirect("/BudgetChummy/home.jsp?page='"+page_name+"'");
+		response.sendRedirect("home.jsp?page='"+page_name+"'");
 		
 	}
 

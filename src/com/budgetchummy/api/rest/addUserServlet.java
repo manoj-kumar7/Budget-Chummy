@@ -142,14 +142,14 @@ public class addUserServlet extends HttpServlet {
 	          {
 		          message.setText("Hi "+to+"\n"+first_name+" has sent you an invitation to join his Budget Chummy account\n"+
                           "Click the below link to join\n"+
-        		          "/BudgetChummy/FirstPage.jsp?account_id="+accid+"&invitation_id="+invitationid+"\n"+
+        		          "FirstPage.jsp?account_id="+accid+"&invitation_id="+invitationid+"\n"+
                           "Passcode : "+passcode);	        	  
 	          }
 	          else
 	          {
 		          message.setText("Hi "+to+"\n"+first_name+" has sent you an invitation to join his Budget Chummy account\n"+
                           "Click the below link to join\n"+
-        		          "/BudgetChummy/FirstPage.jsp?account_id="+accid+"&invitation_id="+invitationid);	        	  
+        		          "FirstPage.jsp?account_id="+accid+"&invitation_id="+invitationid);	        	  
 	          }
 
 	          // Send message

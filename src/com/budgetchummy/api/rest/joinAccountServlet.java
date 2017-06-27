@@ -94,7 +94,7 @@ public class joinAccountServlet extends HttpServlet {
 		}
 		if(passcode.equals(passcode_from_db))
 		{
-			String homeurl = new String("/BudgetChummy/home.jsp");
+			String homeurl = new String("home.jsp");
 			response.setStatus(response.SC_MOVED_TEMPORARILY);
 	        response.setHeader("Location", homeurl);
 		}

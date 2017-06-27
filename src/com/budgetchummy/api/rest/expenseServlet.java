@@ -61,7 +61,7 @@ public class expenseServlet extends HttpServlet {
 			HttpSession session = request.getSession();
 			Object acc_attribute = session.getAttribute("account_id");
 			accid = Long.parseLong(String.valueOf(acc_attribute));
-			String query = "select user_id,date,amount,tag_id,description,location,latitude,longitude,added_date_time from transactions where account_id="+accid+" AND MONTH(from_unixtime(floor(date/1000)))="+month+" AND YEAR(from_unixtime(floor(date/1000)))="+year+" AND transaction_type='expense';";
+			String query = "select user_id,date,amount,tag_id,description,location,latitude,longitude,added_date_time from transactions where  YEAR(from_unixtime(floor(date/1000)))="+year+" AND MONTH(from_unixtime(floor(date/1000)))="+month+" AND transaction_type='expense' AND account_id="+accid+";";			
 			ResultSet rs=null,rs1=null,rs2=null;
 			rs = st.executeQuery(query);
 			String date=null,description=null,tag_name=null,location=null,added_date_time=null,first_name=null;
@@ -183,7 +183,7 @@ public class expenseServlet extends HttpServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		response.sendRedirect("/BudgetChummy/home.jsp?page='"+page_name+"'");
+		response.sendRedirect("home.jsp?page='"+page_name+"'");
 		
 	}
 

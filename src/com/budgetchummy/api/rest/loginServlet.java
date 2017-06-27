@@ -80,13 +80,13 @@ public class loginServlet extends HttpServlet
 			session.setAttribute("user_id",userid);
 			if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
 			{
-				String homeurl = new String("/BudgetChummy/ChooseAccount.jsp");
+				String homeurl = new String("ChooseAccount.jsp");
 				response.setStatus(response.SC_MOVED_TEMPORARILY);
 		        response.setHeader("Location", homeurl);				
 			}
 			else
 			{
-				String homeurl = new String("/BudgetChummy/AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
+				String homeurl = new String("AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
 				response.setStatus(response.SC_MOVED_TEMPORARILY);
 		        response.setHeader("Location", homeurl);			
 		    }
@@ -96,13 +96,13 @@ public class loginServlet extends HttpServlet
 		{
 			if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
 			{
-				String backurl = new String("/BudgetChummy/login.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
+				String backurl = new String("login.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
 				response.setStatus(response.SC_MOVED_TEMPORARILY);
 		        response.setHeader("Location", backurl);
 			}
 			else
 			{
-				String backurl = new String("/BudgetChummy/login.jsp");
+				String backurl = new String("login.jsp");
 				response.setStatus(response.SC_MOVED_TEMPORARILY);
 		        response.setHeader("Location", backurl);
 			}

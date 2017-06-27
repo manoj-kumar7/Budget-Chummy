@@ -251,22 +251,22 @@
 
 		    
 		    $('#income-tab').click(function(){
-		    	location.href="/BudgetChummy/home.jsp?page='income'";
+		    	location.href="home.jsp?page='income'";
 		    });
 		    $('#expense-tab').click(function(){
-		    	location.href="/BudgetChummy/home.jsp?page='expense'";
+		    	location.href="home.jsp?page='expense'";
 		    });	
 		    $('#budget-tab').click(function(){
-		    	location.href="/BudgetChummy/home.jsp?page='budget'";
+		    	location.href="home.jsp?page='budget'";
 		    });
 		    $('#search-tab').click(function(){
-		    	location.href="/BudgetChummy/home.jsp?page='search'";
+		    	location.href="home.jsp?page='search'";
 		    });
 		    $('.search-btn').click(function(){
 		    	search_ajax_call();
 		    });
 		    $('#users-tab').click(function(){
-		    	location.href="/BudgetChummy/home.jsp?page='users'";
+		    	location.href="home.jsp?page='users'";
 		    });
 
 			$('.date-picker').datepicker({
@@ -352,7 +352,7 @@
 				  $('.generic-reminder-dropdown').attr("name","income-reminder");
 				  $('.generic-reminder-dropdown').attr("id","income-reminder");
 				  $('.generic-save').attr("id","income-save");
-				  $('#generic-modal-form').attr("action","/BudgetChummy/incomeServlet");
+				  $('#generic-modal-form').attr("action","incomeServlet");
 				  $('#generic-modal-form').attr("method","POST");
 			};
 			var open_expense_modal = function(){
@@ -390,7 +390,7 @@
 				  $('.generic-reminder-dropdown').attr("name","expense-reminder");
 				  $('.generic-reminder-dropdown').attr("id","expense-reminder-dropdown");
 				  $('.generic-save').attr("id","expense-save");
-				  $('#generic-modal-form').attr("action","/BudgetChummy/expenseServlet");
+				  $('#generic-modal-form').attr("action","expenseServlet");
 				  $('#generic-modal-form').attr("method","POST");
 			}
 			var open_budget_modal = function(){
@@ -399,7 +399,7 @@
 				  $('#generic-type-dropdown').val("budget");
 				  $(".income-expense-modal").css("display","none");
 				  $('#generic-save').attr("id","budget-save");
-				  $('#generic-modal-form').attr("action","/BudgetChummy/budgetServlet");
+				  $('#generic-modal-form').attr("action","budgetServlet");
 				  $('#generic-modal-form').attr("method","POST");
 			}
 	};
@@ -529,7 +529,7 @@ if(session.getAttribute("account_id") == null)
 </div>
 <div class="right">
 	<div class="right-content">
-		<form id="accountChosenForm" action="/BudgetChummy/accountChosenServlet" method="post">
+		<form id="accountChosenForm" action="accountChosenServlet" method="post">
 			<div id="accounts-heading"><span>ACCOUNTS</span></div>
 			<div id="accounts-list"></div>
 			<input type="hidden" id="account_id" name="account_id" />
@@ -539,7 +539,7 @@ if(session.getAttribute("account_id") == null)
 </div>
 	<button class="plus"></button>
 
-<form action="/BudgetChummy/logoutServlet" method="post">
+<form action="logoutServlet" method="post">
 	  <input type="submit" class="logout" value="Logout">
 </form>
  
@@ -563,7 +563,7 @@ if(session.getAttribute("account_id") == null)
     </div>
   </div>
 
-<form action="/BudgetChummy/addUserServlet" method="post">
+<form action="addUserServlet" method="post">
   <div class="modal add-user-modal" id="addUserModal" role="dialog" style="display:none;">
     <div class="modal-dialog">
 

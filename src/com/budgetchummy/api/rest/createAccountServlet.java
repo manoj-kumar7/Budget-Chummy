@@ -94,7 +94,7 @@ public class createAccountServlet extends HttpServlet {
 		}	
 		HttpSession session = request.getSession();
 		session.setAttribute("account_id",accountid);
-		String homeurl = new String("/BudgetChummy/home.jsp");
+		String homeurl = new String("home.jsp");
 		response.setStatus(response.SC_MOVED_TEMPORARILY);
         response.setHeader("Location", homeurl);
 	}

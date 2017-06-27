@@ -2,7 +2,7 @@
 		 	{
 				$.ajax({
 					type:"GET",
-					url:"/BudgetChummy/incomeServlet",
+					url:"incomeServlet",
 					data:{month:month,year:year},
 					success:function(data){
 						if(data!=null)
@@ -44,7 +44,7 @@
 		 	{
 				$.ajax({
 					type:"GET",
-					url:"/BudgetChummy/expenseServlet",
+					url:"expenseServlet",
 					data:{month:month,year:year},
 					success:function(data){
 						if(data!=null)
@@ -87,7 +87,7 @@
 				var date = $('.date-picker').val();
 				$.ajax({
 					type:"GET",
-					url:"/BudgetChummy/searchServlet",
+					url:"searchServlet",
 					data:{date:date},
 					success:function(data){
 						if(data!=null)
@@ -151,7 +151,7 @@
 			var users_ajax_call = function(){
 				$.ajax({
 					type:"GET",
-					url:"/BudgetChummy/getUsersServlet",
+					url:"getUsersServlet",
 					success:function(data){
 						if(data != null)
 						{
@@ -181,7 +181,7 @@
 //			var add_user_ajax_call = function(){
 //				$.ajax({
 //					type:"POST",
-//					url:"/BudgetChummy/addUserServlet",
+//					url:"addUserServlet",
 //					success:function(data){
 //						if(data != null)
 //						{
@@ -198,7 +198,7 @@
 			{
 				$.ajax({
 					type:"GET",
-					url:"/BudgetChummy/getAccountsServlet",
+					url:"getAccountsServlet",
 					success:function(data){
 						if(data != null)
 						{
@@ -219,7 +219,7 @@
 			var get_tags_ajax_call = function(){
 				$.ajax({
 					type:"GET",
-					url:"/BudgetChummy/tagsServlet",
+					url:"tagsServlet",
 					success:function(data){
 						if(data != null)
 						{
@@ -243,7 +243,7 @@
 				var tag = $('#saved-tags-input').val();
 				$.ajax({
 					type:"POST",
-					url:"/BudgetChummy/tagsServlet",
+					url:"tagsServlet",
 					data:{tag_name:tag},
 					async: false,
 					success:function(data){

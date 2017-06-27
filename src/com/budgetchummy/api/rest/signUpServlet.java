@@ -100,13 +100,13 @@ public class signUpServlet extends HttpServlet {
 		
 		if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
 		{
-			String homeurl = new String("/BudgetChummy/CreateAccount.jsp");
+			String homeurl = new String("CreateAccount.jsp");
 			response.setStatus(response.SC_MOVED_TEMPORARILY);
 	        response.setHeader("Location", homeurl);				
 		}
 		else
 		{
-			String homeurl = new String("/BudgetChummy/AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
+			String homeurl = new String("AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
 			response.setStatus(response.SC_MOVED_TEMPORARILY);
 	        response.setHeader("Location", homeurl);
 		}
