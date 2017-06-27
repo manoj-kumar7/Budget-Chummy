@@ -1,7 +1,7 @@
 package com.budgetchummy.api.util;
 
 public interface APIConstants {
-	public static final String MYSQL_URL = "https://mysql32017-budgetchummy.cloud.cms500.com";
-	public static final String MYSQL_USERNAME = "root";
-	public static final String MYSQL_PASSWORD = "YXStrl85124";
+	public static final String MYSQL_URL = "jdbc:mysql://mysql32017-budgetchummy.cloud.cms500.com/budgetchummy";
+	public static final String MYSQL_USERNAME = "manoj";
+	public static final String MYSQL_PASSWORD = "ShXXJA676vwusfYD";
 }
