@@ -48,13 +48,13 @@ public class createAccountServlet extends HttpServlet {
 		long userid=0,accountid=0;
 		long added_date=0;
 		
-		String url = APIConstants.MYSQL_URL;
-		String user = APIConstants.MYSQL_USERNAME;
-		String mysql_password = APIConstants.MYSQL_PASSWORD;
+		String url = APIConstants.POSTGRESQL_URL;
+		String user = APIConstants.POSTGRESQL_USERNAME;
+		String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
 		
 
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
 			out.println("driver not found");
 		}
@@ -78,7 +78,7 @@ public class createAccountServlet extends HttpServlet {
 
 			query = "insert into accounts(account_name,created_by,no_of_members,created_date_time) values('"+account_name+"',"+userid+","+1+","+added_date+");";
 			st.executeUpdate(query);
-			query = "select LAST_INSERT_ID();";
+			query = "select lastval();";
 			rs = st.executeQuery(query);
 			if(rs.next())
 			{

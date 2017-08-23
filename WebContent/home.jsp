@@ -412,6 +412,10 @@
 			$('.month-changer').css("display","none");
 			$('.chart-space').css("display","none");
 		}
+		else
+		{
+			$('.month-changer').css("display","flex");
+		}
 		if(page == "income")
 		{
 			$('.plus').addClass("income");
@@ -435,7 +439,6 @@
 			$('.plus').removeClass("income");
 			$('.plus').css("display","block");
 		}
-		$('.month-changer').css("display","flex");
 		var i,tabcontent,tablinks;
 		tabcontent = document.getElementsByClassName("tabcontent");
 	    for (i = 0; i < tabcontent.length; i++) {
