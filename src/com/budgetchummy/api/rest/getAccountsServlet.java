@@ -40,12 +40,12 @@ public class getAccountsServlet extends HttpServlet {
 	
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
-		String url = APIConstants.MYSQL_URL;
-		String user = APIConstants.MYSQL_USERNAME;
-		String mysql_password = APIConstants.MYSQL_PASSWORD;
+		String url = APIConstants.POSTGRESQL_URL;
+		String user = APIConstants.POSTGRESQL_USERNAME;
+		String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
 		
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
 			out.println("driver not found");
 		}
@@ -80,7 +80,8 @@ public class getAccountsServlet extends HttpServlet {
 				}
 			}
 			rs.close();
-			rs1.close();
+			if(rs1 != null)
+				rs1.close();
 			st.close();
 			st1.close();
 			con.close();

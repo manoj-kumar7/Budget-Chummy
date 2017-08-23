@@ -39,12 +39,12 @@ public class loginServlet extends HttpServlet
 		String invitation_id = request.getParameter("invitation_id");
 		boolean valid = false;
 
-		String url = APIConstants.MYSQL_URL;
-		String user = APIConstants.MYSQL_USERNAME;
-		String mysql_password = APIConstants.MYSQL_PASSWORD;
+		String url = APIConstants.POSTGRESQL_URL;
+		String user = APIConstants.POSTGRESQL_USERNAME;
+		String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
 		long userid=-1;
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
 			out.println("driver not found");
 		}

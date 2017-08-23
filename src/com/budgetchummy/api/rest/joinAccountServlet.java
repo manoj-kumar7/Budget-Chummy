@@ -48,11 +48,11 @@ public class joinAccountServlet extends HttpServlet {
 		String passcode_from_db = null,invitation_status=null;
 		String query = null;
 		
-		String url = APIConstants.MYSQL_URL;
-		String user = APIConstants.MYSQL_USERNAME;
-		String mysql_password = APIConstants.MYSQL_PASSWORD;
+		String url = APIConstants.POSTGRESQL_URL;
+		String user = APIConstants.POSTGRESQL_USERNAME;
+		String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
 			out.println("driver not found");
 		}

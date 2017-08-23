@@ -42,13 +42,13 @@ public class incomeServlet extends HttpServlet {
 		String month = request.getParameter("month");
 		String year = request.getParameter("year");
 
-		String url = APIConstants.MYSQL_URL;
-		String user = APIConstants.MYSQL_USERNAME;
-		String mysql_password = APIConstants.MYSQL_PASSWORD;
+		String url = APIConstants.POSTGRESQL_URL;
+		String user = APIConstants.POSTGRESQL_USERNAME;
+		String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
 		long accid=-1;
 		
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -63,7 +63,7 @@ public class incomeServlet extends HttpServlet {
 			HttpSession session = request.getSession();
 			Object acc_attribute = session.getAttribute("account_id");
 			accid = Long.parseLong(String.valueOf(acc_attribute));
-			String query = "select user_id,date,amount,tag_id,description,location,latitude,longitude,added_date_time from transactions where YEAR(from_unixtime(floor(date/1000)))="+year+" AND MONTH(from_unixtime(floor(date/1000)))="+month+" AND transaction_type='income' AND account_id="+accid+";";
+			String query = "select user_id,date,amount,tag_id,description,location,latitude,longitude,added_date_time from transactions where extract(year from to_timestamp(floor(date/1000)))="+year+" AND extract(month from to_timestamp(floor(date/1000)))="+month+" AND transaction_type='income' AND account_id="+accid+";";
 			ResultSet rs=null,rs1=null,rs2=null;
 			rs = st.executeQuery(query);
 			String date=null,description=null,tag_name=null,location=null,added_date_time=null,first_name=null;
@@ -138,12 +138,12 @@ public class incomeServlet extends HttpServlet {
 		String transaction_type = "income";
 		String additional_info = request.getParameter("income-additional-info");
 		
-		String url = APIConstants.MYSQL_URL;
-		String user = APIConstants.MYSQL_USERNAME;
-		String mysql_password = APIConstants.MYSQL_PASSWORD;
+		String url = APIConstants.POSTGRESQL_URL;
+		String user = APIConstants.POSTGRESQL_USERNAME;
+		String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
 		
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
 			out.println("driver not found");
 		}

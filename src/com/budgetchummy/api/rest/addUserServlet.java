@@ -50,9 +50,9 @@ public class addUserServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		long userid=0,accid=0;
 		
-		String url = APIConstants.MYSQL_URL;
-		String user = APIConstants.MYSQL_USERNAME;
-		String mysql_password = APIConstants.MYSQL_PASSWORD;
+		String url = APIConstants.POSTGRESQL_URL;
+		String user = APIConstants.POSTGRESQL_USERNAME;
+		String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
 		String to = request.getParameter("add-user-input");
 		String authentication_type = request.getParameter("authentication_type");
 		String passcode=null;
@@ -87,7 +87,7 @@ public class addUserServlet extends HttpServlet {
 	   });		
 		
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
 			out.println("driver not found");
 		}
@@ -107,7 +107,7 @@ public class addUserServlet extends HttpServlet {
 			accid = Long.parseLong(String.valueOf(acc_attribute));
 			query = "insert into invitations(sent_by,sent_to,passcode,invitation_status) values("+userid+",'"+to+"','"+passcode+"','"+"not joined"+"');";
 			st.executeUpdate(query);
-			query = "select LAST_INSERT_ID();";
+			query = "select lastval();";
 			rs = st.executeQuery(query);
 			if(rs.next())
 			{
