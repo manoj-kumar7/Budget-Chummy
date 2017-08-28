@@ -26,7 +26,7 @@ import org.json.simple.JSONObject;
 import com.budgetchummy.api.util.APIConstants;
 
 
-@WebServlet("/getAccountsServlet")
+@WebServlet(urlPatterns = {"/getAccounts", "/BudgetChummy/getAccounts"})
 public class getAccountsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -40,6 +40,7 @@ public class getAccountsServlet extends HttpServlet {
 	
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
+		String page = request.getParameter("page");
 		String url = APIConstants.POSTGRESQL_URL;
 		String user = APIConstants.POSTGRESQL_USERNAME;
 		String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
@@ -59,6 +60,12 @@ public class getAccountsServlet extends HttpServlet {
 			HttpSession session = request.getSession();
 			Object attribute = session.getAttribute("user_id");
 			long userid = Long.parseLong(String.valueOf(attribute));
+			long accid=-1;
+			if(page=="home")
+			{
+				Object acc_attribute = session.getAttribute("account_id");
+				accid = Long.parseLong(String.valueOf(acc_attribute));				
+			}
 			String query=null;
 			query = "select account_id from adduser where user_id="+userid+";";
 			ResultSet rs = st.executeQuery(query);
@@ -78,6 +85,12 @@ public class getAccountsServlet extends HttpServlet {
 					jo.put("account_name",acc_name);
 					ja.add(jo.toJSONString());
 				}
+			}
+			jo.clear();
+			if(page.equals("home"))
+			{
+				jo.put("current_account", accid);
+				ja.add(jo.toJSONString());
 			}
 			rs.close();
 			if(rs1 != null)

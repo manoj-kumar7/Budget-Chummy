@@ -28,7 +28,7 @@ import java.util.TimeZone;
 /**
  * Servlet implementation class signUpServlet
  */
-@WebServlet("/signUpServlet")
+@WebServlet(urlPatterns = {"/signUp", "/BudgetChummy/signUp"})
 public class signUpServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -50,7 +50,6 @@ public class signUpServlet extends HttpServlet {
 		String first_name = request.getParameter("first_name");
 		String last_name = request.getParameter("last_name");
 		String email = request.getParameter("email");
-		String phone_no = request.getParameter("phone_no");
 		String pword = request.getParameter("pword");
 		String account_id = request.getParameter("account_id");
 		String invitation_id = request.getParameter("invitation_id");
@@ -79,7 +78,7 @@ public class signUpServlet extends HttpServlet {
 		    Date dateobj = new Date();
 		    df.setTimeZone(TimeZone.getTimeZone("IST"));
 		    added_date = Datehelper.dateToEpoch(df.format(dateobj));
-			query = "insert into users(first_name,last_name,email,phone_no,password,created_date_time) values('"+first_name+"','"+last_name+"','"+email+"','"+phone_no+"','"+pword+"',"+added_date+");";
+			query = "insert into users(first_name,last_name,email,password,created_date_time) values('"+first_name+"','"+last_name+"','"+email+"','"+pword+"',"+added_date+");";
 			st.executeUpdate(query);
 			query = "select user_id from users where email='"+email+"';";
 			rs = st.executeQuery(query);
@@ -98,18 +97,18 @@ public class signUpServlet extends HttpServlet {
 		session.setAttribute("useremail",email);
 		session.setAttribute("user_id",userid);
 		
-		if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
-		{
-			String homeurl = new String("CreateAccount.jsp");
-			response.setStatus(response.SC_MOVED_TEMPORARILY);
-	        response.setHeader("Location", homeurl);				
-		}
-		else
-		{
-			String homeurl = new String("AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
-			response.setStatus(response.SC_MOVED_TEMPORARILY);
-	        response.setHeader("Location", homeurl);
-		}
+//		if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
+//		{
+//			String homeurl = new String("CreateAccount.jsp");
+//			response.setStatus(response.SC_MOVED_TEMPORARILY);
+//	        response.setHeader("Location", homeurl);				
+//		}
+//		else
+//		{
+//			String homeurl = new String("AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
+//			response.setStatus(response.SC_MOVED_TEMPORARILY);
+//	        response.setHeader("Location", homeurl);
+//		}
 
 	}
 

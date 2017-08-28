@@ -25,7 +25,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 
-@WebServlet("/expenseServlet")
+@WebServlet(urlPatterns = {"/expense", "/BudgetChummy/expense"})
 public class expenseServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

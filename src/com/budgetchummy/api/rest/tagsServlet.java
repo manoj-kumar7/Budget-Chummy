@@ -24,7 +24,7 @@ import com.budgetchummy.api.util.APIConstants;
 /**
  * Servlet implementation class tagsServlet
  */
-@WebServlet("/tagsServlet")
+@WebServlet(urlPatterns = {"/tags", "/BudgetChummy/tags"})
 public class tagsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
  

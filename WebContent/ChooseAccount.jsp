@@ -15,15 +15,13 @@
 	
 	<script type="text/javascript">
 	$(document).ready(function(){
-		getAccounts_ajax_call();
-		$('#create-account').click(function(){
+		getAccounts_ajax_call("chooseaccount");
+		$('#create-new-account').click(function(){
 			location.href="CreateAccount.jsp";
 		});
 		$(document).on('click','.accounts',function(){
 			var id = $(this).attr("id");
-			$('#account_id').val(id);
-			$('#page_name').val("income");
-			$('#accountChosenForm').submit();
+			accountChosen_ajax_call(id, "income");
 		});
 	});
 
@@ -40,11 +38,9 @@ else if(session.getAttribute("user_id") == null)
 	response.sendRedirect("FirstPage.jsp");
 }
 %>
-<form id="accountChosenForm" action="accountChosenServlet" method="post">
+<div id="choose-account-form-div">
 	<div id="accounts-list"></div>
-	<input type="button" id="create-account" class="btn" value="Create new Account">
-	<input type="hidden" id="account_id" name="account_id" />
-	<input type="hidden" id="page_name" name="page_name" />
-</form>
+	<input type="button" id="create-new-account" class="btn" value="Create new Account">
+</div>
 </body>
 </html>

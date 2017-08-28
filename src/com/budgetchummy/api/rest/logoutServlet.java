@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/logoutServlet")
+@WebServlet(urlPatterns = {"/logout", "/BudgetChummy/logout"})
 public class logoutServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 

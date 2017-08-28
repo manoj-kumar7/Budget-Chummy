@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession;
 import com.budgetchummy.api.util.APIConstants;
 
 
-@WebServlet("/joinAccountServlet")
+@WebServlet(urlPatterns = {"/joinAccount", "/BudgetChummy/joinAccount"})
 public class joinAccountServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

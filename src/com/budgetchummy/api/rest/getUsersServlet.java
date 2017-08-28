@@ -27,7 +27,7 @@ import com.budgetchummy.api.util.APIConstants;
 import com.budgetchummy.api.util.Datehelper;
 
 
-@WebServlet("/getUsersServlet")
+@WebServlet(urlPatterns = {"/getUsers", "/BudgetChummy/getUsers"})
 public class getUsersServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

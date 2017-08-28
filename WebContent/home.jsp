@@ -15,6 +15,7 @@
 	<script type="text/javascript" src="app/canvasjs.min.js"></script>
 	<script type="text/css" src="styles/bootstrap.min.css"></script>
 	<link rel="stylesheet" href="styles/bootstrap.min.css" type="text/css">
+	<link rel="stylesheet" href="styles/font-awesome.css" type="text/css">
 	<link rel="stylesheet" href="styles/jquery-ui.css" type="text/css">
 	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDtFLcyhDfgarOIcwf-4qiScchMGJS25jo"></script>
 	<script type="text/javascript">
@@ -30,18 +31,21 @@
 	var tags_list = [];
 	
 	window.onload=function(){
-		getAccounts_ajax_call();
+		getAccounts_ajax_call("home");
 /* 		open_page(event,'income');
 		income_ajax_call(month,year);
 		$('#income-tab').addClass("active"); */
+		$('.loader').removeClass('active');
 		if(<%=request.getParameter("page")%> == "expense")
 		{
+			$('#expense-loader').addClass('active');
 			open_page('expense');
 			expense_ajax_call(month,year);
 			$('#expense-tab').addClass("active");
 		}
 		else if(<%=request.getParameter("page")%> == "budget")
 		{
+			$('#budget-loader').addClass('active');
 			open_page('budget');
 			//budget_ajax_call(month,year);
 			$('#budget-tab').addClass("active");
@@ -53,12 +57,14 @@
 		}
 		else if(<%=request.getParameter("page")%> == "users")
 		{
+			$('#users-loader').addClass('active');
 			open_page('users');
 			users_ajax_call(month,year);
 			$('#users-tab').addClass("active");
 		}
 		else
 		{
+			$('#income-loader').addClass('active');
 			open_page('income');
 			income_ajax_call(month,year);
 			$('#income-tab').addClass("active");	
@@ -90,11 +96,9 @@
 				  open_budget_modal();
 			  }
 		  });
-		  $(document).on('click','.accounts',function(){
+		  $(document).on('click','.home-accounts',function(){
 			  var id = $(this).attr("id");
-			  $('#account_id').val(id);
-			  $('.page_name').val(current_page);
-			  $('#accountChosenForm').submit();
+			  accountChosen_ajax_call(id, current_page);
 		  });
 		  
 		  //$('.center').slimscroll();
@@ -172,11 +176,11 @@
 			  $('.add-btn').toggleClass('open');
 		  });
 		  $(document).on('click','.add-icon',function(){
-			  $('.saved-tags-dropdown-div').css("display","none");
-			  $('#saved-tags-input').css("display","block").focus();
+			  $('#saved-tags-input').css("display","inline-block").focus();
+			  $('#saved-tags-dropdown').css("display","none");
 		  });
 		  $(document).on('focusout','#saved-tags-input',function(){
-			  $('.saved-tags-dropdown-div').css("display","block");
+			  $('#saved-tags-dropdown').css("display","inline-block");
 			  $('#saved-tags-input').css("display","none");
 			  $('#save-tag-hint').css("display","none");
 		  });
@@ -263,6 +267,7 @@
 		    	location.href="home.jsp?page='search'";
 		    });
 		    $('.search-btn').click(function(){
+		    	$('#search-loader').addClass('active');
 		    	search_ajax_call();
 		    });
 		    $('#users-tab').click(function(){
@@ -352,7 +357,7 @@
 				  $('.generic-reminder-dropdown').attr("name","income-reminder");
 				  $('.generic-reminder-dropdown').attr("id","income-reminder");
 				  $('.generic-save').attr("id","income-save");
-				  $('#generic-modal-form').attr("action","incomeServlet");
+				  $('#generic-modal-form').attr("action","income");
 				  $('#generic-modal-form').attr("method","POST");
 			};
 			var open_expense_modal = function(){
@@ -390,7 +395,7 @@
 				  $('.generic-reminder-dropdown').attr("name","expense-reminder");
 				  $('.generic-reminder-dropdown').attr("id","expense-reminder-dropdown");
 				  $('.generic-save').attr("id","expense-save");
-				  $('#generic-modal-form').attr("action","expenseServlet");
+				  $('#generic-modal-form').attr("action","expense");
 				  $('#generic-modal-form').attr("method","POST");
 			}
 			var open_budget_modal = function(){
@@ -399,7 +404,7 @@
 				  $('#generic-type-dropdown').val("budget");
 				  $(".income-expense-modal").css("display","none");
 				  $('#generic-save').attr("id","budget-save");
-				  $('#generic-modal-form').attr("action","budgetServlet");
+				  $('#generic-modal-form').attr("action","budget");
 				  $('#generic-modal-form').attr("method","POST");
 			}
 	};
@@ -454,6 +459,20 @@
 	};
 	var setCurrentPage = function(){
 		$('.page_name').val(current_page);
+		// var opened_modal = $('#generic-type-dropdown').val();
+		// $('.loader').removeClass("active");
+		// if(opened_modal == "income")
+		// {
+		// 	$('#income-loader').addClass("active");
+		// }
+		// else if(opened_modal == "expense")
+		// {
+		// 	$('#expense-loader').addClass("active");
+		// }
+		// else if(opened_modal == "budget")
+		// {
+		// 	$('#budget-loader').addClass("active");
+		// }
 	}
 
 	
@@ -482,14 +501,23 @@ if(session.getAttribute("account_id") == null)
 <div class="center">
  	<div class="center-content">
 	 	<div class="month-changer" style="display:none;">
-	 		<img src="images/left_icon.png" class="image left-icon" alt="Prev month">
+	 		<img src="images/left_icon.png" class="icon left-icon" alt="Prev month">
 	 		<div id="selected_month"></div>
-	 		<img src="images/right_icon.png" class="image right-icon" alt="Next month">
+	 		<img src="images/right_icon.png" class="icon right-icon" alt="Next month">
 	 	</div>
+	 	
+	 	<div class="loaders">
+	 		<div class="loader" id="income-loader"><span></span><span></span><span></span></div>
+	 		<div class="loader" id="expense-loader"><span></span><span></span><span></span></div>
+	 		<div class="loader" id="budget-loader"><span></span><span></span><span></span></div>
+	 		<div class="loader" id="search-loader"><span></span><span></span><span></span></div>
+	 		<div class="loader" id="users-loader"><span></span><span></span><span></span></div>
+	 	</div>
+	 	
 		<div id="income-page" style="display:none;" class="tabcontent page">
 			<div class="income-chart-space chart-space">
 			    <div id="chartContainer1"></div>
-			    <div id="empty-income-data" style="display:none;"></div>
+			    <div id="empty-income-data" class="empty-data" style="display:none;"></div>
 		    </div>
 		    <div class="income-table-space table-space">
 	   	    	<table class="income-table table"><tbody></tbody></table>
@@ -498,7 +526,7 @@ if(session.getAttribute("account_id") == null)
 		<div id="expense-page" style="display:none;" class="tabcontent page">
 			<div class="expense-chart-space chart-space">
 			    <div id="chartContainer2" style="display:none;"></div>
-			    <div id="empty-expense-data" style="display:none;"></div>
+			    <div id="empty-expense-data" class="empty-data" style="display:none;"></div>
 		   	</div>
 		    <div class="expense-table-space table-space">
 	   	    	<table class="expense-table table"><tbody></tbody></table>
@@ -511,6 +539,7 @@ if(session.getAttribute("account_id") == null)
 			<input type="button" class="btn search-btn" value="Search"><br>
 			Income for this month:<br><div id="income_search_data"></div>
 			Expenses for this month:<br><div id="expense_search_data"></div>
+			<div id="empty-search-data" class="empty-data" style="display:none;"></div>
 		</div>
 		<div id="users-page" style="display:none;" class="tabcontent page">
 			<div class="account-info-space">
@@ -528,21 +557,18 @@ if(session.getAttribute("account_id") == null)
 	   	    	
 	   	    </div>
 		</div>
+		
 	</div>
 </div>
 <div class="right">
 	<div class="right-content">
-		<form id="accountChosenForm" action="accountChosenServlet" method="post">
 			<div id="accounts-heading"><span>ACCOUNTS</span></div>
-			<div id="accounts-list"></div>
-			<input type="hidden" id="account_id" name="account_id" />
-			<input type="hidden" class="page_name" name="page_name" />
-		</form>
+			<div id="home-accounts-list"></div>
 	</div>
 </div>
 	<button class="plus"></button>
 
-<form action="logoutServlet" method="post">
+<form action="logout" method="post">
 	  <input type="submit" class="logout" value="Logout">
 </form>
  
@@ -566,7 +592,7 @@ if(session.getAttribute("account_id") == null)
     </div>
   </div>
 
-<form action="addUserServlet" method="post">
+<form action="addUser" method="post">
   <div class="modal add-user-modal" id="addUserModal" role="dialog" style="display:none;">
     <div class="modal-dialog">
 
@@ -604,9 +630,9 @@ if(session.getAttribute("account_id") == null)
 
       <div class="modal-content">
         <div class="modal-header">
-        	<button type="button" class="btn close-btn" data-dismiss="modal">&times;</button>
+        	<img src="images/close-icon.png" class="icon close-icon" alt="Close" data-dismiss="modal">
 			<h4 class="modal-title">
-				<select id="generic-type-dropdown">
+				<select id="generic-type-dropdown" class="dropdown">
 				  <option value="income">ADD INCOME</option>
 			 	  <option value="expense">ADD EXPENSE</option>
 				  <option value="budget">ADD BUDGET</option>
@@ -615,68 +641,93 @@ if(session.getAttribute("account_id") == null)
         </div>
         <div class="modal-body">
         	<div class="income-expense-modal" style="display:none;">
-		        <div><input type="text" placeholder="Amount" id="generic-amount" class="generic-amount textbox"></div>
-		        <div><input type="text" placeholder="Date" id="generic-datepicker" class="generic-datepicker textbox"></div>
+		        <div class="textbox_space">
+		        	<label>Amount</label><input type="text" id="generic-amount" class="generic-amount textbox">
+		        </div>
+		        <div class="textbox_space">
+		        	<label>Date</label><input type="text" id="generic-datepicker" class="generic-datepicker textbox">
+		        </div>
 				<div class="income-expense-tags"></div>
 		        <div class="generic-show-more"><span>Store additional information</span></div>
 		      
 		        <div class="generic-additional-info-div">
 		        	<input type="hidden" class="generic-additional-info" id="generic-additional-info">
-		            <input type="text" placeholder="Location" class="generic-location" id="generic-location" class="textbox">
+		        	<div class="textbox_space">
+		            	<label>Location</label><input type="text" class="generic-location" id="generic-location" class="textbox">
+		        		<img src="images/search-icon.png" class="generic-map-search icon search-icon" id="generic-map-search" alt="Search">
+		        	</div>
 		        	<input type="hidden" class="generic-location-lat" id="generic-location-lat">
 		        	<input type="hidden" class="generic-location-lon" id="generic-location-lon">
-		        	<input type="button" class="generic-map-search" id="generic-map-search" class="btn" value="Search">
+		        	
 		            <div class="generic-location-map" id="generic-location-map"></div>
-	     	        <div><input type="text" placeholder="Description" class="generic-description" id="generic-description" class="textbox"></div>
-		        	<div><select class="generic-repeat-dropdown" id="generic-repeat-dropdown">
-		        	    <option value="0">Never</option>
-					    <option value="1">Daily</option>
-				 	    <option value="2">Weekly</option>
-					    <option value="3">Monthly</option>
-					    <option value="4">Yearly</option>
-					    <option value="5">Weekdays</option>
-					    <option value="6">Weekends</option>
-					</select></div>
-					<div><select class="generic-reminder-dropdown" id="generic-reminder-dropdown">
-						<option value="0">Never</option>
-		        	    <option value="1">One day before</option>
-					    <option value="2">On the day</option>
-					</select></div>
+	     	        <div class="textbox_space">
+	     	        	<label>Description</label><input type="text" class="generic-description" id="generic-description" class="textbox">
+	     	        </div>
+		        	<div class="textbox_space">
+			        	<label>Repeat</label><select class="generic-repeat-dropdown dropdown" id="generic-repeat-dropdown">
+			        	    <option value="0">Never</option>
+						    <option value="1">Daily</option>
+					 	    <option value="2">Weekly</option>
+						    <option value="3">Monthly</option>
+						    <option value="4">Yearly</option>
+						    <option value="5">Weekdays</option>
+						    <option value="6">Weekends</option>
+						</select>
+					</div>
+					<div class="textbox_space">
+						<label>Reminder</label><select class="generic-reminder-dropdown dropdown" id="generic-reminder-dropdown">
+							<option value="0">Never</option>
+			        	    <option value="1">One day before</option>
+						    <option value="2">On the day</option>
+						</select>
+					</div>
 		        </div>
 	        </div>
 	        
 			<div class="saved-tags-div" style="display:none;">
-				<div class="saved-tags-dropdown-div">
-		        	<div><select id="saved-tags-dropdown" name="tag_id">
-					</select><img src="images/add-icon.png" class="image add-icon" alt="Add tag"></div>
-				</div>
-				<div class="saved-tags-input-div">
-					<div><input id="saved-tags-input" placeholder="Enter tag" style="display:none;"></div>
+				<div class="textbox_space">
+					<label>Tag</label>
+					<select id="saved-tags-dropdown"  class="dropdown" name="tag_id"></select>
+					<input type="text" id="saved-tags-input" style="display:none;">
+					<img src="images/add-tag-icon.ico" class="icon add-icon" alt="Add tag">
 					<div id="save-tag-hint" class="hint-text" style="display:none;">Press Enter to save</div>
 				</div>
+
 			</div>
 				
 				
 	        <div class="budget-modal" style="display:none;">
-	       		<div><select id="budget-type-dropdown" name="budget-type">
-		        	    <option value="0">All expenses</option>
-					    <option value="1">Tag</option>
-				 	    <option value="2">All expenses except tag</option>
-				</select></div>
-				<div class="budget-tags"></div>
-				<div><select id="budget-repeat-dropdown" name="budget-repeat">
-		        	    <option value="0">One time budget</option>
-					    <option value="1">Daily</option>
-				 	    <option value="2">Weekly</option>
-					    <option value="3" selected>Monthly</option>
-					    <option value="4">Yearly</option>
-				</select></div>
-				<div class="one-time-budget-div" style="display:none;">
-					<div><input type="text" placeholder="Start Date" id="budget-start-datepicker" class="budget-datepicker textbox" name="budget-start-date"></div>
-					<div><input type="text" placeholder="End Date" id="budget-end-datepicker" class="budget-datepicker textbox" name="budget-end-date"></div>
+	       		<div class="textbox_space">
+		       		<label>Type</label><select id="budget-type-dropdown" class="dropdown" name="budget-type">
+			        	    <option value="0">All expenses</option>
+						    <option value="1">Tag</option>
+					 	    <option value="2">All expenses except tag</option>
+					</select>
 				</div>
-				<div><input type="text" placeholder="Amount" id="budget-amount" name="budget-amount" class="textbox"></div>
-				<div><input type="text" placeholder="Description(optional)" id="budget-description" name="budget-description" class="textbox"></div>
+				<div class="budget-tags"></div>
+				<div class="textbox_space">
+					<label>Repeat</label><select id="budget-repeat-dropdown" class="dropdown" name="budget-repeat">
+			        	    <option value="0">One time budget</option>
+						    <option value="1">Daily</option>
+					 	    <option value="2">Weekly</option>
+						    <option value="3" selected>Monthly</option>
+						    <option value="4">Yearly</option>
+					</select>
+				</div>
+				<div class="one-time-budget-div" style="display:none;">
+					<div class="textbox_space">
+						<label>Start date</label><input type="text" id="budget-start-datepicker" class="budget-datepicker textbox" name="budget-start-date">
+					</div>
+					<div class="textbox_space">
+						<label>End date</label><input type="text" id="budget-end-datepicker" class="budget-datepicker textbox" name="budget-end-date">
+					</div>
+				</div>
+				<div class="textbox_space">
+					<label>Amount</label><input type="text" id="budget-amount" name="budget-amount" class="textbox">
+				</div>
+				<div class="textbox_space">
+					<label>Description</label><input type="text" placeholder="optional" id="budget-description" name="budget-description" class="textbox">
+				</div>
 	        </div>
 	        <input type="hidden" class="page_name" name="page_name"/>
         </div>

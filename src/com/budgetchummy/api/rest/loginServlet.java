@@ -13,7 +13,7 @@ import com.budgetchummy.api.util.APIConstants;
 /**
  * Servlet implementation class loginServlet
  */
-@WebServlet("/loginServlet")
+@WebServlet(urlPatterns = {"/login", "/BudgetChummy/login"})
 public class loginServlet extends HttpServlet 
 {
 	private static final long serialVersionUID = 1L;
@@ -62,10 +62,10 @@ public class loginServlet extends HttpServlet
 			{
 				password = rs.getString("password");
 				userid = rs.getLong("user_id");
-			}
-			if(password.equals(pword))
-			{
-				valid = true;
+				if(password.equals(pword))
+				{
+					valid = true;
+				}
 			}	
 			rs.close();
 			st.close();
@@ -78,34 +78,25 @@ public class loginServlet extends HttpServlet
 			HttpSession session = request.getSession();
 			session.setAttribute("useremail",email);
 			session.setAttribute("user_id",userid);
-			if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
-			{
-				String homeurl = new String("ChooseAccount.jsp");
-				response.setStatus(response.SC_MOVED_TEMPORARILY);
-		        response.setHeader("Location", homeurl);				
-			}
-			else
-			{
-				String homeurl = new String("AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
-				response.setStatus(response.SC_MOVED_TEMPORARILY);
-		        response.setHeader("Location", homeurl);			
-		    }
+//			if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
+//			{
+//				String homeurl = new String("ChooseAccount.jsp");
+//				response.setStatus(response.SC_MOVED_TEMPORARILY);
+//		        response.setHeader("Location", homeurl);				
+//			}
+//			else
+//			{
+//				String homeurl = new String("AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
+//				response.setStatus(response.SC_MOVED_TEMPORARILY);
+//		        response.setHeader("Location", homeurl);			
+//		    }
 
 		}
 		else
 		{
-			if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
-			{
-				String backurl = new String("login.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
-				response.setStatus(response.SC_MOVED_TEMPORARILY);
-		        response.setHeader("Location", backurl);
-			}
-			else
-			{
-				String backurl = new String("login.jsp");
-				response.setStatus(response.SC_MOVED_TEMPORARILY);
-		        response.setHeader("Location", backurl);
-			}
+			//String backurl = new String("login.jsp");
+			response.setStatus(401);
+	        //response.setHeader("Location", backurl);
 		}
 		
 	}

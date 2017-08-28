@@ -24,7 +24,7 @@ import com.budgetchummy.api.util.APIConstants;
 import com.budgetchummy.api.util.Datehelper;
 
 
-@WebServlet("/createAccountServlet")
+@WebServlet(urlPatterns = {"/createAccount", "/BudgetChummy/createAccount"})
 public class createAccountServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -94,9 +94,9 @@ public class createAccountServlet extends HttpServlet {
 		}	
 		HttpSession session = request.getSession();
 		session.setAttribute("account_id",accountid);
-		String homeurl = new String("home.jsp");
-		response.setStatus(response.SC_MOVED_TEMPORARILY);
-        response.setHeader("Location", homeurl);
+//		String homeurl = new String("home.jsp");
+//		response.setStatus(response.SC_MOVED_TEMPORARILY);
+//        response.setHeader("Location", homeurl);
 	}
 
 }

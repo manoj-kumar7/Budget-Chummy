@@ -2,17 +2,267 @@ html, body {
 	margin:0;
 	padding:0;
 	height:100%;
-	overflow: hidden;
+	/* overflow: hidden; */
 }
 
 .home-body{
 	margin:0;
 	padding:0;
 	height:100%;
-	overflow:hidden;
+	/* overflow: hidden; */
 }
 
+.bc-lead-picture{
+	text-align: center;
+}
 
+.bc-lead-container{
+	position: absolute;
+	top: 140px;
+	left: 50px;
+}
+
+.bc-lead-tagline{
+    font-size: 40px;
+    font-weight: 700;
+    font-family: Graphik LC Web,-apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;
+    color: #47b972;
+}
+
+.bc-lead-tagline-exp{
+    font-size: 24px;
+    font-weight: 600;
+    font-family: Graphik LC Web,-apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;
+    color: #47b972;
+    margin-top: 10px;
+}
+
+.bc-lead-content{
+    font-size: 17px;
+    font-weight: 400;
+    font-family: Graphik LC Web,-apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;
+    color: #47b972;
+    margin-top: 30px;
+    max-width: 400px;
+}
+
+.firstpage-body{
+	overflow: auto;
+}
+
+#firstpage-top-text{
+	float: right;
+    margin-right: 15px;
+    font-size: 13px;
+    font-family: Graphik LC Web,-apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;
+}
+.firstpage-top-btn{
+	color :#f4511e;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+.lead-impressions-div{
+	height: 380px;
+	text-align: center;
+	font-style: italic;
+	margin: 30px 20px;
+}
+
+.lead-impressions{
+	float: left;
+    width: 300px;
+    height: 225px;
+    margin: 52px;
+}
+
+.lead-impressions .desc-text{
+	margin-top: 20px;
+	font-size: 20px;
+}
+
+#login-form-div{
+	position: absolute;
+	left: 37%;
+	top: 33%;
+	text-align: center;
+}
+
+#signup-form-div{
+	position: absolute;
+	left: 37%;
+	top: 24%;
+	text-align: center;
+}
+
+#create-account-form-div{
+	position: absolute;
+	left: 37%;
+	top: 33%;
+	text-align: center;
+}
+
+.firstpage-textbox-space .textbox_space {
+    width: 250px;
+    height: 50px;
+}
+.modal .textbox_space {
+	width: 468px;
+	margin: 10px 10px;
+}
+.firstpage-textbox-space .textbox_space .textbox { 
+    height: 35px; 
+    width: 100%; 
+    background-color: transparent;  
+    border-style: solid;  
+    border-width: 0px 0px 1px 0px;  
+    border-color: black; 
+    outline:0; 
+    margin: 8px 8px;
+} 
+.modal input[type=text] { 
+    padding: 8px;
+    border-radius: 3px;
+    border: 1px solid #CCC;
+    background-image: none;
+    width: 270px;
+} 
+.modal label{
+	width: 100px;
+}
+.bc-firstpage-btn {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #f4511e;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 14px;
+  padding: 10px;
+  width: 100px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 15px;
+}
+
+.bc-firstpage-btn span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.bc-firstpage-btn span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -10px;
+  transition: 0.5s;
+}
+
+.bc-firstpage-btn:hover span {
+  padding-right: 15px;
+}
+
+.bc-firstpage-btn:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+
+#create-new-account.btn{
+    background-color: #f4511e;
+    color: #fff;
+    padding: 5px 30px;
+    border-radius: 0px !important;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    margin-left: 70px;
+}
+
+#accounts-list{
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0;
+    margin: 10px 50px;
+    width: auto;
+    left: 0;
+    right: 0;
+}
+#accounts-list .accounts{
+	border: 1px solid;
+    width: 300px;
+    height: 120px;
+    margin: 20px 20px;
+    float: left;
+    padding: 3px 3px;
+    cursor: pointer;
+}
+
+#accounts-list .accounts span{
+    font-size: 20px;
+    color: #47b972;
+}
+
+#home-accounts-list .home-accounts{
+	padding: 15px 15px;
+	cursor: pointer;
+}
+
+#home-accounts-list .home-accounts:hover{
+	background-color: #51d2b7;
+}
+
+#home-accounts-list .home-accounts span{
+	font-size: 20px;
+}
+
+#home-accounts-list .home-accounts.active{
+	background-color: #cbfbf0;
+}
+
+#home-accounts-list .icon-ok{
+	color: #51d2b7;
+    font-size: 20px;
+    padding-right: 8px;
+}
+
+.formvalidation.validation-err-box{
+	border-color: #f4511e !important;
+}
+
+#ajax-failure-box{
+    position: fixed;
+    z-index: 99999;
+    width: 100%;
+    text-align: center;
+    top: 0px;
+}
+#ajax-failure-box .content{
+    background: #e66150;
+    border: 1px solid #e66150;
+    width: 550px;
+    margin: 0 auto;
+    line-height: 40px;
+    color: white;
+    position: relative;
+    height: 40px;
+}
+
+#hintbox{
+	position: absolute;
+    background-color: rgb(243, 115, 115);
+    max-height: 80px;
+    line-height: 16px;
+    color: rgb(255, 255, 255);
+    padding: 8px 13px;
+    border-radius: 3px;
+    font-size: 12px;
+    webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    max-width: 200px;
+}
 .left{
 	width: 15%;
 	height: 100%;
@@ -31,12 +281,13 @@ html, body {
 	background: #eaeaea;
 }
 .right-content{
-	margin-left: 15px;
+	
 }
 #accounts-heading{
 	height: 60px;
     line-height: 60px;
     font-size: 20px;
+    padding-left: 15px;
 }
 .logout{
 	z-index:99999999;
@@ -70,19 +321,40 @@ html, body {
 	width:25px;
 	height:25px;
 }
-.location-icon:hover{
-	cursor:pointer;
+.close-icon{
+	padding-left: 5px;	
 }
 .delete-user-icon{
 	width:25px;
 	height:25px;	
 }
-.delete-user-icon:hover{
-	cursor:pointer;
-}
+
 .add-icon{
 	width: 20px;
 	height: 20px;
+}
+.search-icon{
+	width: 25px;
+	height: 25px;
+	margin: 3px 3px;
+}
+.icon:hover{
+	cursor:pointer;
+}
+.icon{
+	margin: 3px 3px;
+}
+
+.dropdown{
+    width: 270px;
+    height: 42px;
+    border: 1px solid #e5e5e5 !important;
+    cursor: pointer;
+    background-color: #fff;
+}
+.dropdown option {
+	background-color: #efefef;
+    border: 1px solid #eaeaea !important;
 }
 .month-changer{
 	margin:auto;
@@ -135,7 +407,7 @@ div.tab button {
     display: block;
     background-color: inherit;
     color: black;
-    padding: 22px 16px;
+    padding: 16px 16px;
     width: 100%;
     border: none;
     outline: none;
@@ -181,6 +453,20 @@ div.tab button.active .tab-title{
 .chart-space{
 	width: 100% !important;
 }
+
+.empty-data{
+	text-align: center;
+}
+
+.empty-data img{
+	width: 400px;
+	height: 300px;
+}
+
+.empty-data .empty-data-text{
+	font-style: italic;
+}
+
 .table-space{
 	width: 100% !important;
 	position: relative;
@@ -245,6 +531,7 @@ div.tab button.active .tab-title{
 /*Plus style starts */
 .plus {
   display:none;
+  cursor: pointer;
   position: fixed;
   top:80%;
   left : 3%;
@@ -303,4 +590,56 @@ div.tab button.active .tab-title{
     font-style: italic;
     font-size: 14px;
     color: #00f;
+}
+
+
+/* Loaders */
+.loader.active span{
+  position: relative;
+  left: 45%;
+  top: 50%;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  margin: 35px 5px;
+  opacity: 0;
+}
+
+.loader.active span:nth-child(1){
+  animation: opacitychange 1s ease-in-out infinite;
+}
+
+.loader.active span:nth-child(2){
+  animation: opacitychange 1s ease-in-out 0.33s infinite;
+}
+
+.loader.active span:nth-child(3){
+  animation: opacitychange 1s ease-in-out 0.66s infinite;
+}
+
+@keyframes opacitychange{
+  0%, 100%{
+    opacity: 0;
+  }
+
+  60%{
+    opacity: 1;
+  }
+}
+
+#income-loader span{
+	background-color: #43bf58;
+}
+#expense-loader span{
+	background-color: #C9353B;
+}
+#budget-loader span{
+	background-color: #368cb2;
+}
+#search-loader span{
+	background-color: #ffa500;
+}
+#users-loader span{
+	background-color: #ffff00;
 }

@@ -29,7 +29,7 @@ import javax.mail.internet.*;
 import javax.activation.*;
 
 
-@WebServlet("/addUserServlet")
+@WebServlet(urlPatterns = {"/addUser", "/BudgetChummy/addUser"})
 public class addUserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
