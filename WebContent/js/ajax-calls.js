@@ -304,7 +304,7 @@
 			
 			var search_ajax_call=function()
 		 	{
-				var date = $('.date-picker').val();
+				var date = dateToEpoch($('.date-picker').val());
 				$.ajax({
 					type:"GET",
 					url:"/BudgetChummy/search",

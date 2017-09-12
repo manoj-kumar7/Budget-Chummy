@@ -39,7 +39,7 @@ public class searchServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 
-		long date = Datehelper.dateToEpoch(request.getParameter("date"));
+		long date = Long.parseLong(request.getParameter("date"));
 
 		String url = APIConstants.POSTGRESQL_URL;
 		String user = APIConstants.POSTGRESQL_USERNAME;

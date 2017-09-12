@@ -72,7 +72,7 @@ var calculateWeekStartEndDates = function(start_date){
 	{
 		if(today >= d_start && today <= d_end)
 		{
-			return [d_start, d_end];
+			return [d_start.valueOf(), d_end.valueOf()];
 		}
 		else
 		{
@@ -101,7 +101,7 @@ var calculateMonthStartEndDates = function(start_date){
 		date = date - 1;
 	}
 	d_end.setFullYear(year, m, date);
-	return [d_start, d_end];
+	return [d_start.valueOf(), d_end.valueOf()];
 }
 
 var calculateYearStartEndDates = function(start_date){
@@ -119,7 +119,7 @@ var calculateYearStartEndDates = function(start_date){
 		date = date - 1;
 	}
 	d_end.setFullYear(year+1, month-1, date);
-	return [d_start, d_end];
+	return [d_start.valueOf(), d_end.valueOf()];
 }
 
 var calculateNoOfDaysToEndBudget = function(start_date, end_date){
