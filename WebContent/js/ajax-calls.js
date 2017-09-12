@@ -541,7 +541,7 @@
 					async: false,
 					success:function()
 					{
-						location.href = "/BudgetChummy/";
+						location.href = "/";
 					}
 				});	
 			}
