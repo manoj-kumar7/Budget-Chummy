@@ -29,7 +29,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('#create-account').on('click',function(){
+	var createAccount = function(){
 		if($('#create-account-form-div').find('.validation-err-box').length || $('#accountname').val()=="")
 		{
 			var validation_fields = $('.formvalidation');
@@ -51,7 +51,16 @@ $(document).ready(function(){
 		{
 			create_account_ajax_call();
 		}
+	}
 
+	$(document).on('keypress', function(e){
+		if(e.keyCode == 13 || e.which == 13){
+			createAccount();
+		}
+	});
+
+	$('#create-account').on('click',function(){
+		createAccount();
 	});
 
 });
@@ -66,7 +75,7 @@ if(session.getAttribute("account_id") != null)
 }
 else if(session.getAttribute("user_id") == null)
 {
-	response.sendRedirect("FirstPage.jsp");
+	response.sendRedirect("/BudgetChummy/");
 }
 %>
 	<div id="create-account-form-div">

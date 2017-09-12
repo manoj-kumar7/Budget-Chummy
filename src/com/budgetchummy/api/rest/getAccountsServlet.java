@@ -61,7 +61,7 @@ public class getAccountsServlet extends HttpServlet {
 			Object attribute = session.getAttribute("user_id");
 			long userid = Long.parseLong(String.valueOf(attribute));
 			long accid=-1;
-			if(page=="home")
+			if(page.equals("home"))
 			{
 				Object acc_attribute = session.getAttribute("account_id");
 				accid = Long.parseLong(String.valueOf(acc_attribute));				

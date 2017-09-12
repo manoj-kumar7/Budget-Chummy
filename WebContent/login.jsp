@@ -43,8 +43,8 @@ $(document).ready(function(){
 			}		
 		}
 	});
-	
-	$('#login').on('click',	function(){
+
+	var login = function(){
 		if($('#login-form-div').find('.validation-err-box').length || $('#email').val()=="" || $('#pword').val()=="")
 		{
 			var validation_fields = $('.formvalidation');
@@ -71,7 +71,16 @@ $(document).ready(function(){
 		{
 			login_ajax_call();
 		}
+	}
 
+	$(document).on('keypress', function(e){
+		if(e.keyCode == 13 || e.which == 13){
+			login();
+		}
+	});
+	
+	$('#login').on('click',	function(){
+		login();
 	});
 
 });

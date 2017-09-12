@@ -59,7 +59,7 @@ $(document).ready(function(){
 		}
 	});
 	
-	$('#signup').on('click',	function(){
+	var signup = function(){
 		if($('#signup-form-div').find('.validation-err-box').length || $('#email').val()=="" || $('#pword').val()=="" || $('#firstname').val()=="")
 		{
 			var validation_fields = $('.formvalidation');
@@ -92,7 +92,16 @@ $(document).ready(function(){
 		{
 			signup_ajax_call();
 		}
+	}
 
+	$(document).on('keypress', function(e){
+		if(e.keyCode == 13 || e.which == 13){
+			signup();
+		}
+	});
+
+	$('#signup').on('click', function(){
+		signup();
 	});
 });
 

@@ -51,7 +51,7 @@ var lat,lon;
 			    document.getElementById(type+'-lat').value = currentLocation.lat(); //latitude
 			    document.getElementById(type+'-lon').value = currentLocation.lng(); //longitude
 		    } else {
-		      alert('Geocode was not successful for the following reason: ' + status);
+//		      alert('Geocode was not successful for the following reason: ' + status);
 		    }
 		  });
 		}

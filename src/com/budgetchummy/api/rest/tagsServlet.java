@@ -37,6 +37,7 @@ public class tagsServlet extends HttpServlet {
 
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
+		String tag_type = request.getParameter("tag_type");
 		String url = APIConstants.POSTGRESQL_URL;
 		String user = APIConstants.POSTGRESQL_USERNAME;
 		String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
@@ -57,7 +58,7 @@ public class tagsServlet extends HttpServlet {
 			long accid = Long.parseLong(String.valueOf(account_attribute));
 			String query=null,tag_name=null;
 			long tag_id=-1;
-			query = "select tag_id,tag_name from tags where account_id="+accid+";";
+			query = "select tag_id,tag_name from tags where account_id="+accid+" and tag_type='"+tag_type+"';";
 			ResultSet rs = st.executeQuery(query);
 			JSONArray ja = new JSONArray();
 			JSONObject jo = new JSONObject();
@@ -91,6 +92,7 @@ public class tagsServlet extends HttpServlet {
 		String user = APIConstants.POSTGRESQL_USERNAME;
 		String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
 		String tag_name = request.getParameter("tag_name");
+		String tag_type = request.getParameter("tag_type");
 		
 		try {
 			Class.forName("org.postgresql.Driver");
@@ -107,7 +109,7 @@ public class tagsServlet extends HttpServlet {
 			Object account_attribute = session.getAttribute("account_id");
 			long accid = Long.parseLong(String.valueOf(account_attribute));
 			String query=null;
-			query = "insert into tags(account_id,tag_name) values("+accid+",'"+tag_name+"')";
+			query = "insert into tags(account_id,tag_name,tag_type) values("+accid+",'"+tag_name+"','"+tag_type+"')";
 			st.executeUpdate(query);
 			st.close();
 			con.close();

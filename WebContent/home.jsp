@@ -8,22 +8,27 @@
 	<link rel="stylesheet" href="styles/style.css" type="text/css">
 	<script type="text/javascript" src="app/jquery-3.1.1.js"></script>
 	<script type="text/javascript" src="app/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="app/bootstrap.js"></script>
+
 	<script type="text/javascript" src="app/bootstrap.min.js"></script>
 	<script type="text/javascript" src="app/jquery.canvasjs.min.js"></script>
 	<script type="text/javascript" src="app/jquery.slimscroll.min.js"></script>
 	<script type="text/javascript" src="app/canvasjs.min.js"></script>
-	<script type="text/css" src="styles/bootstrap.min.css"></script>
+
 	<link rel="stylesheet" href="styles/bootstrap.min.css" type="text/css">
 	<link rel="stylesheet" href="styles/font-awesome.css" type="text/css">
 	<link rel="stylesheet" href="styles/jquery-ui.css" type="text/css">
 	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDtFLcyhDfgarOIcwf-4qiScchMGJS25jo"></script>
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<script type="text/javascript">
+	google.charts.load('current', {'packages':['bar']});
 	var month_array=["January","February","March","April","May","June","July","August","September","October","November","December"];
+	var months_shortform = ["Jan", "Feb", "Mar", "Apr", "May" ,"Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	var income_data = [];
 	var expense_data = [];
 	var income_search_data = [];
 	var expense_search_data = [];
+	var expenses_in_month = [];
+	var budgets_in_month = [];
 	var d = new Date();
 	var month = d.getMonth() + 1;
 	var year = d.getFullYear();
@@ -35,40 +40,60 @@
 /* 		open_page(event,'income');
 		income_ajax_call(month,year);
 		$('#income-tab').addClass("active"); */
-		$('.loader').removeClass('active');
-		if(<%=request.getParameter("page")%> == "expense")
-		{
-			$('#expense-loader').addClass('active');
-			open_page('expense');
-			expense_ajax_call(month,year);
-			$('#expense-tab').addClass("active");
+		initial_page_load = function(page){
+			$('.loader').removeClass('active');
+			if(page == "expense")
+			{
+				$('#expense-loader').addClass('active');
+				open_page('expense');
+				get_expense_ajax_call(month,year,"expense");
+				$('#expense-tab').addClass("active");
+				$('#budgets-right-slider').hide();
+				//$('#accounts-right-slider').show('slide', {direction: 'right'}, 300);
+				$('#accounts-right-slider').show();
+			}
+			else if(page == "budget")
+			{
+				$('#budget-loader').addClass('active');
+				open_page('budget');
+				//get_budget_ajax_call(month,year);
+				get_expense_ajax_call(month, year, "budget");
+				$('#budget-tab').addClass("active");
+				$('#accounts-right-slider').hide();
+				//$('#budgets-right-slider').show('slide', {direction: 'right'}, 300);
+				$('#budgets-right-slider').show();
+			}
+			else if(page == "search")
+			{
+				open_page('search');
+				$('#search-tab').addClass("active");
+				$('#budgets-right-slider').hide();
+				//$('#accounts-right-slider').show('slide', {direction: 'right'}, 300);
+				$('#accounts-right-slider').show();
+			}
+			else if(page == "users")
+			{
+				$('#users-loader').addClass('active');
+				open_page('users');
+				users_ajax_call(month,year);
+				$('#users-tab').addClass("active");
+				$('#budgets-right-slider').hide();
+				//$('#accounts-right-slider').show('slide', {direction: 'right'}, 300);
+				$('#accounts-right-slider').show();
+			}
+			else
+			{
+				$('#income-loader').addClass('active');
+				open_page('income');
+				get_income_ajax_call(month,year);
+				$('#income-tab').addClass("active");	
+				$('#budgets-right-slider').hide();
+				//$('#accounts-right-slider').show('slide', {direction: 'right'}, 300);
+				$('#accounts-right-slider').show();
+			}
 		}
-		else if(<%=request.getParameter("page")%> == "budget")
-		{
-			$('#budget-loader').addClass('active');
-			open_page('budget');
-			//budget_ajax_call(month,year);
-			$('#budget-tab').addClass("active");
-		}
-		else if(<%=request.getParameter("page")%> == "search")
-		{
-			open_page('search');
-			$('#search-tab').addClass("active");
-		}
-		else if(<%=request.getParameter("page")%> == "users")
-		{
-			$('#users-loader').addClass('active');
-			open_page('users');
-			users_ajax_call(month,year);
-			$('#users-tab').addClass("active");
-		}
-		else
-		{
-			$('#income-loader').addClass('active');
-			open_page('income');
-			income_ajax_call(month,year);
-			$('#income-tab').addClass("active");	
-		}
+		initial_page_load("income");
+		
 		document.getElementById("selected_month").innerHTML = month_array[month-1]+", "+year;
 		  
 		  
@@ -106,12 +131,12 @@
  		      $('.center-content').slimscroll({
 		    		width: '100%',
 		  			height: '100%',
-		  			opacity: '0'
+		  			opacity: '0.2'
 		      }); 
 		      $('.right-content').slimscroll({
 		    		width: '100%',
 		  			height: '100%',
-		  			opacity: '0'
+		  			opacity: '0.2'
 		      });
 		  });
 		  $('#generic-type-dropdown').on('click',function(){
@@ -135,6 +160,18 @@
 		  });
 		  $(document).on('click','#expense-map-search',function(){
 			  codeAddress('expense-location');
+		  });
+		  $(document).on('focusout','#income-location',function(){
+			  codeAddress('income-location');
+		  });
+		  $(document).on('focusout','#expense-location',function(){
+			  codeAddress('expense-location');
+		  });
+		  
+		  $(document).on('click','.budget-container',function(e){
+			  var budget_id = $(e.target).closest('.budget-container').attr('id');
+			  var budget_number = budget_id[budget_id.length - 1];
+			  getBudgetDataForStat(budget_number);
 		  });
 		  
 		  $(document).on('click','#add-user',function(){
@@ -201,8 +238,21 @@
 			    	e.preventDefault();
 			        if($('#saved-tags-input').length > 0 && text != "" && !is_in_tags_list(text))
 			        {
-			        	save_tag_ajax_call();
-			        	get_tags_ajax_call();
+			        	if($('#generic-modal-form').find('#addIncomeModal').length)
+		        		{
+			        		save_tag_ajax_call("income");
+				        	get_tags_ajax_call("income");
+		        		}
+			        	else if($('#generic-modal-form').find('#addExpenseModal').length)
+			        	{
+			        		save_tag_ajax_call("expense");
+				        	get_tags_ajax_call("expense");
+			        	}
+			        	else
+			        	{
+			        		save_tag_ajax_call("expense");
+				        	get_tags_ajax_call("expense");
+			        	}
 			        }
 				    $('.saved-tags-div').css("display","block");
 			        $('#saved-tags-input').css("display","none");
@@ -227,12 +277,17 @@
 		    	document.getElementById("selected_month").innerHTML = month_array[month-1]+", "+year;
 		    	if($('#income-tab').hasClass('active'))
 		    	{
-		    		income_ajax_call(month,year);
+		    		get_income_ajax_call(month,year);
 		    	}
 		    	else if($('#expense-tab').hasClass('active'))
 		    	{
-		    		expense_ajax_call(month,year);
-		    	}	
+		    		get_expense_ajax_call(month,year,"expense");
+		    	}
+		    	else if($('#budget-tab').hasClass('active'))
+		    	{
+		    		//get_budget_ajax_call(month,year);
+		    		get_expense_ajax_call(month,year,"budget");
+		    	}
 		    });
 		    $(document).on('click','.right-icon',function(){
 		    	month=month+1;
@@ -244,34 +299,42 @@
 		    	document.getElementById("selected_month").innerHTML = month_array[month-1]+", "+year;
 		    	if($('#income-tab').hasClass('active'))
 		    	{
-		    		income_ajax_call(month,year);
+		    		get_income_ajax_call(month,year);
 		    	}
 		    	else if($('#expense-tab').hasClass('active'))
 		    	{
-		    		expense_ajax_call(month,year);
+		    		get_expense_ajax_call(month,year,"expense");
+		    	}
+		    	else if($('#budget-tab').hasClass('active'))
+		    	{
+		    		//get_budget_ajax_call(month,year);
+		    		get_expense_ajax_call(month,year,"budget");
 		    	}
 		    });
 		    
 
 		    
 		    $('#income-tab').click(function(){
-		    	location.href="home.jsp?page='income'";
+		    	initial_page_load("income");
 		    });
 		    $('#expense-tab').click(function(){
-		    	location.href="home.jsp?page='expense'";
+		    	initial_page_load("expense");
 		    });	
 		    $('#budget-tab').click(function(){
-		    	location.href="home.jsp?page='budget'";
+		    	initial_page_load("budget");
 		    });
 		    $('#search-tab').click(function(){
-		    	location.href="home.jsp?page='search'";
+		    	initial_page_load("search");
 		    });
 		    $('.search-btn').click(function(){
 		    	$('#search-loader').addClass('active');
 		    	search_ajax_call();
 		    });
 		    $('#users-tab').click(function(){
-		    	location.href="home.jsp?page='users'";
+		    	initial_page_load("users");
+		    });
+		    $('#logout').click(function(){
+		    	logout_ajax_call();
 		    });
 
 			$('.date-picker').datepicker({
@@ -328,9 +391,9 @@
 				  $(".income-expense-tags").html($(".saved-tags-div"));
 				  $(".income-expense-tags .saved-tags-div").css("display","block");
 				  $(".budget-tags .saved-tags-div").css("display","none");
-				  get_tags_ajax_call();
-				  $('.genericModal').addClass("add-income-modal");
-				  $('.genericModal').attr("id","addIncomeModal");
+				  $('.generic-modal').addClass("add-income-modal");
+				  $('.generic-modal').attr("id","addIncomeModal");
+				  get_tags_ajax_call("income");
 				  $('#generic-type-dropdown').val("income");
 				  $('.generic-amount').attr("name","income-amount");
 				  $('.generic-amount').attr("id","income-amount");
@@ -357,8 +420,8 @@
 				  $('.generic-reminder-dropdown').attr("name","income-reminder");
 				  $('.generic-reminder-dropdown').attr("id","income-reminder");
 				  $('.generic-save').attr("id","income-save");
-				  $('#generic-modal-form').attr("action","income");
-				  $('#generic-modal-form').attr("method","POST");
+				  //$('#generic-modal-form').attr("action","income");
+				  //$('#generic-modal-form').attr("method","POST");
 			};
 			var open_expense_modal = function(){
 				  $(".budget-modal").css("display","none");
@@ -366,9 +429,9 @@
 				  $(".income-expense-tags").html($(".saved-tags-div"));
 				  $(".income-expense-tags .saved-tags-div").css("display","block");
 				  $(".budget-tags .saved-tags-div").css("display","none");
-				  get_tags_ajax_call();
 				  $('.generic-modal').addClass("add-expense-modal");
 				  $('.generic-modal').attr("id","addExpenseModal");
+				  get_tags_ajax_call("expense");
 				  $('#generic-type-dropdown').val("expense");
 				  $('.generic-amount').attr("name","expense-amount");
 				  $('.generic-amount').attr("id","expense-amount");
@@ -395,18 +458,19 @@
 				  $('.generic-reminder-dropdown').attr("name","expense-reminder");
 				  $('.generic-reminder-dropdown').attr("id","expense-reminder-dropdown");
 				  $('.generic-save').attr("id","expense-save");
-				  $('#generic-modal-form').attr("action","expense");
-				  $('#generic-modal-form').attr("method","POST");
+				  //$('#generic-modal-form').attr("action","expense");
+				  //$('#generic-modal-form').attr("method","POST");
 			}
 			var open_budget_modal = function(){
 				  $(".budget-modal").css("display","block");
-				  get_tags_ajax_call();
+				  get_tags_ajax_call("expense");
 				  $('#generic-type-dropdown').val("budget");
 				  $(".income-expense-modal").css("display","none");
-				  $('#generic-save').attr("id","budget-save");
-				  $('#generic-modal-form').attr("action","budget");
-				  $('#generic-modal-form').attr("method","POST");
+				  $('.generic-save').attr("id","budget-save");
+				  //$('#generic-modal-form').attr("action","budget");
+				  //$('#generic-modal-form').attr("method","POST");
 			}
+			
 	};
 
 
@@ -457,22 +521,25 @@
 	    $('#'+page+'-page').addClass("active");
 
 	};
+	
+	var modal_ajax_call = function(){
+		if($('.generic-save').attr('id') == "income-save")
+		{
+			save_income_ajax_call(month, year);
+		}
+		else if($('.generic-save').attr('id') == "expense-save")
+		{
+			save_expense_ajax_call(month, year);
+		}
+		else if($('.generic-save').attr('id') == "budget-save")
+		{
+			save_budget_ajax_call();
+		}
+	}
+	
 	var setCurrentPage = function(){
 		$('.page_name').val(current_page);
-		// var opened_modal = $('#generic-type-dropdown').val();
-		// $('.loader').removeClass("active");
-		// if(opened_modal == "income")
-		// {
-		// 	$('#income-loader').addClass("active");
-		// }
-		// else if(opened_modal == "expense")
-		// {
-		// 	$('#expense-loader').addClass("active");
-		// }
-		// else if(opened_modal == "budget")
-		// {
-		// 	$('#budget-loader').addClass("active");
-		// }
+		modal_ajax_call();
 	}
 
 	
@@ -483,27 +550,28 @@
 <%
 if(session.getAttribute("account_id") == null)
 {
-	response.sendRedirect("/BudgetChummy/FirstPage.jsp");
+	response.sendRedirect("/BudgetChummy/");
 }
 %>
 <div class="home-body">
 
 	<div class="left">
 		<div class="tab">
-		  <button class="tablinks" id="income-tab"><div class="tab-title">INCOME</div></button>
-		  <button class="tablinks" id="expense-tab"><div class="tab-title">EXPENSE</div></button>
-		  <button class="tablinks" id="budget-tab"><div class="tab-title">BUDGET</div></button>
+		  <button class="tablinks" id="income-tab"><div class="tab-title">INCOMES</div></button>
+		  <button class="tablinks" id="expense-tab"><div class="tab-title">EXPENSES</div></button>
+		  <button class="tablinks" id="budget-tab"><div class="tab-title">BUDGETS</div></button>
 		  <button class="tablinks" id="search-tab"><div class="tab-title">SEARCH</div></button>
 		  <button class="tablinks" id="users-tab"><div class="tab-title">USERS</div></button>	 
 		</div>
+		<button class="plus"></button>
 	</div>
 
 <div class="center">
  	<div class="center-content">
 	 	<div class="month-changer" style="display:none;">
-	 		<img src="images/left_icon.png" class="icon left-icon" alt="Prev month">
+	 		<img src="images/left_icon.png" class="icon timespan-nav-icon left-icon" alt="Prev month">
 	 		<div id="selected_month"></div>
-	 		<img src="images/right_icon.png" class="icon right-icon" alt="Next month">
+	 		<img src="images/right_icon.png" class="icon timespan-nav-icon right-icon" alt="Next month">
 	 	</div>
 	 	
 	 	<div class="loaders">
@@ -532,25 +600,67 @@ if(session.getAttribute("account_id") == null)
 	   	    	<table class="expense-table table"><tbody></tbody></table>
 	   	    </div>
 		</div>
-		<div id="budget-page" style="display:none;" class="tabcontent page"></div>
+		<div id="budget-page" style="display:none;" class="tabcontent page">
+			<div id="budget-page-header" class="budget-page-header-content" style="display:none;">
+				<div id="budget-page-tag" class="budget-page-header-content"></div>
+				<div id="budget-page-repeat" class="budget-page-header-content"></div>
+				<div id="budget-page-amount" class="budget-page-header-content"></div>
+			</div>
+			<div id="budget-page-stat" class="budget-page-stat" style="display:none;">
+				<div id="budget-page-spent" class="budget-page-stat-content"></div>
+				<div id="budget-page-left" class="budget-page-stat-content"></div>
+				<div id="budget-page-hint" class="budget-page-stat-content"></div>
+			</div>
+			<div id="budget-timespan" style="display:none;">
+				<span id="budget-timespan-text">Budget time span</span>
+				<span id="budget-timespan-period"></span>
+			</div>
+			<div id="budget-chart-space" class="budget-chart-space chart-space" style="display:none;">
+		   	</div>
+		   	<div id="empty-budget-data" class="empty-data" style="display:none;"></div>
+		</div>
 		
 		<div id="search-page" style="display:none;" class="tabcontent page">
-			Select date : <input type="text" class="date-picker">
-			<input type="button" class="btn search-btn" value="Search"><br>
-			Income for this month:<br><div id="income_search_data"></div>
-			Expenses for this month:<br><div id="expense_search_data"></div>
-			<div id="empty-search-data" class="empty-data" style="display:none;"></div>
+			<div class="search-container">
+				<div class="search-label">Select date</div>
+				<div class="search-input"><input type="text" class="date-picker"></div>
+				<input type="button" id="income-expense-search-btn" class="search-btn" value="Search"><br>
+			</div>
+			<div class="search-results-container">
+				<div class="income-results">
+					<div id="income-results-header" class="search-results-header">Incomes</div>
+					<div id="income_search_data"></div>
+					<div id="empty-search-income-data" class="empty-search-data" style="display:none;">
+						No income in this date
+					</div>
+				</div>
+				<div class="expense-results">
+					<div id="expense-results-header" class="search-results-header">Expenses</div>
+					<div id="expense_search_data"></div>
+					<div id="empty-search-expense-data" class="empty-search-data" style="display:none;">
+						No expense in this date
+					</div>
+				</div>				
+			</div>
 		</div>
 		<div id="users-page" style="display:none;" class="tabcontent page">
 			<div class="account-info-space">
-				<div id="users-account-name" class="users-account-name users-account-details"><pre>Account Name    :<div> </div></pre></div>
-				<div id="users-no-of-members" class="users-no-of-members users-account-details"><pre>No of Members   :<div> </div></pre></div>
-				<div id="users-created-on" class="users-created-on users-account-details"><pre>Created on      :<div> </div></pre></div>
-				<div id="users-created-by" class="users-created-by users-account-details"><pre>Created by      :<div> </div></pre></div>
+				<div id="users-account-name" class="users-account-name users-account-details">
+					<div class="label">Account Name</div><span class="value"></span>
+				</div>
+				<div id="users-no-of-members" class="users-no-of-members users-account-details">
+					<div class="label">No of members</div><span class="value"></span>
+				</div>
+				<div id="users-created-on" class="users-created-on users-account-details">
+					<div class="label">Created on</div><span class="value"></span>
+				</div>
+				<div id="users-created-by" class="users-created-by users-account-details">
+					<div class="label">Created by</div><span class="value"></span>
+				</div>
 			</div>
 			<div class="users-btns">
-				<button id="add-user" class="add-user btn">Add User</button>
-				<button id="users-invitations" class="users-invitations btn">Pending Invitations</button>
+				<button id="add-user" class="add-user">Add User</button>
+				<button id="users-invitations" class="users-invitations">Pending Invitations</button>
 			</div>
 		    <div class="users-table-space table-space">
 	   	    	<table class="users-table table"><tbody></tbody></table>
@@ -560,17 +670,21 @@ if(session.getAttribute("account_id") == null)
 		
 	</div>
 </div>
+
 <div class="right">
 	<div class="right-content">
+		<div id="accounts-right-slider" class="right-slider">
 			<div id="accounts-heading"><span>ACCOUNTS</span></div>
 			<div id="home-accounts-list"></div>
+		</div>
+		
+		<div id="budgets-right-slider" class="right-slider" style="display:none;">
+			<div id="budgets-heading"><span>BUDGETS</span></div>
+			<div id="home-budgets-list"></div>
+		</div>
 	</div>
+	<button id="logout" class="logout" value="Logout">Logout</button>
 </div>
-	<button class="plus"></button>
-
-<form action="logout" method="post">
-	  <input type="submit" class="logout" value="Logout">
-</form>
  
 
   <div class="modal show-location-modal" id="showLocationModal" role="dialog" style="display:none;">
@@ -578,7 +692,7 @@ if(session.getAttribute("account_id") == null)
 
       <div class="modal-content">
         <div class="modal-header">
-        	<button type="button" class="btn close-btn" data-dismiss="modal">&times;</button>
+        	<img src="images/close-icon.png" class="icon close-icon" alt="Close" data-dismiss="modal">
 			<h4 class="modal-title">Location</h4>
         </div>
         <div class="modal-body">
@@ -598,7 +712,7 @@ if(session.getAttribute("account_id") == null)
 
       <div class="modal-content">
         <div class="modal-header">
-        	<button type="button" class="btn close-btn" data-dismiss="modal">&times;</button>
+        	<img src="images/close-icon.png" class="icon close-icon" alt="Close" data-dismiss="modal">
 			<h4 class="modal-title">Add User</h4>
         </div>
         <div class="modal-body">
@@ -624,7 +738,7 @@ if(session.getAttribute("account_id") == null)
   </div>
 </form>
 
-<form id="generic-modal-form" action="" method="">
+<div id="generic-modal-form">
   <div class="modal generic-modal" id="genericModal" role="dialog" style="display:none;">
     <div class="modal-dialog">
 
@@ -687,7 +801,7 @@ if(session.getAttribute("account_id") == null)
 			<div class="saved-tags-div" style="display:none;">
 				<div class="textbox_space">
 					<label>Tag</label>
-					<select id="saved-tags-dropdown"  class="dropdown" name="tag_id"></select>
+					<select id="saved-tags-dropdown"  class="dropdown saved-tags-dropdown" name="tag_id"></select>
 					<input type="text" id="saved-tags-input" style="display:none;">
 					<img src="images/add-tag-icon.ico" class="icon add-icon" alt="Add tag">
 					<div id="save-tag-hint" class="hint-text" style="display:none;">Press Enter to save</div>
@@ -701,7 +815,6 @@ if(session.getAttribute("account_id") == null)
 		       		<label>Type</label><select id="budget-type-dropdown" class="dropdown" name="budget-type">
 			        	    <option value="0">All expenses</option>
 						    <option value="1">Tag</option>
-					 	    <option value="2">All expenses except tag</option>
 					</select>
 				</div>
 				<div class="budget-tags"></div>
@@ -732,18 +845,20 @@ if(session.getAttribute("account_id") == null)
 	        <input type="hidden" class="page_name" name="page_name"/>
         </div>
         <div class="modal-footer">
-          <input type="submit" class="generic-save" id="generic-save" class="btn" value="Save" onclick="setCurrentPage();">
+          <button class="generic-save" id="generic-save" class="btn" value="Save" onclick="setCurrentPage();">Save</button>
         </div>
       </div>
       
     </div>
   </div>
-</form>
+</div>
 
 </div>
 <script type="text/javascript" src="js/map-api.js"></script>
 <script type="text/javascript" src="js/charts.js"></script>
 <script type="text/javascript" src="js/ajax-calls.js"></script>
+<script type="text/javascript" src="js/Datehelper.js"></script>
+<script type="text/javascript" src="js/budgets.js"></script>
 </body>
 
 </html>

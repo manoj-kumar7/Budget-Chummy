@@ -21,6 +21,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import java.util.*;
 
 import com.budgetchummy.api.util.APIConstants;
 import com.budgetchummy.api.util.Datehelper;
@@ -55,45 +56,58 @@ public class searchServlet extends HttpServlet {
 		try {
 			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			Statement st=null;
+			Statement st=null, st1=null;
 			st = con.createStatement();
+			st1 = con.createStatement();
+			ResultSet rs=null;
 			HttpSession session = request.getSession();
 			Object user_attribute = session.getAttribute("user_id");
 			Object acc_attribute = session.getAttribute("account_id");
 			userid = Long.parseLong(String.valueOf(user_attribute));
 			accid = Long.parseLong(String.valueOf(acc_attribute));
-			String query = "select amount,description from transactions where account_id="+accid+" AND date="+date+" AND transaction_type='income';";
-			ResultSet rs=null;
+			Map<Long, String> tags = new HashMap<Long, String>();
+
+			String query = "select tag_id, tag_name from tags where account_id="+accid+";";
 			rs = st.executeQuery(query);
-			String description=null;
-			int amount=-1;
+			while(rs.next())
+			{
+				tags.put(rs.getLong("tag_id"), rs.getString("tag_name"));
+			}
+			rs=null;
+
+			query = "select amount,tag_id from transactions where account_id="+accid+" AND date="+date+" AND transaction_type='income';";
+			rs = st1.executeQuery(query);
+			float amount=-1;
+			String tag_name=null;
 			JSONArray income_arr = new JSONArray();
 			JSONObject income_obj = new JSONObject();
 			while(rs.next())
 			{
-				description=rs.getString("description");
-				amount=rs.getInt("amount");
-				income_obj.put("description", description);
+				tag_name=tags.get(rs.getLong("tag_id"));
+				amount=rs.getFloat("amount");
+				income_obj.put("tag_name", tag_name);
 				income_obj.put("amount", amount);
 				income_arr.add(income_obj.toJSONString());
 				income_obj.clear();
 			}
-			query = "select amount,description from transactions where account_id="+accid+" AND date='"+date+"' AND transaction_type='expense';";
+			
+			query = "select amount,tag_id from transactions where account_id="+accid+" AND date='"+date+"' AND transaction_type='expense';";
 			rs=null;
-			rs = st.executeQuery(query);
+			rs = st1.executeQuery(query);
 			JSONArray expense_arr = new JSONArray();
 			JSONObject expense_obj = new JSONObject();	
 			while(rs.next())
 			{
-				description=rs.getString("description");
-				amount=rs.getInt("amount");
-				expense_obj.put("description", description);
+				tag_name=tags.get(rs.getLong("tag_id"));
+				amount=rs.getFloat("amount");
+				expense_obj.put("tag_name", tag_name);
 				expense_obj.put("amount", amount);
 				expense_arr.add(expense_obj.toJSONString());
 				expense_obj.clear();
 			}
 			rs.close();
 			st.close();
+			st1.close();
 			con.close();
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");

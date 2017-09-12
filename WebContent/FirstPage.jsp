@@ -22,7 +22,7 @@ $(document).ready(function(){
 		}
 
 	});
-	$("#signup").click(function(){
+	$("#signup,.get-started-btn").click(function(){
 		if(<%=request.getParameter("account_id")%> == null || <%=request.getParameter("invitation_id")%> == null)
 		{
 			location.href="signup.jsp";
@@ -64,8 +64,10 @@ if(session.getAttribute("account_id") != null)
 			Budget Chummy allows you to analyze past spending behaviors while also enabling you to budget for the future.
 		</div>
 	</div>
-	
-	<div class="lead-impressions-div">
+	<div class="get-started-btn-div">
+		<button class="get-started-btn btn bc-firstpage-btn"><span>Get Started</span></button>
+	</div>
+	<!--   div class="lead-impressions-div">
 		<div class="interface-desc lead-impressions">
 			<img src="images/simple_and_functional_ui.png" width=300 height=225 alt="Simple and Functional interface">
 			<div class="desc-text">Simple and Functional interface</div>
@@ -78,7 +80,7 @@ if(session.getAttribute("account_id") != null)
 			<img src="images/bc_predicts_future.png" width=300 height=225 alt="Future savings prediction">
 			<div class="desc-text">Future savings prediction</div>
 		</div>
-	</div>
+	</div -->
 	
 </body>
 </html>

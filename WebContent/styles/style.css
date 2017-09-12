@@ -15,7 +15,9 @@ html, body {
 .bc-lead-picture{
 	text-align: center;
 }
-
+.bc-lead-picture img{
+	width: 100%;
+}
 .bc-lead-container{
 	position: absolute;
 	top: 140px;
@@ -53,6 +55,7 @@ html, body {
 #firstpage-top-text{
 	float: right;
     margin-right: 15px;
+    margin-top: 5px;
     font-size: 13px;
     font-family: Graphik LC Web,-apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;
 }
@@ -60,6 +63,19 @@ html, body {
 	color :#f4511e;
 	font-weight: bold;
 	cursor: pointer;
+}
+
+.get-started-btn-div{
+    position: absolute;
+    top: 390px;
+    left: 40px;
+}
+
+.get-started-btn-div .get-started-btn{
+    width: 200px;
+    height: 55px;
+    font-size: 20px;
+    position: absolute;
 }
 
 .lead-impressions-div{
@@ -173,7 +189,7 @@ html, body {
 #create-new-account.btn{
     background-color: #f4511e;
     color: #fff;
-    padding: 5px 30px;
+    padding: 7px 30px;
     border-radius: 0px !important;
     font-size: 14px;
     border: none;
@@ -199,10 +215,11 @@ html, body {
     padding: 3px 3px;
     cursor: pointer;
 }
-
+#accounts-list .accounts:hover{
+	background-color: #51d2b7;
+}
 #accounts-list .accounts span{
     font-size: 20px;
-    color: #47b972;
 }
 
 #home-accounts-list .home-accounts{
@@ -264,36 +281,280 @@ html, body {
     max-width: 200px;
 }
 .left{
-	width: 15%;
-	height: 100%;
+	width: 15% !important;
+	height: 100% !important;
 	float: left;
-	overflow: hidden;
+	overflow: auto;
 }
 .center{
-	width: 65% !important;
+	width: 60% !important;
 	height: 100% !important;
 	float:left;
 }
 .right{
-	width: 20% !important;
+	width: 25% !important;
+	height: 100% !important;
+	float:left;
+	background: #eaeaea;
+	overflow: auto;
+}
+#accounts-right-slider{
+	width: 100% !important;
 	height: 100% !important;
 	float:left;
 	background: #eaeaea;
 }
-.right-content{
-	
+#budgets-right-slider{
+	width: 100% !important;
+	height: 100% !important;
+	float:left;
+	background: #eaeaea;
 }
-#accounts-heading{
+.right-slide-toggle{
+	position: absolute;
+    right: 0;
+    top: 0;
+    width: 30px;
+    height: 30px;
+    background-color: #eaeaea;
+    text-align: center;
+    cursor: pointer;
+    padding: 5px;
+}
+#accounts-heading, #budgets-heading{
 	height: 60px;
     line-height: 60px;
     font-size: 20px;
     padding-left: 15px;
 }
+.budget-header{
+	font-size: 14px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.budget-status{
+	font-size: 12px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.budget-status-bar{
+    height: 22px;
+    margin-top: 5px;
+	margin-bottom: 5px;
+}
+.budget-status-left-bar{
+    background-color: #C9353B;
+    float: left;
+}
+.budget-status-right-bar{
+    background-color: #368cb2;
+    float: right;
+}
+.budget-container{
+    margin: 15px 10px;
+    padding: 5px;
+    background-color: #d0d0d0;
+    cursor: pointer;
+}
+.budget-container:hover{
+	background-color: #a5a5a5;
+}
+.budget-container.active{
+	background-color: #4d4d4d;
+}
+.budget-container.active .text{
+	color: #e8e7e7;
+}
+.budget-tag, .budget-amount, .budget-repeat, .seperator-hyphen, .budget-amount-used, .budget-amount-left{
+	padding-left: 3px;
+    padding-right: 3px;
+}
+.budget-amount-left{
+	float: right;
+}
+
+#budget-page-header{
+	margin: 1% 10%;
+    overflow: visible;
+    height: 40px;
+}
+#budget-page-tag{
+    float: left;
+    padding-right: 40px;
+    font-size: 26px;
+    line-height: 40px;
+}
+#budget-page-repeat{
+    float: left;
+    padding-right: 40px;
+    font-size: 11px;
+    line-height: 40px;
+}
+#budget-page-repeat span{
+	background-color: #65c3df;
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: .25em;
+}
+#budget-page-amount{
+	float: left;
+    padding-right: 10px;
+    font-size: 22px;
+    line-height: 40px;
+}
+#budget-page-stat{
+	clear: both;
+	margin: 1% 10%;
+    overflow: visible;
+    height: 40px;
+}
+#budget-page-spent{
+    float: left;
+    padding-right: 40px;
+    font-size: 22px;
+    color: #9c9c9c;
+}
+#budget-page-left{
+    float: left;
+    padding-right: 40px;
+    font-size: 22px;
+    color: #9c9c9c;
+}
+#budget-page-hint{
+	float: left;
+    padding-right: 10px;
+    font-size: 22px;
+    color: #9c9c9c;
+}
+#budget-timespan{
+	margin: 1% 10%;
+    font-size: 12px;
+}
+#budget-timespan-text{
+	padding-right: 15px;
+}
+#budget-chart-space{
+	clear: both;
+	margin-top: 12%;
+}
 .logout{
-	z-index:99999999;
-	position:absolute;
-	left:1200px;
-	top:10px;
+    position: absolute;
+    left: 94%;
+    top: 1%;
+    background-color: #f4511e;
+    color: #fff;
+    padding: 2px 16px;
+    font-size: 12px;
+    border: none;
+    cursor: pointer;
+}
+
+.search-container{
+  margin: 3%;
+}
+.search-container .search-label{
+  float: left;
+  width: 15%;
+}
+.search-container .search-input{
+  float: left;
+}
+#income-expense-search-btn{
+  background-color: #f4511e;
+  color: #fff;
+  padding: 4px 23px;
+  border-radius: 5px !important;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  margin-left: 8px;
+}
+.search-results-container{
+  clear: both;
+  margin: 3%;
+}
+.search-results-container .income-results{
+  width: 50%;
+  float: left;
+}
+.search-results-container .expense-results{
+  width: 50%;
+  float: right;
+}
+.search-results-header{
+  background-color: #ececec;
+  text-align: center;
+  color: #808080;
+}
+.empty-search-data{
+  font-style: italic;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.search-bag{
+  margin: 5%;
+  padding: 5px;
+  border-radius: 5px;
+}
+.income-bag{
+  border: #43bf58 1px solid;
+  box-shadow: 1px 1px 3px #43bf58;
+}
+.expense-bag{
+  border: #C9353B 1px solid;
+  box-shadow: 1px 1px 3px #C9353B;
+}
+.search-bag .search-tag{
+  padding: 5px;
+}
+.search-bag .search-amount{
+  padding: 5px;
+}
+.search-bag .search-tag .tag-label{
+  float: left;
+  width: 25%;
+}
+.search-bag .search-amount .amount-label{
+  float: left;
+  width: 25%;
+}
+
+
+.account-info-space{
+  padding: 30px;
+}
+.account-info-space .users-account-details{
+  padding: 5px;
+}
+.account-info-space .users-account-details .label{
+  width: 20%;
+}
+.account-info-space .users-account-details .value{
+  color: #808080;
+}
+.users-btns{
+  padding-left: 30px;
+  padding-right: 30px;
+}
+.users-btns #add-user{
+  background-color: #f4511e;
+  color: #fff;
+  padding: 5px 25px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.users-btns #users-invitations{
+  background-color: #a7a7a7;
+  color: #fff;
+  padding: 5px 20px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .add-income-img{
@@ -320,13 +581,17 @@ html, body {
 .location-icon{
 	width:25px;
 	height:25px;
+	cursor: pointer;
 }
 .close-icon{
 	padding-left: 5px;	
 }
 .delete-user-icon{
-	width:25px;
-	height:25px;	
+	font-size: 14px;
+	cursor: pointer;	
+}
+.delete-user-icon:hover{
+  color: red;
 }
 
 .add-icon{
@@ -393,6 +658,9 @@ html, body {
 	text-align:center;
 }
 
+.timespan-nav-icon:hover{
+  background-color: #e8e8e8;
+}
 
 /* Style the tab */
 div.tab {
@@ -484,7 +752,8 @@ div.tab button.active .tab-title{
 	top: 20px;
 }
 .table th{
-	color: #dd5;
+	color: #808080;
+  background-color: #ececec;
 }
 
 .users-account-details div{
@@ -530,18 +799,16 @@ div.tab button.active .tab-title{
 
 /*Plus style starts */
 .plus {
-  display:none;
-  cursor: pointer;
-  position: fixed;
-  top:80%;
-  left : 3%;
-  margin-left:1em;
-  z-index: 9999;
-  width: 80px;
-  height: 80px;
-  color: #f4d6d7;
-  border-radius: 50%;
-  border: none;
+   display: none;
+   cursor: pointer;
+   position: absolute;
+   top: 80%;
+   left: 4%;
+   width: 80px;
+   height: 80px;
+   color: #f4d6d7;
+   border-radius: 50%;
+   border: none;
   -webkit-transition: box-shadow 400ms cubic-bezier(0.2, 0, 0.7, 1), -webkit-transform 200ms cubic-bezier(0.2, 0, 0.7, 1);
   transition: box-shadow 400ms cubic-bezier(0.2, 0, 0.7, 1), -webkit-transform 200ms cubic-bezier(0.2, 0, 0.7, 1);
   transition: box-shadow 400ms cubic-bezier(0.2, 0, 0.7, 1), transform 200ms cubic-bezier(0.2, 0, 0.7, 1);
@@ -578,11 +845,15 @@ div.tab button.active .tab-title{
 
 
 /* Table style */
-.amount-col{
-	width: 5%;
+
+.table{
+  font-size: 13px;
 }
-.date-col,.tag-col,.description-col,.addedby-col,.addedon-col{
-	width: 13%;
+.amount-col{
+	width: 11%;
+}
+.date-col,.tag-col,.description-col,.addedby-col{
+	width: 15%;
 }
 
 
@@ -599,8 +870,8 @@ div.tab button.active .tab-title{
   left: 45%;
   top: 50%;
   display: inline-block;
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   border-radius: 100%;
   margin: 35px 5px;
   opacity: 0;

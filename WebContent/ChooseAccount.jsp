@@ -35,7 +35,7 @@ if(session.getAttribute("account_id") != null)
 }
 else if(session.getAttribute("user_id") == null)
 {
-	response.sendRedirect("FirstPage.jsp");
+	response.sendRedirect("/BudgetChummy/");
 }
 %>
 <div id="choose-account-form-div">
