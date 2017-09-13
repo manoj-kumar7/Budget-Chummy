@@ -60,6 +60,10 @@ public class expenseServlet extends HttpServlet {
 			st1 = con.createStatement();
 			st2 = con.createStatement();
 			HttpSession session = request.getSession();
+			if(session == null)
+			{
+				response.sendRedirect("login.jsp");
+			}
 			Object acc_attribute = session.getAttribute("account_id");
 			accid = Long.parseLong(String.valueOf(acc_attribute));
 			String query="";
@@ -162,6 +166,10 @@ public class expenseServlet extends HttpServlet {
 			Statement st=null;
 			st = con.createStatement();
 			HttpSession session = request.getSession();
+			if(session == null)
+			{
+				response.sendRedirect("login.jsp");
+			}
 			Object user_attribute = session.getAttribute("user_id");
 			Object acc_attribute = session.getAttribute("account_id");
 			long userid = Long.parseLong(String.valueOf(user_attribute));

@@ -58,6 +58,10 @@ public class getAccountsServlet extends HttpServlet {
 			st = con.createStatement();
 			st1 = con.createStatement();
 			HttpSession session = request.getSession();
+			if(session == null)
+			{
+				response.sendRedirect("login.jsp");
+			}
 			Object attribute = session.getAttribute("user_id");
 			long userid = Long.parseLong(String.valueOf(attribute));
 			long accid=-1;

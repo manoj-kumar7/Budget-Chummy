@@ -61,6 +61,10 @@ public class searchServlet extends HttpServlet {
 			st1 = con.createStatement();
 			ResultSet rs=null;
 			HttpSession session = request.getSession();
+			if(session == null)
+			{
+				response.sendRedirect("login.jsp");
+			}
 			Object user_attribute = session.getAttribute("user_id");
 			Object acc_attribute = session.getAttribute("account_id");
 			userid = Long.parseLong(String.valueOf(user_attribute));

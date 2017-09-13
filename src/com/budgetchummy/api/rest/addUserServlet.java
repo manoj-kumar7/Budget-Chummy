@@ -101,6 +101,10 @@ public class addUserServlet extends HttpServlet {
 			ResultSet rs = null,rs1=null;
 			String query=null;
 			HttpSession http_session = request.getSession();
+			if(http_session == null)
+			{
+				response.sendRedirect("login.jsp");
+			}
 			Object user_attribute = http_session.getAttribute("user_id");
 			Object acc_attribute = http_session.getAttribute("account_id");
 			userid = Long.parseLong(String.valueOf(user_attribute));

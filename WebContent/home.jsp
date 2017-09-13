@@ -3,6 +3,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+	<%
+	if(session.getAttribute("account_id") == null)
+	{
+		if(session.getAttribute("user_id") != null)
+		{
+			response.sendRedirect("/BudgetChummy/ChooseAccount.jsp");
+			return;
+		}
+		else
+		{
+			response.sendRedirect("/BudgetChummy/");
+			return;
+		}
+	}
+	%>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Home | BC</title>
 	<link rel="stylesheet" href="styles/style.css" type="text/css">
@@ -480,6 +495,7 @@
 		{
 			$('.month-changer').css("display","none");
 			$('.chart-space').css("display","none");
+			$('.plus').css("display","none");
 		}
 		else
 		{
@@ -547,12 +563,6 @@
 </head>
 <body>
 
-<%
-if(session.getAttribute("account_id") == null)
-{
-	response.sendRedirect("/BudgetChummy/");
-}
-%>
 <div class="home-body">
 
 	<div class="left">

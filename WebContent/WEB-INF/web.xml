@@ -9,4 +9,7 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>FirstPage.jsp</welcome-file>
   </welcome-file-list>
+  <session-config>
+        <session-timeout>30</session-timeout>
+    </session-config>
 </web-app>

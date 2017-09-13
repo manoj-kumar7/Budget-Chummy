@@ -61,6 +61,10 @@ public class incomeServlet extends HttpServlet {
 			st1 = con.createStatement();
 			st2 = con.createStatement();
 			HttpSession session = request.getSession();
+			if(session == null)
+			{
+				response.sendRedirect("login.jsp");
+			}
 			Object acc_attribute = session.getAttribute("account_id");
 			accid = Long.parseLong(String.valueOf(acc_attribute));
 			String query = "select user_id,date,amount,tag_id,description,location,latitude,longitude,added_date_time from transactions where extract(year from to_timestamp(floor(date/1000)))="+year+" AND extract(month from to_timestamp(floor(date/1000)))="+month+" AND transaction_type='income' AND account_id="+accid+";";
@@ -154,6 +158,10 @@ public class incomeServlet extends HttpServlet {
 			Statement st=null;
 			st = con.createStatement();
 			HttpSession session = request.getSession();
+			if(session == null)
+			{
+				response.sendRedirect("login.jsp");
+			}
 			Object user_attribute = session.getAttribute("user_id");
 			Object acc_attribute = session.getAttribute("account_id");
 			long userid = Long.parseLong(String.valueOf(user_attribute));

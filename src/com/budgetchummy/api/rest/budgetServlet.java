@@ -65,6 +65,10 @@ public class budgetServlet extends HttpServlet {
 			ResultSet rs = null, rs1 = null, rs2 = null;
 			
 			HttpSession session = request.getSession();
+			if(session == null)
+			{
+				response.sendRedirect("login.jsp");
+			}
 			Object user_attribute = session.getAttribute("user_id");
 			Object acc_attribute = session.getAttribute("account_id");
 			long userid = Long.parseLong(String.valueOf(user_attribute));

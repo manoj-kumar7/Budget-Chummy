@@ -29,6 +29,10 @@ public class accountChosenServlet extends HttpServlet {
 		long acc_id = Long.parseLong(request.getParameter("account_id"));
 		String page_name = request.getParameter("page_name");
 		HttpSession session = request.getSession();
+		if(session == null)
+		{
+			response.sendRedirect("login.jsp");
+		}
 		session.setAttribute("account_id",acc_id);
 //		String homeurl = new String("home.jsp?page='"+page_name+"'");
 //		response.setStatus(response.SC_MOVED_TEMPORARILY);

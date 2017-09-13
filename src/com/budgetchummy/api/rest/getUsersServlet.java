@@ -64,6 +64,10 @@ public class getUsersServlet extends HttpServlet {
 			String role=null,first_name=null,email=null;
 			long no_of_members=-1,created_by_id = -1,user_id=-1;
 			HttpSession session = request.getSession();
+			if(session == null)
+			{
+				response.sendRedirect("login.jsp");
+			}
 			Object acc_attribute = session.getAttribute("account_id");
 			accid = Long.parseLong(String.valueOf(acc_attribute));
 			JSONArray ja = new JSONArray();

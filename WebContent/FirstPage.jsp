@@ -46,6 +46,10 @@ if(session.getAttribute("account_id") != null)
 {
 	response.sendRedirect("home.jsp");
 }
+else if(session.getAttribute("user_id") != null)
+{
+	response.sendRedirect("ChooseAccount.jsp");
+}
 %>
 	<div id="firstpage-top-text" class="firstpage-top">Already have an account?<span id="login" class="firstpage-top-btn"> Login </span> or <span id="signup" class="firstpage-top-btn"> Signup </span></div>
 	

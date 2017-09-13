@@ -39,6 +39,10 @@ public class joinAccountServlet extends HttpServlet {
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		HttpSession session = request.getSession();
+		if(session == null)
+		{
+			response.sendRedirect("login.jsp");
+		}
 		Object user_attribute = session.getAttribute("user_id");
 		long userid = Long.parseLong(String.valueOf(user_attribute));
 		

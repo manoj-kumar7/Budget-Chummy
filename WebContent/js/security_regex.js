@@ -1,6 +1,7 @@
 var emailErrorText = "Invalid email address";
 var passwordErrorText = "A password should contain minimum of 6 and maximum of 16 characters with atleast one number, one lowercase letter, one uppercase letter and one special symbol (!@#$%^&*)";
 var nameErrorText = "A name can contain maximum of 16 characters with lowercase, uppercase, numbers and special characters (!@#$%^-_' )";
+var cookiesDisabledMessage = "Browser cookies are disabled. Enable your cookies and try again.";
 
 function validateEmail(email){
 	var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

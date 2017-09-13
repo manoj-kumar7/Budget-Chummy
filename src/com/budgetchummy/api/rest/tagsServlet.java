@@ -54,6 +54,10 @@ public class tagsServlet extends HttpServlet {
 			Statement st=null;
 			st = con.createStatement();
 			HttpSession session = request.getSession();
+			if(session == null)
+			{
+				response.sendRedirect("login.jsp");
+			}
 			Object account_attribute = session.getAttribute("account_id");
 			long accid = Long.parseLong(String.valueOf(account_attribute));
 			String query=null,tag_name=null;
@@ -106,6 +110,10 @@ public class tagsServlet extends HttpServlet {
 			Statement st=null;
 			st = con.createStatement();
 			HttpSession session = request.getSession();
+			if(session == null)
+			{
+				response.sendRedirect("login.jsp");
+			}
 			Object account_attribute = session.getAttribute("account_id");
 			long accid = Long.parseLong(String.valueOf(account_attribute));
 			String query=null;

@@ -72,6 +72,10 @@ public class createAccountServlet extends HttpServlet {
 		    df.setTimeZone(TimeZone.getTimeZone("IST"));
 		    
 			HttpSession session = request.getSession();
+			if(session == null)
+			{
+				response.sendRedirect("login.jsp");
+			}
 			Object user_attribute = session.getAttribute("user_id");
 			userid = Long.parseLong(String.valueOf(user_attribute));
 			added_date = Datehelper.dateToEpoch(df.format(dateobj));

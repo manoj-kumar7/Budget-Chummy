@@ -90,8 +90,6 @@ var getStartEndDatesOfBudget = function(obj){
 var analyseBudget = function(){
 	var expenses= expenses_in_month;
 	var budgets = budgets_in_month;
-	console.log(expenses);
-	console.log(budgets);
 	$('#home-budgets-list').html("");
 	var tag_name, budget_amount, repeat_periods=["One time budget", "Daily", "Weekly", "Monthly", "Yearly"], repeat, amount_used, amount_used_text, amount_left, amount_over = 0, amount_left_or_over_text;
 	var budget_bar_spent, budget_bar_spent_width, budget_bar_left_width;

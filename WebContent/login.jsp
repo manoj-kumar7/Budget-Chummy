@@ -69,7 +69,14 @@ $(document).ready(function(){
 		}
 		else
 		{
-			login_ajax_call();
+			if(!navigator.cookieEnabled)
+			{
+				showAjaxFailureMessage(cookiesDisabledMessage);
+			}
+			else
+			{
+				login_ajax_call();
+			}
 		}
 	}
 
