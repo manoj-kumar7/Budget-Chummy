@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,7 +29,7 @@ import javax.servlet.http.HttpSession;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-@WebServlet(urlPatterns = {"/budget", "/BudgetChummy/budget"})
+@WebServlet(urlPatterns = {"/api/v1/budget", "/BudgetChummy/api/v1/budget"})
 public class budgetServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -42,8 +43,8 @@ public class budgetServlet extends HttpServlet {
 		
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
-		String month = request.getParameter("month");
-		String year = request.getParameter("year");
+		int month = Integer.parseInt(request.getParameter("month"));
+		int year = Integer.parseInt(request.getParameter("year"));
 		
 		String url = APIConstants.POSTGRESQL_URL;
 		String user = APIConstants.POSTGRESQL_USERNAME;
@@ -58,16 +59,13 @@ public class budgetServlet extends HttpServlet {
 		try {
 			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			Statement st=null, st1=null, st2=null;
-			st = con.createStatement();
-			st1 = con.createStatement();
-			st2 = con.createStatement();
+			PreparedStatement st=null, st1=null, st2=null;
 			ResultSet rs = null, rs1 = null, rs2 = null;
 			
-			HttpSession session = request.getSession();
+			HttpSession session = request.getSession(false);
 			if(session == null)
 			{
-				response.sendRedirect("login.jsp");
+				response.sendRedirect("login");
 			}
 			Object user_attribute = session.getAttribute("user_id");
 			Object acc_attribute = session.getAttribute("account_id");
@@ -75,14 +73,20 @@ public class budgetServlet extends HttpServlet {
 			long accid = Long.parseLong(String.valueOf(acc_attribute));
 			Map<Long, String> tags = new HashMap<Long, String>();
 			
-			String query = "select tag_id, tag_name from tags where account_id="+accid+";";
-			rs = st.executeQuery(query);
+			st = con.prepareStatement("select tag_id, tag_name from tags where account_id=?;");
+			st.setLong(1, accid);
+			rs = st.executeQuery();
 			while(rs.next())
 			{
 				tags.put(rs.getLong("tag_id"), rs.getString("tag_name"));
 			}
-			query = "select amount, repeat_period, tag_id, description, added_by, budget_type, start_date, end_date from budget where (extract(year from to_timestamp(floor(start_date/1000)))<"+year+" OR (extract(year from to_timestamp(floor(start_date/1000)))="+year+" AND extract(month from to_timestamp(floor(start_date/1000)))<="+month+")) AND account_id="+accid+";";
-			rs1 = st1.executeQuery(query);
+
+			st1 = con.prepareStatement("select amount, repeat_period, tag_id, description, added_by, budget_type, start_date, end_date from budget where (extract(year from to_timestamp(floor(start_date/1000)))<? OR (extract(year from to_timestamp(floor(start_date/1000)))=? AND extract(month from to_timestamp(floor(start_date/1000)))<=?)) AND account_id=?;");
+			st1.setInt(1, year);
+			st1.setInt(2, year);
+			st1.setInt(3, month);
+			st1.setLong(4, accid);
+			rs1 = st1.executeQuery();
 			JSONArray ja = new JSONArray();
 			JSONObject jo = new JSONObject();
 			String description, tag_name, added_by_name="";
@@ -99,8 +103,9 @@ public class budgetServlet extends HttpServlet {
 				added_by=rs1.getLong("added_by");
 				repeat_period=rs1.getInt("repeat_period");
 				budget_type=rs1.getInt("budget_type");
-				query="select first_name from users where user_id="+added_by+";";
-				rs2=st2.executeQuery(query);
+				st2 = con.prepareStatement("select first_name from users where user_id=?;");
+				st2.setLong(1, added_by);
+				rs2=st2.executeQuery();
 				while(rs2.next())
 				{
 					added_by_name = rs2.getString("first_name");
@@ -117,12 +122,20 @@ public class budgetServlet extends HttpServlet {
 				jo.clear();
 			}
 			if(rs != null)
+			{
 				rs.close();
-			if(rs1 != null)
+				st.close();
+			}
+			if(rs1!=null)
+			{
 				rs1.close();
-			if(rs2 != null)
+				st1.close();
+			}
+			if(rs2!=null)
+			{
 				rs2.close();
-			st.close();
+				st2.close();
+			}
 			con.close();
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
@@ -174,22 +187,29 @@ public class budgetServlet extends HttpServlet {
 		try {
 			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			Statement st=null;
-			st = con.createStatement();
-			HttpSession session = request.getSession();
+			PreparedStatement st=null;
+			HttpSession session = request.getSession(false);
 			Object user_attribute = session.getAttribute("user_id");
 			Object acc_attribute = session.getAttribute("account_id");
 			long userid = Long.parseLong(String.valueOf(user_attribute));
 			long accid = Long.parseLong(String.valueOf(acc_attribute));
-			String query = "insert into budget(account_id,budget_type,tag_id,repeat_period,amount,description,added_by,start_date,end_date) values("+accid+","+budget_type+","+tag_id+","+budget_repeat+","+budget_amount+",'"+budget_description+"',"+userid+","+start_date+","+end_date+");";
-			
-			st.executeUpdate(query);
+			st = con.prepareStatement("insert into budget(account_id,budget_type,tag_id,repeat_period,amount,description,added_by,start_date,end_date) values(?,?,?,?,?,?,?,?,?);");
+			st.setLong(1, accid);
+			st.setInt(2, budget_type);
+			st.setLong(3, tag_id);
+			st.setInt(4, budget_repeat);
+			st.setFloat(5, budget_amount);
+			st.setString(6, budget_description);
+			st.setLong(7, userid);
+			st.setLong(8, start_date);
+			st.setLong(9, end_date);
+			int i = st.executeUpdate();
 			st.close();
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-//		response.sendRedirect("home.jsp?page='"+page_name+"'");
+//		response.sendRedirect("home?page='"+page_name+"'");
 		
 	}
 

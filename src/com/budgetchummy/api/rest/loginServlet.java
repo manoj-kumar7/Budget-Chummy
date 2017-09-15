@@ -13,7 +13,7 @@ import com.budgetchummy.api.util.APIConstants;
 /**
  * Servlet implementation class loginServlet
  */
-@WebServlet(urlPatterns = {"/login", "/BudgetChummy/login"})
+@WebServlet(urlPatterns = {"/api/v1/login", "/BudgetChummy/api/v1/login"})
 public class loginServlet extends HttpServlet 
 {
 	private static final long serialVersionUID = 1L;
@@ -52,11 +52,11 @@ public class loginServlet extends HttpServlet
 		try {
 			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			Statement st=null;
-			st = con.createStatement();
-			String query = "select password,user_id from users where email='"+email+"';";
+			PreparedStatement st=null;
+			st = con.prepareStatement("select password,user_id from users where email=?;");
+			st.setString(1, email);
 			ResultSet rs=null;
-			rs = st.executeQuery(query);
+			rs = st.executeQuery();
 			String password=null;
 			while(rs.next())
 			{
@@ -80,13 +80,13 @@ public class loginServlet extends HttpServlet
 			session.setAttribute("user_id",userid);
 //			if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
 //			{
-//				String homeurl = new String("ChooseAccount.jsp");
+//				String homeurl = new String("ChooseAccount");
 //				response.setStatus(response.SC_MOVED_TEMPORARILY);
 //		        response.setHeader("Location", homeurl);				
 //			}
 //			else
 //			{
-//				String homeurl = new String("AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
+//				String homeurl = new String("AccountAuthentication?account_id="+account_id+"&invitation_id="+invitation_id);
 //				response.setStatus(response.SC_MOVED_TEMPORARILY);
 //		        response.setHeader("Location", homeurl);			
 //		    }
@@ -94,7 +94,7 @@ public class loginServlet extends HttpServlet
 		}
 		else
 		{
-			//String backurl = new String("login.jsp");
+			//String backurl = new String("login");
 			response.setStatus(401);
 	        //response.setHeader("Location", backurl);
 		}

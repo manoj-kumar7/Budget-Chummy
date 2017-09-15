@@ -5,18 +5,18 @@
 				var invitation_id = $('#invitation_id').val();
 				$.ajax({
 					type:"POST",
-					url:"/BudgetChummy/login",
+					url:"/BudgetChummy/api/v1/login",
 					data:{email:email,pword:pword,account_id:account_id,invitation_id:invitation_id},
 					async: false,
 					success:function(data){
 						//showAjaxSuccessMessage("Logged in successfully");
 						if(account_id=="null" || invitation_id=="null")
 						{
-							location.href = "ChooseAccount.jsp";
+							location.href = "ChooseAccount";
 						}
 						else
 						{
-							location.href = "AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id;
+							location.href = "AccountAuthentication?account_id="+account_id+"&invitation_id="+invitation_id;
 						}
 					},
 					error:function(data){
@@ -34,18 +34,18 @@
 				var invitation_id = $('#invitation_id').val();
 				$.ajax({
 					type:"POST",
-					url:"/BudgetChummy/signUp",
+					url:"/BudgetChummy/api/v1/signUp",
 					data:{first_name:firstname,last_name:lastname,email:email,pword:pword,account_id:account_id,invitation_id:invitation_id},
 					async: false,
 					success:function(data){
 						//showAjaxSuccessMessage("Signed up successfully");
 						if(account_id=="null" || invitation_id=="null")
 						{
-							location.href = "CreateAccount.jsp";
+							location.href = "CreateAccount";
 						}
 						else
 						{
-							location.href = "AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id;
+							location.href = "AccountAuthentication?account_id="+account_id+"&invitation_id="+invitation_id;
 						}
 					},
 					error:function(data){
@@ -58,12 +58,12 @@
 				var accountname = $('#accountname').val();
 				$.ajax({
 					type:"POST",
-					url:"/BudgetChummy/createAccount",
+					url:"/BudgetChummy/api/v1/createAccount",
 					data:{account_name:accountname},
 					async: false,
 					success:function(data){
 						//showAjaxSuccessMessage("Signed up successfully");
-						location.href = "home.jsp";
+						location.href = "home";
 					},
 					error:function(data){
 						//showAjaxFailureMessage("");
@@ -71,11 +71,29 @@
 				});	
 			}
 			
+			var join_account_ajax_call = function(){
+				var passcode = $('#passcode').val();
+				var account_id = $('#account_id').val();
+				var invitation_id = $('#invitation_id').val();
+				$.ajax({
+					type:"POST",
+					url:"/BudgetChummy/api/v1/joinAccount",
+					data:{passcode: passcode,account_id:account_id,invitation_id:invitation_id},
+					async: false,
+					success:function(data){
+						
+					},
+					error:function(data){
+						showAjaxFailureMessage("Incorrect passcode");
+					}
+				});	
+			}
+
 			var get_income_ajax_call=function(month,year)
 		 	{
 				$.ajax({
 					type:"GET",
-					url:"/BudgetChummy/income",
+					url:"/BudgetChummy/api/v1/income",
 					data:{month:month,year:year},
 					success:function(data){
 						$('.loader').removeClass('active');
@@ -86,7 +104,6 @@
 							for(var i=0;i<data.length;i++)
 							{
 								var obj = jQuery.parseJSON(data[i]);
-								income_data.push({y:obj.amount,indexLabel:obj.amount+"(#percent%)",legendText:""+obj.amount,description:obj.description,date:obj.date,tag:obj.tag_name});
 								let amount = obj.amount || "-";
 								let dates = getDateFromEpoch(obj.date);
 								let date = formCustomDateFormat(dates);
@@ -97,6 +114,7 @@
 								let location = obj.location || "-";
 								let lat = obj.latitude || "-";
 								let lon = obj.longitude || "-";
+								income_data.push({y:amount,indexLabel:amount+"(#percent%)",legendText:""+amount,description:description,date:date,tag:tag});
 								let append_string = "<tr><td><i class='icon-inr'></i>"+amount+"</td><td>"+date+"</td><td>"+tag+"</td><td>"+description+"</td><td>"+user_name+"</td><td>"+location;
 								if(location != "-")
 								{
@@ -137,7 +155,7 @@
 		 	{
 				$.ajax({
 					type:"GET",
-					url:"/BudgetChummy/expense",
+					url:"/BudgetChummy/api/v1/expense",
 					data:{month:month,year:year,page:page},
 					success:function(data){
 						$('.loader').removeClass('active');
@@ -148,7 +166,6 @@
 							for(var i=0;i<data.length;i++)
 							{
 								var obj = jQuery.parseJSON(data[i]);
-								expense_data.push({y:obj.amount,indexLabel:obj.amount+"(#percent%)",legendText:""+obj.amount,description:obj.description,date:obj.date,tag:obj.tag_name});
 								let amount = obj.amount || "-";
 								let dates = getDateFromEpoch(obj.date);
 								let date = formCustomDateFormat(dates);
@@ -159,6 +176,7 @@
 								let location = obj.location || "-";
 								let lat = obj.latitude || "-";
 								let lon = obj.longitude || "-";
+								expense_data.push({y:amount,indexLabel:amount+"(#percent%)",legendText:""+amount,description:description,date:date,tag:tag});
 								let append_string = "<tr><td><i class='icon-inr'></i>"+amount+"</td><td>"+date+"</td><td>"+tag+"</td><td>"+description+"</td><td>"+user_name+"</td><td>"+location;
 								if(location != "-")
 								{
@@ -209,7 +227,7 @@
 			{
 				$.ajax({
 					type:"GET",
-					url:"/BudgetChummy/budget",
+					url:"/BudgetChummy/api/v1/budget",
 					data:{month:month,year:year},
 					success:function(data){
 						$('.loader').removeClass('active');
@@ -240,7 +258,7 @@
 				var reminder = $('.generic-reminder-dropdown').val();
 				$.ajax({
 					type:"POST",
-					url:"/BudgetChummy/income",
+					url:"/BudgetChummy/api/v1/income",
 					data:{amount:amount, date:date, tag_id:tag_id, add_info:add_info, location: location, location_lat:lat, location_lon:lon, description:description, repeat:repeat, reminder:reminder},
 					success:function(data){
 						$('#generic-modal-form').find('.close-icon').click();
@@ -264,7 +282,7 @@
 				var reminder = $('.generic-reminder-dropdown').val();
 				$.ajax({
 					type:"POST",
-					url:"/BudgetChummy/expense",
+					url:"/BudgetChummy/api/v1/expense",
 					data:{amount:amount, date:date, tag_id:tag_id, add_info:add_info, location: location, location_lat:lat, location_lon:lon, description:description, repeat:repeat, reminder:reminder},
 					success:function(data){
 						$('#generic-modal-form').find('.close-icon').click();
@@ -292,7 +310,7 @@
 				var description = $('#budget-description').val();
 				$.ajax({
 					type:"POST",
-					url:"/BudgetChummy/budget",
+					url:"/BudgetChummy/api/v1/budget",
 					data:{budget_type:budget_type, tag_id:tag_id, budget_repeat:budget_repeat, budget_start_date:start_date, budget_end_date:end_date, budget_amount:amount, budget_description:description},
 					success:function(data){
 						$('#generic-modal-form').find('.close-icon').click();
@@ -307,7 +325,7 @@
 				var date = dateToEpoch($('.date-picker').val());
 				$.ajax({
 					type:"GET",
-					url:"/BudgetChummy/search",
+					url:"/BudgetChummy/api/v1/search",
 					data:{date:date},
 					success:function(data){
 						$('.loader').removeClass('active');
@@ -378,7 +396,7 @@
 			var users_ajax_call = function(){
 				$.ajax({
 					type:"GET",
-					url:"/BudgetChummy/getUsers",
+					url:"/BudgetChummy/api/v1/getUsers",
 					success:function(data){
 						$('.loader').removeClass('active');
 						if(data != null)
@@ -426,7 +444,7 @@
 			{
 				$.ajax({
 					type:"GET",
-					url:"/BudgetChummy/getAccounts",
+					url:"/BudgetChummy/api/v1/getAccounts",
 					data:{page:page},
 					success:function(data){
 						var obj;
@@ -480,7 +498,7 @@
 			var get_tags_ajax_call = function(tag_type){
 				$.ajax({
 					type:"GET",
-					url:"/BudgetChummy/tags",
+					url:"/BudgetChummy/api/v1/tags",
 					data:{tag_type:tag_type},
 					success:function(data){
 						if(data != null)
@@ -505,7 +523,7 @@
 				var tag = $('#saved-tags-input').val();
 				$.ajax({
 					type:"POST",
-					url:"/BudgetChummy/tags",
+					url:"/BudgetChummy/api/v1/tags",
 					data:{tag_name:tag, tag_type:tag_type},
 					async: false,
 					success:function(data){
@@ -524,12 +542,12 @@
 			var accountChosen_ajax_call=function(id, curr_page){
 				$.ajax({
 					type:"POST",
-					url:"/BudgetChummy/accountChosen",
+					url:"/BudgetChummy/api/v1/accountChosen",
 					data:{account_id:id, page_name:curr_page},
 					async: false,
 					success:function(data)
 					{
-						location.href = "home.jsp";
+						location.href = "home";
 					}
 				});	
 			}
@@ -537,11 +555,11 @@
 			var logout_ajax_call = function(){
 				$.ajax({
 					type:"POST",
-					url:"/BudgetChummy/logout",
+					url:"/BudgetChummy/api/v1/logout",
 					async: false,
 					success:function()
 					{
-						location.href = "/";
+						location.href = "/BudgetChummy/BC";
 					}
 				});	
 			}

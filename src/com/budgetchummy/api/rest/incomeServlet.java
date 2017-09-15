@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,7 +28,7 @@ import com.budgetchummy.api.util.APIConstants;
 import com.budgetchummy.api.util.Datehelper;
 
 
-@WebServlet(urlPatterns = {"/income", "/BudgetChummy/income"})
+@WebServlet(urlPatterns = {"/api/v1/income", "/BudgetChummy/api/v1/income"})
 public class incomeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -39,8 +40,8 @@ public class incomeServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		String month = request.getParameter("month");
-		String year = request.getParameter("year");
+		int month = Integer.parseInt(request.getParameter("month"));
+		int year = Integer.parseInt(request.getParameter("year"));
 
 		String url = APIConstants.POSTGRESQL_URL;
 		String user = APIConstants.POSTGRESQL_USERNAME;
@@ -56,20 +57,21 @@ public class incomeServlet extends HttpServlet {
 		try {
 			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			Statement st=null,st1=null,st2=null;
-			st = con.createStatement();
-			st1 = con.createStatement();
-			st2 = con.createStatement();
-			HttpSession session = request.getSession();
+			PreparedStatement st=null,st1=null,st2=null;
+			HttpSession session = request.getSession(false);
 			if(session == null)
 			{
-				response.sendRedirect("login.jsp");
+				response.sendRedirect("login");
 			}
 			Object acc_attribute = session.getAttribute("account_id");
 			accid = Long.parseLong(String.valueOf(acc_attribute));
-			String query = "select user_id,date,amount,tag_id,description,location,latitude,longitude,added_date_time from transactions where extract(year from to_timestamp(floor(date/1000)))="+year+" AND extract(month from to_timestamp(floor(date/1000)))="+month+" AND transaction_type='income' AND account_id="+accid+";";
+			st = con.prepareStatement("select user_id,date,amount,tag_id,description,location,latitude,longitude,added_date_time from transactions where extract(year from to_timestamp(floor(date/1000)))=? AND extract(month from to_timestamp(floor(date/1000)))=? AND transaction_type=? AND account_id=?;");
+			st.setInt(1, year);
+			st.setInt(2, month);
+			st.setString(3, "income");
+			st.setLong(4, accid);	
 			ResultSet rs=null,rs1=null,rs2=null;
-			rs = st.executeQuery(query);
+			rs = st.executeQuery();
 			String description=null,tag_name=null,location=null,first_name=null;
 			float amount=-1;
 			long user_id=-1,tag_id=-1,added_date_time=-1,date=-1;
@@ -80,15 +82,17 @@ public class incomeServlet extends HttpServlet {
 			{
 
 				user_id=rs.getLong("user_id");
-				query="select first_name from users where user_id="+user_id+";";
-				rs1=st1.executeQuery(query);
+				st1 = con.prepareStatement("select first_name from users where user_id=?;");
+				st1.setLong(1, user_id);
+				rs1=st1.executeQuery();
 				while(rs1.next())
 				{
 					first_name = rs1.getString("first_name");
 				}
 				tag_id=rs.getLong("tag_id");
-				query="select tag_name from tags where tag_id="+tag_id+";";
-				rs2=st2.executeQuery(query);
+				st2 = con.prepareStatement("select tag_name from tags where tag_id=?;");
+				st2.setLong(1, tag_id);
+				rs2=st2.executeQuery();
 				while(rs2.next())
 				{
 					tag_name = rs2.getString("tag_name");
@@ -112,14 +116,21 @@ public class incomeServlet extends HttpServlet {
 				ja.add(jo.toJSONString());
 				jo.clear();
 			}
-			rs.close();
+			if(rs != null)
+			{
+				rs.close();
+				st.close();
+			}
 			if(rs1!=null)
+			{
 				rs1.close();
+				st1.close();
+			}
 			if(rs2!=null)
+			{
 				rs2.close();
-			st.close();
-			st1.close();
-			st2.close();
+				st2.close();
+			}
 			con.close();
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");
@@ -155,12 +166,11 @@ public class incomeServlet extends HttpServlet {
 		try {
 			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			Statement st=null;
-			st = con.createStatement();
-			HttpSession session = request.getSession();
+			PreparedStatement st=null;
+			HttpSession session = request.getSession(false);
 			if(session == null)
 			{
-				response.sendRedirect("login.jsp");
+				response.sendRedirect("login");
 			}
 			Object user_attribute = session.getAttribute("user_id");
 			Object acc_attribute = session.getAttribute("account_id");
@@ -179,19 +189,39 @@ public class incomeServlet extends HttpServlet {
 				String description = request.getParameter("description");
 				int income_repeat = Integer.parseInt(request.getParameter("repeat"));
 				int income_reminder = Integer.parseInt(request.getParameter("reminder"));
-				query = "insert into transactions(user_id,account_id,date,amount,tag_id,description,transaction_type,repeat_period,reminder_period,location,latitude,longitude,added_date_time) values("+userid+","+accid+","+date+","+amount+","+tag_id+",'"+description+"','"+transaction_type+"',"+income_repeat+","+income_reminder+",'"+location+"',"+latitude+","+longitude+","+added_date+");";
+				st = con.prepareStatement("insert into transactions(user_id,account_id,date,amount,tag_id,description,transaction_type,repeat_period,reminder_period,location,latitude,longitude,added_date_time) values(?,?,?,?,?,?,?,?,?,?,?,?,?);");
+				st.setLong(1, userid);
+				st.setLong(2, accid);
+				st.setLong(3, date);
+				st.setFloat(4, amount);
+				st.setLong(5, tag_id);
+				st.setString(6, description);
+				st.setString(7, transaction_type);
+				st.setInt(8, income_repeat);
+				st.setInt(9, income_reminder);
+				st.setString(10, location);
+				st.setFloat(11, latitude);
+				st.setFloat(12, longitude);
+				st.setLong(13, added_date);
 			}
 			else
 			{
-				query = "insert into transactions(user_id,account_id,date,amount,tag_id,transaction_type,added_date_time) values("+userid+","+accid+","+date+","+amount+","+tag_id+",'"+transaction_type+"',"+added_date+");";
+				st = con.prepareStatement("insert into transactions(user_id,account_id,date,amount,tag_id,transaction_type,added_date_time) values(?,?,?,?,?,?,?);");
+				st.setLong(1, userid);
+				st.setLong(2, accid);
+				st.setLong(3, date);
+				st.setFloat(4, amount);
+				st.setLong(5, tag_id);
+				st.setString(6, transaction_type);
+				st.setLong(7, added_date);			
 			}
-			st.executeUpdate(query);
+			st.executeUpdate();
 			st.close();
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-//		response.sendRedirect("home.jsp?page='"+page_name+"'");
+//		response.sendRedirect("home?page='"+page_name+"'");
 	}
 
 }

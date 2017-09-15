@@ -17,7 +17,7 @@
 	$(document).ready(function(){
 		getAccounts_ajax_call("chooseaccount");
 		$('#create-new-account').click(function(){
-			location.href="CreateAccount.jsp";
+			location.href="CreateAccount";
 		});
 		$(document).on('click','.accounts',function(){
 			var id = $(this).attr("id");
@@ -31,7 +31,7 @@
 <%
 if(session.getAttribute("account_id") != null)
 {
-	response.sendRedirect("home.jsp");
+	response.sendRedirect("home");
 }
 else if(session.getAttribute("user_id") == null)
 {

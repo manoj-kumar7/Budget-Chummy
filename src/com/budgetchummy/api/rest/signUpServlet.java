@@ -8,7 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+import java.sql.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,7 +28,7 @@ import java.util.TimeZone;
 /**
  * Servlet implementation class signUpServlet
  */
-@WebServlet(urlPatterns = {"/signUp", "/BudgetChummy/signUp"})
+@WebServlet(urlPatterns = {"/api/v1/signUp", "/BudgetChummy/api/v1/signUp"})
 public class signUpServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -69,8 +69,7 @@ public class signUpServlet extends HttpServlet {
 		try {
 			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			Statement st=null;
-			st = con.createStatement();
+			PreparedStatement st=null;
 			ResultSet rs = null;
 			String query=null;
 
@@ -78,10 +77,17 @@ public class signUpServlet extends HttpServlet {
 		    Date dateobj = new Date();
 		    df.setTimeZone(TimeZone.getTimeZone("IST"));
 		    added_date = Datehelper.dateToEpoch(df.format(dateobj));
-			query = "insert into users(first_name,last_name,email,password,created_date_time) values('"+first_name+"','"+last_name+"','"+email+"','"+pword+"',"+added_date+");";
-			st.executeUpdate(query);
-			query = "select user_id from users where email='"+email+"';";
-			rs = st.executeQuery(query);
+			st = con.prepareStatement("insert into users(first_name,last_name,email,password,created_date_time) values(?,?,?,?,?);");
+			st.setString(1, first_name);
+			st.setString(2, last_name);
+			st.setString(3, email);
+			st.setString(4, pword);
+			st.setLong(5, added_date);
+			st.executeUpdate();
+
+			st = con.prepareStatement("select user_id from users where email=?;");
+			st.setString(1, email);
+			rs = st.executeQuery();
 
 			while(rs.next())
 			{
@@ -99,13 +105,13 @@ public class signUpServlet extends HttpServlet {
 		
 //		if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
 //		{
-//			String homeurl = new String("CreateAccount.jsp");
+//			String homeurl = new String("CreateAccount");
 //			response.setStatus(response.SC_MOVED_TEMPORARILY);
 //	        response.setHeader("Location", homeurl);				
 //		}
 //		else
 //		{
-//			String homeurl = new String("AccountAuthentication.jsp?account_id="+account_id+"&invitation_id="+invitation_id);
+//			String homeurl = new String("AccountAuthentication?account_id="+account_id+"&invitation_id="+invitation_id);
 //			response.setStatus(response.SC_MOVED_TEMPORARILY);
 //	        response.setHeader("Location", homeurl);
 //		}

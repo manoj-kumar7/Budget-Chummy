@@ -98,7 +98,7 @@ $(document).ready(function(){
 <%
 if(session.getAttribute("account_id") != null)
 {
-	response.sendRedirect("home.jsp");
+	response.sendRedirect("home");
 }
 %>
 	<div id="login-form-div">

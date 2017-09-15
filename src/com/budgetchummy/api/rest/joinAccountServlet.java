@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpSession;
 import com.budgetchummy.api.util.APIConstants;
 
 
-@WebServlet(urlPatterns = {"/joinAccount", "/BudgetChummy/joinAccount"})
+@WebServlet(urlPatterns = {"/api/v1/joinAccount", "/BudgetChummy/api/v1/joinAccount"})
 public class joinAccountServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -38,10 +39,10 @@ public class joinAccountServlet extends HttpServlet {
 
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
 		if(session == null)
 		{
-			response.sendRedirect("login.jsp");
+			response.sendRedirect("login");
 		}
 		Object user_attribute = session.getAttribute("user_id");
 		long userid = Long.parseLong(String.valueOf(user_attribute));
@@ -64,12 +65,11 @@ public class joinAccountServlet extends HttpServlet {
 		try {
 			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			Statement st=null,st1=null;
-			st = con.createStatement();
-			st1 = con.createStatement();
+			PreparedStatement st=null,st1=null;
 			ResultSet rs=null;
-			query = "select passcode,invitation_status from invitations where invitation_id="+invitation_id+";";
-			rs = st.executeQuery(query);
+			st = con.prepareStatement("select passcode,invitation_status from invitations where invitation_id=?;");
+			st.setLong(1, invitation_id);
+			rs = st.executeQuery();
 			while(rs.next())
 			{
 				passcode_from_db = rs.getString("passcode");
@@ -81,26 +81,42 @@ public class joinAccountServlet extends HttpServlet {
 			}
 			else if(passcode.equals(passcode_from_db))
 			{
-				query = "insert into adduser(account_id,user_id,role) values("+account_id+","+userid+",'"+"user"+"');";
-				st1.executeUpdate(query);
-				query = "update accounts set no_of_members=no_of_members+1 where account_id="+account_id+";";
-				st1.executeUpdate(query);
-				query = "update invitations set invitation_status='joined' where invitation_id="+invitation_id+";";
-				st1.executeUpdate(query);
+				st1 = con.prepareStatement("insert into adduser(account_id,user_id,role) values(?,?,?);");
+				st1.setLong(1, account_id);
+				st1.setLong(2, userid);
+				st1.setString(3, "user");
+				int i;
+				i = st1.executeUpdate();
+				st1 = con.prepareStatement("update accounts set no_of_members=no_of_members+1 where account_id=?;");
+				st1.setLong(1, account_id);
+				i = st1.executeUpdate();
+				st1 = con.prepareStatement("update invitations set invitation_status='joined' where invitation_id=?;");
+				st1.setLong(1, invitation_id);
+				i = st1.executeUpdate();
 				session.setAttribute("account_id",account_id);
 			}
-			rs.close();
-			st.close();
-			st1.close();
+			if(rs != null)
+			{
+				rs.close();
+				st.close();
+			}
+			if(st1!=null)
+			{
+				st1.close();
+			}
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		if(passcode.equals(passcode_from_db))
 		{
-			String homeurl = new String("home.jsp");
-			response.setStatus(response.SC_MOVED_TEMPORARILY);
-	        response.setHeader("Location", homeurl);
+			// String homeurl = new String("home");
+			// response.setStatus(response.SC_MOVED_TEMPORARILY);
+	  //       response.setHeader("Location", homeurl);
+		}
+		else
+		{
+			response.setStatus(401);
 		}
 	}
 

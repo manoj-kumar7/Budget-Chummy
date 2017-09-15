@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,7 +28,7 @@ import com.budgetchummy.api.util.APIConstants;
 import com.budgetchummy.api.util.Datehelper;
 
 
-@WebServlet(urlPatterns = {"/getUsers", "/BudgetChummy/getUsers"})
+@WebServlet(urlPatterns = {"/api/v1/getUsers", "/BudgetChummy/api/v1/getUsers"})
 public class getUsersServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -55,35 +56,35 @@ public class getUsersServlet extends HttpServlet {
 		try {
 			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			Statement st=null,st1=null;
-			st = con.createStatement();
-			st1=con.createStatement();
+			PreparedStatement st=null,st1=null;
 			ResultSet rs = null,rs1=null;
 			String query=null;
 			String account_name=null,created_by=null,created_date_time=null;
 			String role=null,first_name=null,email=null;
 			long no_of_members=-1,created_by_id = -1,user_id=-1;
-			HttpSession session = request.getSession();
+			HttpSession session = request.getSession(false);
 			if(session == null)
 			{
-				response.sendRedirect("login.jsp");
+				response.sendRedirect("login");
 			}
 			Object acc_attribute = session.getAttribute("account_id");
 			accid = Long.parseLong(String.valueOf(acc_attribute));
 			JSONArray ja = new JSONArray();
 			JSONObject jo = new JSONObject();
-			query = "select account_name,created_by,no_of_members,created_date_time from accounts where account_id="+accid+";";
-			rs = st.executeQuery(query);
+			st = con.prepareStatement("select account_name,created_by,no_of_members,created_date_time from accounts where account_id=?;");
+			st.setLong(1, accid);
+			rs = st.executeQuery();
 			while(rs.next())
 			{
 				account_name = rs.getString("account_name");
-				created_by_id = rs.getInt("created_by");
-				no_of_members = rs.getInt("no_of_members");
+				created_by_id = rs.getLong("created_by");
+				no_of_members = rs.getLong("no_of_members");
 				created_date_time = Datehelper.epochToDate(rs.getLong("created_date_time"));
 			}
 
-			query = "select first_name from users where user_id="+created_by_id+";";
-			rs = st.executeQuery(query);
+			st = con.prepareStatement("select first_name from users where user_id=?;");
+			st.setLong(1, created_by_id);
+			rs = st.executeQuery();
 			while(rs.next())
 			{
 				created_by = rs.getString("first_name");
@@ -95,14 +96,16 @@ public class getUsersServlet extends HttpServlet {
 			ja.add(jo.toJSONString());
 			jo.clear();
 			
-			query = "select user_id,role from adduser where account_id="+accid+";";
-			rs = st.executeQuery(query);
+			st = con.prepareStatement("select user_id,role from adduser where account_id=?;");
+			st.setLong(1, accid);
+			rs = st.executeQuery();
 			while(rs.next())
 			{
 				user_id = rs.getInt("user_id");
 				role = rs.getString("role");
-				query = "select first_name,email from users where user_id="+user_id+";";
-				rs1 = st1.executeQuery(query);
+				st1 = con.prepareStatement("select first_name,email from users where user_id=?;");
+				st1.setLong(1, user_id);
+				rs1 = st1.executeQuery();
 				while(rs1.next())
 				{
 					first_name = rs1.getString("first_name");
@@ -113,10 +116,16 @@ public class getUsersServlet extends HttpServlet {
 				jo.put("role",role);
 				ja.add(jo.toJSONString());
 			}
-			rs.close();
-			rs1.close();
-			st.close();
-			st1.close();
+			if(rs != null)
+			{
+				rs.close();
+				st.close();
+			}
+			if(rs1!=null)
+			{
+				rs1.close();
+				st1.close();
+			}
 			con.close();
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");

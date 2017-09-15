@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -29,7 +30,7 @@ import javax.mail.internet.*;
 import javax.activation.*;
 
 
-@WebServlet(urlPatterns = {"/addUser", "/BudgetChummy/addUser"})
+@WebServlet(urlPatterns = {"/api/v1/addUser", "/BudgetChummy/api/v1/addUser"})
 public class addUserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -95,38 +96,49 @@ public class addUserServlet extends HttpServlet {
 		try {
 			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			Statement st=null,st1=null;
-			st = con.createStatement();
-			st1 = con.createStatement();
+			PreparedStatement st=null,st1=null;
 			ResultSet rs = null,rs1=null;
 			String query=null;
-			HttpSession http_session = request.getSession();
+			HttpSession http_session = request.getSession(false);
 			if(http_session == null)
 			{
-				response.sendRedirect("login.jsp");
+				response.sendRedirect("login");
 			}
 			Object user_attribute = http_session.getAttribute("user_id");
 			Object acc_attribute = http_session.getAttribute("account_id");
 			userid = Long.parseLong(String.valueOf(user_attribute));
 			accid = Long.parseLong(String.valueOf(acc_attribute));
-			query = "insert into invitations(sent_by,sent_to,passcode,invitation_status) values("+userid+",'"+to+"','"+passcode+"','"+"not joined"+"');";
-			st.executeUpdate(query);
-			query = "select lastval();";
-			rs = st.executeQuery(query);
+			st = con.prepareStatement("insert into invitations(sent_by,sent_to,passcode,invitation_status) values(?,?,?,?);");
+			st.setLong(1, userid);
+			st.setString(2, to);
+			st.setString(3, passcode);
+			st.setString(4, "not joined");
+			int i = st.executeUpdate();
+
+			st = con.prepareStatement("select lastval();");
+			rs = st.executeQuery();
 			if(rs.next())
 			{
 				invitationid = rs.getInt(1);
 			}
-			query = "select first_name from users where user_id="+userid+";";
-			rs1 = st1.executeQuery(query);
+
+			st1 = con.prepareStatement("select first_name from users where user_id=?;");
+			st1.setLong(1, userid);
+			rs1 = st1.executeQuery();
 			while(rs1.next())
 			{
 				first_name = rs1.getString("first_name");
 			}
-			rs.close();
-			st.close();
-			rs1.close();
-			st1.close();
+			if(rs != null)
+			{
+				rs.close();
+				st.close();
+			}
+			if(rs1!=null)
+			{
+				rs1.close();
+				st1.close();
+			}
 			con.close();	
 		}catch (SQLException e) {
 			e.printStackTrace();
@@ -146,14 +158,14 @@ public class addUserServlet extends HttpServlet {
 	          {
 		          message.setText("Hi "+to+"\n"+first_name+" has sent you an invitation to join his Budget Chummy account\n"+
                           "Click the below link to join\n"+
-        		          "FirstPage.jsp?account_id="+accid+"&invitation_id="+invitationid+"\n"+
+        		          "BC?account_id="+accid+"&invitation_id="+invitationid+"\n"+
                           "Passcode : "+passcode);	        	  
 	          }
 	          else
 	          {
 		          message.setText("Hi "+to+"\n"+first_name+" has sent you an invitation to join his Budget Chummy account\n"+
                           "Click the below link to join\n"+
-        		          "FirstPage.jsp?account_id="+accid+"&invitation_id="+invitationid);	        	  
+        		          "BC?account_id="+accid+"&invitation_id="+invitationid);	        	  
 	          }
 
 	          // Send message

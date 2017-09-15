@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet(urlPatterns = {"/logout", "/BudgetChummy/logout"})
+@WebServlet(urlPatterns = {"/api/v1/logout", "/BudgetChummy/api/v1/logout"})
 public class logoutServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -25,16 +25,16 @@ public class logoutServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
 		if(session == null)
 		{
-			response.sendRedirect("login.jsp");
+			response.sendRedirect("login");
 		}
 		session.removeAttribute("useremail");
 		session.removeAttribute("user_id");
 		session.removeAttribute("account_id");
 		session.invalidate();
-//		response.sendRedirect("FirstPage.jsp");
+//		response.sendRedirect("BC");
 	}
 
 }

@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,7 +27,7 @@ import java.util.*;
 import com.budgetchummy.api.util.APIConstants;
 import com.budgetchummy.api.util.Datehelper;
 
-@WebServlet(urlPatterns = {"/search", "/BudgetChummy/search"})
+@WebServlet(urlPatterns = {"/api/v1/search", "/BudgetChummy/api/v1/search"})
 public class searchServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -56,14 +57,12 @@ public class searchServlet extends HttpServlet {
 		try {
 			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			Statement st=null, st1=null;
-			st = con.createStatement();
-			st1 = con.createStatement();
+			PreparedStatement st=null, st1=null;
 			ResultSet rs=null;
-			HttpSession session = request.getSession();
+			HttpSession session = request.getSession(false);
 			if(session == null)
 			{
-				response.sendRedirect("login.jsp");
+				response.sendRedirect("login");
 			}
 			Object user_attribute = session.getAttribute("user_id");
 			Object acc_attribute = session.getAttribute("account_id");
@@ -71,16 +70,20 @@ public class searchServlet extends HttpServlet {
 			accid = Long.parseLong(String.valueOf(acc_attribute));
 			Map<Long, String> tags = new HashMap<Long, String>();
 
-			String query = "select tag_id, tag_name from tags where account_id="+accid+";";
-			rs = st.executeQuery(query);
+			st = con.prepareStatement("select tag_id, tag_name from tags where account_id=?;");
+			st.setLong(1, accid);
+			rs = st.executeQuery();
 			while(rs.next())
 			{
 				tags.put(rs.getLong("tag_id"), rs.getString("tag_name"));
 			}
 			rs=null;
 
-			query = "select amount,tag_id from transactions where account_id="+accid+" AND date="+date+" AND transaction_type='income';";
-			rs = st1.executeQuery(query);
+			st1 = con.prepareStatement("select amount,tag_id from transactions where account_id=? AND date=? AND transaction_type=?;");
+			st1.setLong(1, accid);
+			st1.setLong(2, date);
+			st1.setString(3, "income");
+			rs = st1.executeQuery();
 			float amount=-1;
 			String tag_name=null;
 			JSONArray income_arr = new JSONArray();
@@ -94,10 +97,13 @@ public class searchServlet extends HttpServlet {
 				income_arr.add(income_obj.toJSONString());
 				income_obj.clear();
 			}
-			
-			query = "select amount,tag_id from transactions where account_id="+accid+" AND date='"+date+"' AND transaction_type='expense';";
 			rs=null;
-			rs = st1.executeQuery(query);
+
+			st1 = con.prepareStatement("select amount,tag_id from transactions where account_id=? AND date=? AND transaction_type=?;");
+			st1.setLong(1, accid);
+			st1.setLong(2, date);
+			st1.setString(3, "expense");
+			rs = st1.executeQuery();
 			JSONArray expense_arr = new JSONArray();
 			JSONObject expense_obj = new JSONObject();	
 			while(rs.next())
@@ -109,9 +115,15 @@ public class searchServlet extends HttpServlet {
 				expense_arr.add(expense_obj.toJSONString());
 				expense_obj.clear();
 			}
-			rs.close();
-			st.close();
-			st1.close();
+			if(rs != null)
+			{
+				rs.close();
+				st.close();
+			}
+			if(st1!=null)
+			{
+				st1.close();
+			}
 			con.close();
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");

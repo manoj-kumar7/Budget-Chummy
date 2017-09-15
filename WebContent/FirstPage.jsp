@@ -12,11 +12,11 @@ $(document).ready(function(){
 	$("#login").click(function(){
 		if(<%=request.getParameter("account_id")%> == null || <%=request.getParameter("invitation_id")%> == null)
 		{
-			location.href="login.jsp";
+			location.href="login";
 		}
 		else
 		{
-			location.href="login.jsp"+
+			location.href="login"+
             "?account_id="+<%=request.getParameter("account_id")%>+
             "&invitation_id="+<%=request.getParameter("invitation_id")%>;
 		}
@@ -25,11 +25,11 @@ $(document).ready(function(){
 	$("#signup,.get-started-btn").click(function(){
 		if(<%=request.getParameter("account_id")%> == null || <%=request.getParameter("invitation_id")%> == null)
 		{
-			location.href="signup.jsp";
+			location.href="signup";
 		}
 		else
 		{
-			location.href="signup.jsp"+
+			location.href="signup"+
             "?account_id="+<%=request.getParameter("account_id")%>+
             "&invitation_id="+<%=request.getParameter("invitation_id")%>;
 		}
@@ -44,11 +44,11 @@ $(document).ready(function(){
 <%
 if(session.getAttribute("account_id") != null)
 {
-	response.sendRedirect("home.jsp");
+	response.sendRedirect("home");
 }
 else if(session.getAttribute("user_id") != null)
 {
-	response.sendRedirect("ChooseAccount.jsp");
+	response.sendRedirect("ChooseAccount");
 }
 %>
 	<div id="firstpage-top-text" class="firstpage-top">Already have an account?<span id="login" class="firstpage-top-btn"> Login </span> or <span id="signup" class="firstpage-top-btn"> Signup </span></div>

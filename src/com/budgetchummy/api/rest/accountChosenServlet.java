@@ -9,7 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 
-@WebServlet(urlPatterns = {"/accountChosen","/BudgetChummy/accountChosen"})
+@WebServlet(urlPatterns = {"/api/v1/accountChosen","/BudgetChummy/api/v1/accountChosen"})
 public class accountChosenServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -28,13 +28,13 @@ public class accountChosenServlet extends HttpServlet {
 		response.setContentType("text/html");
 		long acc_id = Long.parseLong(request.getParameter("account_id"));
 		String page_name = request.getParameter("page_name");
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(false);
 		if(session == null)
 		{
-			response.sendRedirect("login.jsp");
+			response.sendRedirect("login");
 		}
 		session.setAttribute("account_id",acc_id);
-//		String homeurl = new String("home.jsp?page='"+page_name+"'");
+//		String homeurl = new String("home?page='"+page_name+"'");
 //		response.setStatus(response.SC_MOVED_TEMPORARILY);
 //        response.setHeader("Location", homeurl);		
 

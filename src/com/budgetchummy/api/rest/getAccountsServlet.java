@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +27,7 @@ import org.json.simple.JSONObject;
 import com.budgetchummy.api.util.APIConstants;
 
 
-@WebServlet(urlPatterns = {"/getAccounts", "/BudgetChummy/getAccounts"})
+@WebServlet(urlPatterns = {"/api/v1/getAccounts", "/BudgetChummy/api/v1/getAccounts"})
 public class getAccountsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -54,13 +55,11 @@ public class getAccountsServlet extends HttpServlet {
 		try {
 			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			Statement st=null,st1=null;
-			st = con.createStatement();
-			st1 = con.createStatement();
-			HttpSession session = request.getSession();
+			PreparedStatement st=null,st1=null;
+			HttpSession session = request.getSession(false);
 			if(session == null)
 			{
-				response.sendRedirect("login.jsp");
+				response.sendRedirect("login");
 			}
 			Object attribute = session.getAttribute("user_id");
 			long userid = Long.parseLong(String.valueOf(attribute));
@@ -71,8 +70,9 @@ public class getAccountsServlet extends HttpServlet {
 				accid = Long.parseLong(String.valueOf(acc_attribute));				
 			}
 			String query=null;
-			query = "select account_id from adduser where user_id="+userid+";";
-			ResultSet rs = st.executeQuery(query);
+			st = con.prepareStatement("select account_id from adduser where user_id=?;");
+			st.setLong(1, userid);
+			ResultSet rs = st.executeQuery();
 			ResultSet rs1 = null;
 			JSONArray ja = new JSONArray();
 			JSONObject jo = new JSONObject();
@@ -81,8 +81,9 @@ public class getAccountsServlet extends HttpServlet {
 			{
 				acc_id = rs.getInt("account_id");
 				jo.put("account_id", acc_id);
-				query = "select account_name from accounts where account_id="+acc_id+";";
-				rs1 = st1.executeQuery(query);
+				st1 = con.prepareStatement("select account_name from accounts where account_id=?;");
+				st1.setLong(1, acc_id);
+				rs1 = st1.executeQuery();
 				while(rs1.next())
 				{
 					String acc_name = rs1.getString("account_name");
@@ -96,11 +97,16 @@ public class getAccountsServlet extends HttpServlet {
 				jo.put("current_account", accid);
 				ja.add(jo.toJSONString());
 			}
-			rs.close();
-			if(rs1 != null)
+			if(rs != null)
+			{
+				rs.close();
+				st.close();
+			}
+			if(rs1!=null)
+			{
 				rs1.close();
-			st.close();
-			st1.close();
+				st1.close();
+			}
 			con.close();
 			response.setContentType("application/json");
 			response.setCharacterEncoding("UTF-8");

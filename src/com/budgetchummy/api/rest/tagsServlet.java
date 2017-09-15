@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -24,7 +25,7 @@ import com.budgetchummy.api.util.APIConstants;
 /**
  * Servlet implementation class tagsServlet
  */
-@WebServlet(urlPatterns = {"/tags", "/BudgetChummy/tags"})
+@WebServlet(urlPatterns = {"/api/v1/tags", "/BudgetChummy/api/v1/tags"})
 public class tagsServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
  
@@ -51,19 +52,20 @@ public class tagsServlet extends HttpServlet {
 		try {
 			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			Statement st=null;
-			st = con.createStatement();
-			HttpSession session = request.getSession();
+			PreparedStatement st=null;
+			HttpSession session = request.getSession(false);
 			if(session == null)
 			{
-				response.sendRedirect("login.jsp");
+				response.sendRedirect("login");
 			}
 			Object account_attribute = session.getAttribute("account_id");
 			long accid = Long.parseLong(String.valueOf(account_attribute));
 			String query=null,tag_name=null;
 			long tag_id=-1;
-			query = "select tag_id,tag_name from tags where account_id="+accid+" and tag_type='"+tag_type+"';";
-			ResultSet rs = st.executeQuery(query);
+			st = con.prepareStatement("select tag_id,tag_name from tags where account_id=? and tag_type=?;");
+			st.setLong(1, accid);
+			st.setString(2, tag_type);
+			ResultSet rs = st.executeQuery();
 			JSONArray ja = new JSONArray();
 			JSONObject jo = new JSONObject();
 			while(rs.next())
@@ -107,18 +109,20 @@ public class tagsServlet extends HttpServlet {
 		try {
 			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			Statement st=null;
-			st = con.createStatement();
-			HttpSession session = request.getSession();
+			PreparedStatement st=null;
+			HttpSession session = request.getSession(false);
 			if(session == null)
 			{
-				response.sendRedirect("login.jsp");
+				response.sendRedirect("login");
 			}
 			Object account_attribute = session.getAttribute("account_id");
 			long accid = Long.parseLong(String.valueOf(account_attribute));
 			String query=null;
-			query = "insert into tags(account_id,tag_name,tag_type) values("+accid+",'"+tag_name+"','"+tag_type+"')";
-			st.executeUpdate(query);
+			st = con.prepareStatement("insert into tags(account_id,tag_name,tag_type) values("+accid+",'"+tag_name+"','"+tag_type+"')");
+			st.setLong(1, accid);
+			st.setString(2, tag_name);
+			st.setString(3, tag_type);
+			int i = st.executeUpdate();
 			st.close();
 			con.close();
 			response.setContentType("application/json");

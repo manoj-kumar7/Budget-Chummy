@@ -8,7 +8,7 @@
 	{
 		if(session.getAttribute("user_id") != null)
 		{
-			response.sendRedirect("/BudgetChummy/ChooseAccount.jsp");
+			response.sendRedirect("/BudgetChummy/ChooseAccount");
 			return;
 		}
 		else

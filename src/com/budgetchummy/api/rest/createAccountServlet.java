@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,7 +25,7 @@ import com.budgetchummy.api.util.APIConstants;
 import com.budgetchummy.api.util.Datehelper;
 
 
-@WebServlet(urlPatterns = {"/createAccount", "/BudgetChummy/createAccount"})
+@WebServlet(urlPatterns = {"/api/v1/createAccount", "/BudgetChummy/api/v1/createAccount"})
 public class createAccountServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -62,8 +63,7 @@ public class createAccountServlet extends HttpServlet {
 		try {
 			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			Statement st=null;
-			st = con.createStatement();
+			PreparedStatement st=null;
 			ResultSet rs = null;
 			String query=null;
 
@@ -71,26 +71,33 @@ public class createAccountServlet extends HttpServlet {
 		    Date dateobj = new Date();
 		    df.setTimeZone(TimeZone.getTimeZone("IST"));
 		    
-			HttpSession session = request.getSession();
+			HttpSession session = request.getSession(false);
 			if(session == null)
 			{
-				response.sendRedirect("login.jsp");
+				response.sendRedirect("login");
 			}
 			Object user_attribute = session.getAttribute("user_id");
 			userid = Long.parseLong(String.valueOf(user_attribute));
 			added_date = Datehelper.dateToEpoch(df.format(dateobj));
 
-			query = "insert into accounts(account_name,created_by,no_of_members,created_date_time) values('"+account_name+"',"+userid+","+1+","+added_date+");";
-			st.executeUpdate(query);
-			query = "select lastval();";
-			rs = st.executeQuery(query);
+			st = con.prepareStatement("insert into accounts(account_name,created_by,no_of_members,created_date_time) values(?,?,?,?);");
+			st.setString(1, account_name);
+			st.setLong(2, userid);
+			st.setInt(3, 1);
+			st.setLong(4, added_date);
+			int i = st.executeUpdate();
+			st = con.prepareStatement("select lastval();");
+			rs = st.executeQuery();
 			if(rs.next())
 			{
 				accountid = rs.getInt(1);
-				query = "insert into adduser(account_id,user_id,role) values("+accountid+","+userid+",'admin');";
+				st = con.prepareStatement("insert into adduser(account_id,user_id,role) values("+accountid+","+userid+",'admin');");
+				st.setLong(1, accountid);
+				st.setLong(2, userid);
+				st.setString(3, "admin");
+				int j = st.executeUpdate();
 			}
 			rs.close();
-			st.executeUpdate(query);
 			st.close();
 			con.close();
 		} catch (SQLException e) {
@@ -98,7 +105,7 @@ public class createAccountServlet extends HttpServlet {
 		}	
 		HttpSession session = request.getSession();
 		session.setAttribute("account_id",accountid);
-//		String homeurl = new String("home.jsp");
+//		String homeurl = new String("home");
 //		response.setStatus(response.SC_MOVED_TEMPORARILY);
 //        response.setHeader("Location", homeurl);
 	}
