@@ -54,13 +54,13 @@ public class addUserServlet extends HttpServlet {
 		String url = APIConstants.POSTGRESQL_URL;
 		String user = APIConstants.POSTGRESQL_USERNAME;
 		String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
-		String to = request.getParameter("add-user-input");
+		String to = request.getParameter("to");
 		String authentication_type = request.getParameter("authentication_type");
 		String passcode=null;
 		long invitationid = 0;
 		if(authentication_type.equals("Offline"))
 		{
-			passcode = request.getParameter("offline-code");
+			passcode = request.getParameter("passcode");
 		}
 		else
 		{
@@ -71,6 +71,7 @@ public class addUserServlet extends HttpServlet {
 		String pass="Manoj@bc1";
 		String host = "localhost";
 		String first_name=null;
+		String rootURL = APIConstants.rootURL;
 		
 		
 		Properties properties = System.getProperties();
@@ -158,14 +159,14 @@ public class addUserServlet extends HttpServlet {
 	          {
 		          message.setText("Hi "+to+"\n"+first_name+" has sent you an invitation to join his Budget Chummy account\n"+
                           "Click the below link to join\n"+
-        		          "BC?account_id="+accid+"&invitation_id="+invitationid+"\n"+
+        		          rootURL + "BC?account_id="+accid+"&invitation_id="+invitationid+"\n"+
                           "Passcode : "+passcode);	        	  
 	          }
 	          else
 	          {
 		          message.setText("Hi "+to+"\n"+first_name+" has sent you an invitation to join his Budget Chummy account\n"+
                           "Click the below link to join\n"+
-        		          "BC?account_id="+accid+"&invitation_id="+invitationid);	        	  
+        		          rootURL + "BC?account_id="+accid+"&invitation_id="+invitationid);	        	  
 	          }
 
 	          // Send message

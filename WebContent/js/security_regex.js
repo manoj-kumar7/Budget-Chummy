@@ -1,6 +1,6 @@
 var emailErrorText = "Invalid email address";
-var passwordErrorText = "A password should contain minimum of 6 and maximum of 16 characters with atleast one number, one lowercase letter, one uppercase letter and one special symbol (!@#$%^&*)";
-var nameErrorText = "A name can contain maximum of 16 characters with lowercase, uppercase, numbers and special characters (!@#$%^-_' )";
+var passwordErrorText = "A password can contain maximum of 16 characters with lowercase, uppercase, numbers and special characters (!@#$%^-_')";
+var nameErrorText = "A name can contain maximum of 16 characters with lowercase, uppercase, numbers and special characters (!@#$%^-_')";
 var cookiesDisabledMessage = "Browser cookies are disabled. Enable your cookies and try again.";
 
 function validateEmail(email){
@@ -9,11 +9,12 @@ function validateEmail(email){
 }
 
 function validatePassword(pword){
-	var re = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+	// var re = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+	var re = /^[a-zA-Z0-9!@#$%^-_']{1,16}$/;
 	return re.test(pword);
 }
 
 function validateName(name){
-	var re = /^[a-zA-Z0-9!@#$%^-_' ]{1,16}$/;
+	var re = /^[a-zA-Z0-9!@#$%^-_']{1,16}$/;
 	return re.test(name);
 }

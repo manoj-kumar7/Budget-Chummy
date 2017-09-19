@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 
 import com.budgetchummy.api.util.APIConstants;
 import com.budgetchummy.api.util.Datehelper;
+import com.budgetchummy.api.util.PasswordUtil;
 
 import java.util.Date;
 import java.text.DateFormat;
@@ -59,6 +60,7 @@ public class signUpServlet extends HttpServlet {
 		String user = APIConstants.POSTGRESQL_USERNAME;
 		String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
 		
+		String generatedPassword = PasswordUtil.generatePassword(pword);
 
 		try {
 			Class.forName("org.postgresql.Driver");
@@ -77,31 +79,44 @@ public class signUpServlet extends HttpServlet {
 		    Date dateobj = new Date();
 		    df.setTimeZone(TimeZone.getTimeZone("IST"));
 		    added_date = Datehelper.dateToEpoch(df.format(dateobj));
-			st = con.prepareStatement("insert into users(first_name,last_name,email,password,created_date_time) values(?,?,?,?,?);");
-			st.setString(1, first_name);
-			st.setString(2, last_name);
-			st.setString(3, email);
-			st.setString(4, pword);
-			st.setLong(5, added_date);
-			st.executeUpdate();
-
-			st = con.prepareStatement("select user_id from users where email=?;");
-			st.setString(1, email);
-			rs = st.executeQuery();
-
-			while(rs.next())
+		    st = con.prepareStatement("select * from users where email=?");
+		    st.setString(1, email);
+		    rs = st.executeQuery();
+		    if(rs.next())
 			{
-				userid = rs.getInt("user_id");
+				response.setStatus(401);
 			}
+			else
+			{
+				st = con.prepareStatement("insert into users(first_name,last_name,email,password,created_date_time) values(?,?,?,?,?);");
+				st.setString(1, first_name);
+				st.setString(2, last_name);
+				st.setString(3, email);
+				st.setString(4, generatedPassword);
+				st.setLong(5, added_date);
+				int i = st.executeUpdate();
+
+				rs = null;
+				st = con.prepareStatement("select user_id from users where email=?;");
+				st.setString(1, email);
+				rs = st.executeQuery();
+
+				while(rs.next())
+				{
+					userid = rs.getInt("user_id");
+				}
+				HttpSession session = request.getSession();
+				session.setAttribute("useremail",email);
+				session.setAttribute("user_id",userid);
+			}
+
 			rs.close();
 			st.close();
 			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}	
-		HttpSession session = request.getSession();
-		session.setAttribute("useremail",email);
-		session.setAttribute("user_id",userid);
+
 		
 //		if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
 //		{

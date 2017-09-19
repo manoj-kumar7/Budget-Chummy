@@ -348,6 +348,9 @@
 		    $('#users-tab').click(function(){
 		    	initial_page_load("users");
 		    });
+		    $('#add-user-send').on('click', function(){
+		    	add_user_ajax_call();
+		    });
 		    $('#logout').click(function(){
 		    	logout_ajax_call();
 		    });
@@ -716,37 +719,34 @@
     </div>
   </div>
 
-<form action="addUser" method="post">
-  <div class="modal add-user-modal" id="addUserModal" role="dialog" style="display:none;">
-    <div class="modal-dialog">
+<div class="modal add-user-modal" id="addUserModal" role="dialog" style="display:none;">
+<div class="modal-dialog">
 
-      <div class="modal-content">
-        <div class="modal-header">
-        	<img src="images/close-icon.png" class="icon close-icon" alt="Close" data-dismiss="modal">
-			<h4 class="modal-title">Add User</h4>
-        </div>
-        <div class="modal-body">
-        	Enter the email address of the user to send invitation
-        	<div>
-				<input type="text" id="add-user-input" name="add-user-input" class="text add-user-input"/>
+  <div class="modal-content">
+    <div class="modal-header">
+    	<img src="images/close-icon.png" class="icon close-icon" alt="Close" data-dismiss="modal">
+		<h4 class="modal-title">Add User</h4>
+    </div>
+    <div class="modal-body">
+    	Enter the email address of the user to send invitation
+    	<div>
+			<input type="text" id="add-user-input" name="add-user-input" class="text add-user-input"/>
+		</div>
+		Set authentication
+		<div>
+			<input type="radio" id="email-radio" name="authentication_type" value="Email" checked> Email
+ 			<input type="radio" id="offline-radio" name="authentication_type" value="Offline"> Offline<br>
 			</div>
-			Set authentication
-			<div>
-				<input type="radio" id="email-radio" name="authentication_type" value="Email" checked> Email
-	 			<input type="radio" id="offline-radio" name="authentication_type" value="Offline"> Offline<br>
- 			</div>
- 			<div id="set-offline-code" style="display:none;">
- 				<input type="text" id="offline-code" name="offline-code" class="text offline-code-input"/>
- 			</div>
-        </div>
-        <div class="modal-footer">
-        	<input type="submit" id="add-user-send" class="add-user-send btn" value="Send"/>
-        </div>
-      </div>
-      
+			<div id="set-offline-code" style="display:none;">
+				<input type="text" id="offline-code" name="offline-code" class="text offline-code-input"/>
+			</div>
+    </div>
+    <div class="modal-footer">
+    	<button id="add-user-send" class="add-user-send btn" value="Send invitation">Send invitation</button>
     </div>
   </div>
-</form>
+  
+</div>
 
 <div id="generic-modal-form">
   <div class="modal generic-modal" id="genericModal" role="dialog" style="display:none;">

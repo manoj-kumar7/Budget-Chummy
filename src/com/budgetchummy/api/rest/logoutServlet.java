@@ -30,10 +30,13 @@ public class logoutServlet extends HttpServlet {
 		{
 			response.sendRedirect("login");
 		}
-		session.removeAttribute("useremail");
-		session.removeAttribute("user_id");
-		session.removeAttribute("account_id");
-		session.invalidate();
+		else
+		{
+			session.removeAttribute("useremail");
+			session.removeAttribute("user_id");
+			session.removeAttribute("account_id");
+			session.invalidate();
+		}
 //		response.sendRedirect("BC");
 	}
 

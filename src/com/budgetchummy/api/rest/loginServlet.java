@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import com.budgetchummy.api.util.APIConstants;
+import com.budgetchummy.api.util.PasswordUtil;
 
 /**
  * Servlet implementation class loginServlet
@@ -62,10 +63,11 @@ public class loginServlet extends HttpServlet
 			{
 				password = rs.getString("password");
 				userid = rs.getLong("user_id");
-				if(password.equals(pword))
-				{
-					valid = true;
-				}
+				// if(password.equals(pword))
+				// {
+				// 	valid = true;
+				// }
+				valid = PasswordUtil.verifyPassword(pword, password);
 			}	
 			rs.close();
 			st.close();

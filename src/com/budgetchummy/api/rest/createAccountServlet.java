@@ -91,7 +91,7 @@ public class createAccountServlet extends HttpServlet {
 			if(rs.next())
 			{
 				accountid = rs.getInt(1);
-				st = con.prepareStatement("insert into adduser(account_id,user_id,role) values("+accountid+","+userid+",'admin');");
+				st = con.prepareStatement("insert into adduser(account_id,user_id,role) values(?,?,?);");
 				st.setLong(1, accountid);
 				st.setLong(2, userid);
 				st.setString(3, "admin");

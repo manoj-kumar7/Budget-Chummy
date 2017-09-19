@@ -20,8 +20,8 @@ html, body {
 }
 .bc-lead-container{
 	position: absolute;
-	top: 140px;
-	left: 50px;
+	top: 20%;
+	left: 4%;
 }
 
 .bc-lead-tagline{
@@ -56,7 +56,7 @@ html, body {
 	float: right;
     margin-right: 15px;
     margin-top: 5px;
-    font-size: 13px;
+    font-size: 14px;
     font-family: Graphik LC Web,-apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;
 }
 .firstpage-top-btn{
@@ -99,16 +99,24 @@ html, body {
 
 #login-form-div{
 	position: absolute;
-	left: 37%;
-	top: 33%;
+	margin: auto;
+	left: 0;
+	right: 0;
+	top: 35%;
+	bottom: 0;
 	text-align: center;
+	width: 20%;
 }
 
 #signup-form-div{
-	position: absolute;
-	left: 37%;
-	top: 24%;
-	text-align: center;
+  position: absolute;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 25%;
+  bottom: 0;
+  text-align: center;
+  width: 20%;
 }
 
 #create-account-form-div{
@@ -119,8 +127,7 @@ html, body {
 }
 
 .firstpage-textbox-space .textbox_space {
-    width: 250px;
-    height: 50px;
+    width: 100%;
 }
 .modal .textbox_space {
 	width: 468px;
@@ -865,6 +872,7 @@ div.tab button.active .tab-title{
 
 
 /* Loaders */
+
 .loader.active span{
   position: relative;
   left: 45%;

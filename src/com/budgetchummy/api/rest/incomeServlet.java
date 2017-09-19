@@ -215,7 +215,7 @@ public class incomeServlet extends HttpServlet {
 				st.setString(6, transaction_type);
 				st.setLong(7, added_date);			
 			}
-			st.executeUpdate();
+			int i = st.executeUpdate();
 			st.close();
 			con.close();
 		} catch (SQLException e) {

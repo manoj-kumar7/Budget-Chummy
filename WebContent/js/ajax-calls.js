@@ -20,7 +20,7 @@
 						}
 					},
 					error:function(data){
-						showAjaxFailureMessage("Invalid email or password");
+						showAjaxFailureMessage("Invalid email and/or password");
 					}
 				});	
 			}
@@ -49,7 +49,7 @@
 						}
 					},
 					error:function(data){
-						//showAjaxFailureMessage("");
+						showAjaxFailureMessage("This email address already has an BC account");
 					}
 				});	
 			}
@@ -81,7 +81,7 @@
 					data:{passcode: passcode,account_id:account_id,invitation_id:invitation_id},
 					async: false,
 					success:function(data){
-						
+						location.href = "home";
 					},
 					error:function(data){
 						showAjaxFailureMessage("Incorrect passcode");
@@ -424,22 +424,33 @@
 				});				
 			}
 			
-//			var add_user_ajax_call = function(){
-//				$.ajax({
-//					type:"POST",
-//					url:"addUserServlet",
-//					success:function(data){
-//						if(data != null)
-//						{
-//							for(var i=0;i<data.length;i++)
-//							{
-//								var obj = jQuery.parseJSON(data[i]);
-//								$("#accounts-list").append("<div class='accounts' onclick=javascript:document.getElementById('account_id').value="+obj.account_id+";document.forms[0].submit();>"+obj.account_name+"</div><br>");
-//							}
-//						}
-//					}
-//				});				
-//			}
+			var add_user_ajax_call = function(){
+				var to = $('#add-user-input').val();
+				var authentication_type = $('input[name=authentication_type]:checked').val();
+				if(authentication_type === "Offline")
+				{
+					var passcode = '-1';
+				}
+				else
+				{
+					var passcode = $('#offline-code').val();
+				}
+				$.ajax({
+					type:"POST",
+					url:"/BudgetChummy/api/v1/addUser",
+					data:{to: to, authentication_type: authentication_type, passcode: passcode},
+					success:function(data){
+						if(data != null)
+						{
+							for(var i=0;i<data.length;i++)
+							{
+								var obj = jQuery.parseJSON(data[i]);
+								$("#accounts-list").append("<div class='accounts' onclick=javascript:document.getElementById('account_id').value="+obj.account_id+";document.forms[0].submit();>"+obj.account_name+"</div><br>");
+							}
+						}
+					}
+				});				
+			}
 			var getAccounts_ajax_call = function(page)
 			{
 				$.ajax({
@@ -559,7 +570,7 @@
 					async: false,
 					success:function()
 					{
-						location.href = "/BudgetChummy/BC";
+						location.href = "BC";
 					}
 				});	
 			}

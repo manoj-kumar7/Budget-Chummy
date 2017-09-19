@@ -27,6 +27,11 @@
 		    <artifactId>postgresql</artifactId>
 		    <version>42.1.4.jre7</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.mindrot</groupId>
+		    <artifactId>jbcrypt</artifactId>
+		    <version>0.4</version>
+		</dependency>
     </dependencies>
   <build>
     <sourceDirectory>src</sourceDirectory>

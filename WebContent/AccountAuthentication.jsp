@@ -26,8 +26,8 @@
 <body>
 	<div class="join-acc-authentication">
 		<label>Enter passcode</label><input type="text" name="passcode" id="passcode" class="textbox passcode">
-		<input type="hidden" value="<%=request.getParameter("account_id") %>" name="account_id">
-		<input type="hidden" value="<%=request.getParameter("invitation_id") %>" name="invitation_id">
+		<input type="hidden" id="account_id" value="<%=request.getParameter("account_id") %>" name="account_id">
+		<input type="hidden" id="invitation_id" value="<%=request.getParameter("invitation_id") %>" name="invitation_id">
 		<button class="join-acc-btn bc-btn" value="Join Account">Join Account</button>
 	</div>
 	<script type="text/javascript" src="js/security_regex.js"></script>
