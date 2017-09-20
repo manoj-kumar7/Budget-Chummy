@@ -67,7 +67,7 @@ public class addUserServlet extends HttpServlet {
 			Random ran = new Random();
 			passcode = String.valueOf(100000 + ran.nextInt(900000));
 		}
-		String from = "manoj.budgetchummy@gmail.com";
+		String from = "manoj.budgetchummy@yahoo.com";
 		String pass="Manoj@bc1";
 		String host = "localhost";
 		String first_name=null;
@@ -75,7 +75,7 @@ public class addUserServlet extends HttpServlet {
 		
 		
 		Properties properties = System.getProperties();
-		properties.setProperty("mail.smtp.host", "smtp.gmail.com");
+		properties.setProperty("mail.smtp.host", "smtp.mail.yahoo.com");
 		properties.put("mail.smtp.auth", "true");
 		if(APIConstants.isProduction)
 		{
@@ -95,7 +95,7 @@ public class addUserServlet extends HttpServlet {
 	    {
 	  	  protected PasswordAuthentication getPasswordAuthentication() 
 	  	  {
-	  	 	 return new PasswordAuthentication("manoj.budgetchummy@gmail.com","Manoj@bc1");
+	  	 	 return new PasswordAuthentication("manoj.budgetchummy@yahoo.com","Manoj@bc1");
 	  	  }
 	   });	
 	    session.setDebug(true);
