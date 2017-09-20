@@ -76,7 +76,7 @@ public class addUserServlet extends HttpServlet {
 		
 		Properties properties = System.getProperties();
 		properties.setProperty("mail.smtp.host", "smtp.gmail.com");
-		//properties.put("mail.smtp.auth", "true");
+		properties.put("mail.smtp.auth", "true");
 		if(APIConstants.isProduction)
 		{
 			properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
