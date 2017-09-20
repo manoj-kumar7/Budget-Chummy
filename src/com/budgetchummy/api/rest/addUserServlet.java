@@ -76,7 +76,7 @@ public class addUserServlet extends HttpServlet {
 		
 		Properties properties = System.getProperties();
 		properties.setProperty("mail.smtp.host", "smtp.gmail.com");
-		properties.put("mail.smtp.auth", "true");
+		//properties.put("mail.smtp.auth", "true");
 		if(APIConstants.isProduction)
 		{
 			properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
@@ -96,7 +96,8 @@ public class addUserServlet extends HttpServlet {
 	  	  {
 	  	 	 return new PasswordAuthentication("manoj.budgetchummy@gmail.com","Manoj@bc1");
 	  	  }
-	   });		
+	   });	
+	    session.setDebug(true);
 		
 		try {
 			Class.forName("org.postgresql.Driver");
