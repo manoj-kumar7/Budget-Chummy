@@ -75,10 +75,20 @@ public class addUserServlet extends HttpServlet {
 		
 		
 		Properties properties = System.getProperties();
-		properties.put("mail.smtp.auth", "true");
-		properties.put("mail.smtp.starttls.enable", "true");
 		properties.setProperty("mail.smtp.host", "smtp.gmail.com");
-		properties.put("mail.smtp.port", "587");
+		properties.put("mail.smtp.auth", "true");
+		if(APIConstants.isProduction)
+		{
+			properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+			properties.put("mail.smtp.socketFactory.port", "465");
+			properties.put("mail.smtp.port", "465");
+		}
+		else
+		{
+			properties.put("mail.smtp.starttls.enable", "true");
+			properties.put("mail.smtp.port", "587");
+		}
+		
 		//properties.setProperty("mail.password", "Manoj@bc1");
 	    Session session = Session.getInstance(properties,new javax.mail.Authenticator()
 	    {
