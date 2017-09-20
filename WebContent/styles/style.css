@@ -67,8 +67,8 @@ html, body {
 
 .get-started-btn-div{
     position: absolute;
-    top: 390px;
-    left: 40px;
+    top: 55%;
+    left: 4%;
 }
 
 .get-started-btn-div .get-started-btn{
@@ -120,10 +120,14 @@ html, body {
 }
 
 #create-account-form-div{
-	position: absolute;
-	left: 37%;
-	top: 33%;
-	text-align: center;
+  position: absolute;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 40%;
+  bottom: 0;
+  text-align: center;
+  width: 20%;
 }
 
 .firstpage-textbox-space .textbox_space {
@@ -446,11 +450,11 @@ html, body {
 }
 .logout{
     position: absolute;
-    left: 94%;
+    right: 1%;
     top: 1%;
     background-color: #f4511e;
     color: #fff;
-    padding: 2px 16px;
+    padding: 4px 16px;
     font-size: 12px;
     border: none;
     cursor: pointer;
@@ -734,8 +738,8 @@ div.tab button.active .tab-title{
 }
 
 .empty-data img{
-	width: 400px;
-	height: 300px;
+	width: 50%;
+	height: 50%;
 }
 
 .empty-data .empty-data-text{
@@ -809,7 +813,7 @@ div.tab button.active .tab-title{
    display: none;
    cursor: pointer;
    position: absolute;
-   top: 80%;
+   bottom: 10%;
    left: 4%;
    width: 80px;
    height: 80px;

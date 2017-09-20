@@ -9,71 +9,63 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>FirstPage.jsp</welcome-file>
   </welcome-file-list>
-
   <servlet>
-  	<servlet-name>firstpage_jsp</servlet-name>
-  	<jsp-file>/FirstPage.jsp</jsp-file>
+    <servlet-name>firstpage_jsp</servlet-name>
+    <jsp-file>/FirstPage.jsp</jsp-file>
   </servlet>
   <servlet-mapping>
-	<servlet-name>firstpage_jsp</servlet-name>
-	<url-pattern>/BC</url-pattern> <!-- Use this URL -->
+    <servlet-name>firstpage_jsp</servlet-name>
+    <url-pattern>/BC</url-pattern>
   </servlet-mapping>
-  
   <servlet>
-  	<servlet-name>login_jsp</servlet-name>
-  	<jsp-file>/login.jsp</jsp-file>
+    <servlet-name>login_jsp</servlet-name>
+    <jsp-file>/login.jsp</jsp-file>
   </servlet>
   <servlet-mapping>
-	<servlet-name>login_jsp</servlet-name>
-	<url-pattern>/login</url-pattern> <!-- Use this URL -->
+    <servlet-name>login_jsp</servlet-name>
+    <url-pattern>/login</url-pattern>
   </servlet-mapping>
-
   <servlet>
-  	<servlet-name>signup_jsp</servlet-name>
-  	<jsp-file>/signup.jsp</jsp-file>
+    <servlet-name>signup_jsp</servlet-name>
+    <jsp-file>/signup.jsp</jsp-file>
   </servlet>
   <servlet-mapping>
-	<servlet-name>signup_jsp</servlet-name>
-	<url-pattern>/signup</url-pattern> <!-- Use this URL -->
+    <servlet-name>signup_jsp</servlet-name>
+    <url-pattern>/signup</url-pattern>
   </servlet-mapping>
-
   <servlet>
-  	<servlet-name>home_jsp</servlet-name>
-  	<jsp-file>/home.jsp</jsp-file>
+    <servlet-name>home_jsp</servlet-name>
+    <jsp-file>/home.jsp</jsp-file>
   </servlet>
   <servlet-mapping>
-	<servlet-name>home_jsp</servlet-name>
-	<url-pattern>/home</url-pattern> <!-- Use this URL -->
+    <servlet-name>home_jsp</servlet-name>
+    <url-pattern>/home</url-pattern>
   </servlet-mapping>
-
   <servlet>
-  	<servlet-name>createaccount_jsp</servlet-name>
-  	<jsp-file>/CreateAccount.jsp</jsp-file>
+    <servlet-name>createaccount_jsp</servlet-name>
+    <jsp-file>/CreateAccount.jsp</jsp-file>
   </servlet>
   <servlet-mapping>
-	<servlet-name>createaccount_jsp</servlet-name>
-	<url-pattern>/CreateAccount</url-pattern> <!-- Use this URL -->
+    <servlet-name>createaccount_jsp</servlet-name>
+    <url-pattern>/CreateAccount</url-pattern>
   </servlet-mapping>
-
   <servlet>
-  	<servlet-name>chooseaccount_jsp</servlet-name>
-  	<jsp-file>/ChooseAccount.jsp</jsp-file>
+    <servlet-name>chooseaccount_jsp</servlet-name>
+    <jsp-file>/ChooseAccount.jsp</jsp-file>
   </servlet>
   <servlet-mapping>
-	<servlet-name>chooseaccount_jsp</servlet-name>
-	<url-pattern>/ChooseAccount</url-pattern> <!-- Use this URL -->
+    <servlet-name>chooseaccount_jsp</servlet-name>
+    <url-pattern>/ChooseAccount</url-pattern>
   </servlet-mapping>
-
   <servlet>
-  	<servlet-name>accountauthentication_jsp</servlet-name>
-  	<jsp-file>/AccountAuthentication.jsp</jsp-file>
+    <servlet-name>accountauthentication_jsp</servlet-name>
+    <jsp-file>/AccountAuthentication.jsp</jsp-file>
   </servlet>
   <servlet-mapping>
-	<servlet-name>accountauthentication_jsp</servlet-name>
-	<url-pattern>/AccountAuthentication</url-pattern> <!-- Use this URL -->
+    <servlet-name>accountauthentication_jsp</servlet-name>
+    <url-pattern>/AccountAuthentication</url-pattern>
   </servlet-mapping>
-
   <session-config>
-        <session-timeout>30</session-timeout>
+    <session-timeout>30</session-timeout>
   </session-config>
 </web-app>

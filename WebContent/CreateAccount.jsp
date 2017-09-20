@@ -75,7 +75,7 @@ if(session.getAttribute("account_id") != null)
 }
 else if(session.getAttribute("user_id") == null)
 {
-	response.sendRedirect("/BudgetChummy/");
+	response.sendRedirect("login");
 }
 %>
 	<div id="create-account-form-div">
