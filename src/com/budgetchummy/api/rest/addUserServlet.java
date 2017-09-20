@@ -79,6 +79,7 @@ public class addUserServlet extends HttpServlet {
 		properties.put("mail.smtp.auth", "true");
 		if(APIConstants.isProduction)
 		{
+			properties.put("mail.smtp.starttls.enable", "true");
 			properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 			properties.put("mail.smtp.socketFactory.port", "587");
 			properties.put("mail.smtp.port", "587");
