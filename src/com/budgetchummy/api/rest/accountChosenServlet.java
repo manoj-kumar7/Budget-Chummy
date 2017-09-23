@@ -26,14 +26,17 @@ public class accountChosenServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		response.setContentType("text/html");
-		long acc_id = Long.parseLong(request.getParameter("account_id"));
-		String page_name = request.getParameter("page_name");
 		HttpSession session = request.getSession(false);
-		if(session == null)
+		if(session.getAttribute("user_id") == null)
 		{
-			response.sendRedirect("login");
+			response.setStatus(401);
 		}
-		session.setAttribute("account_id",acc_id);
+		else
+		{
+			long acc_id = Long.parseLong(request.getParameter("account_id"));
+			String page_name = request.getParameter("page_name");
+			session.setAttribute("account_id",acc_id);
+		}
 //		String homeurl = new String("home?page='"+page_name+"'");
 //		response.setStatus(response.SC_MOVED_TEMPORARILY);
 //        response.setHeader("Location", homeurl);		

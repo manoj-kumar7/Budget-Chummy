@@ -28,14 +28,14 @@
 	<script type="text/javascript" src="app/jquery.canvasjs.min.js"></script>
 	<script type="text/javascript" src="app/jquery.slimscroll.min.js"></script>
 	<script type="text/javascript" src="app/canvasjs.min.js"></script>
+	<script type="text/javascript" src="app/nprogress.js"></script>
 
 	<link rel="stylesheet" href="styles/bootstrap.min.css" type="text/css">
 	<link rel="stylesheet" href="styles/font-awesome.css" type="text/css">
 	<link rel="stylesheet" href="styles/jquery-ui.css" type="text/css">
+	<link rel="stylesheet" href="styles/nprogress.css" type="text/css">
 	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDtFLcyhDfgarOIcwf-4qiScchMGJS25jo"></script>
-	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<script type="text/javascript">
-	google.charts.load('current', {'packages':['bar']});
 	var month_array=["January","February","March","April","May","June","July","August","September","October","November","December"];
 	var months_shortform = ["Jan", "Feb", "Mar", "Apr", "May" ,"Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	var income_data = [];
@@ -50,16 +50,14 @@
 	var current_page = "income";
 	var tags_list = [];
 	
-	window.onload=function(){
+	$(document).ready(function(){
 		getAccounts_ajax_call("home");
 /* 		open_page(event,'income');
 		income_ajax_call(month,year);
 		$('#income-tab').addClass("active"); */
 		initial_page_load = function(page){
-			$('.loader').removeClass('active');
 			if(page == "expense")
 			{
-				$('#expense-loader').addClass('active');
 				open_page('expense');
 				get_expense_ajax_call(month,year,"expense");
 				$('#expense-tab').addClass("active");
@@ -69,7 +67,6 @@
 			}
 			else if(page == "budget")
 			{
-				$('#budget-loader').addClass('active');
 				open_page('budget');
 				//get_budget_ajax_call(month,year);
 				get_expense_ajax_call(month, year, "budget");
@@ -88,7 +85,6 @@
 			}
 			else if(page == "users")
 			{
-				$('#users-loader').addClass('active');
 				open_page('users');
 				users_ajax_call(month,year);
 				$('#users-tab').addClass("active");
@@ -98,7 +94,6 @@
 			}
 			else
 			{
-				$('#income-loader').addClass('active');
 				open_page('income');
 				get_income_ajax_call(month,year);
 				$('#income-tab').addClass("active");	
@@ -248,9 +243,9 @@
 			  }
 		  });
 		  $(document).keypress(function(e) {
-			  var text = $('#saved-tags-input').val();
 			    if(e.which == 13) {
 			    	e.preventDefault();
+			    	var text = $('#saved-tags-input').val();
 			        if($('#saved-tags-input').length > 0 && text != "" && !is_in_tags_list(text))
 			        {
 			        	if($('#generic-modal-form').find('#addIncomeModal').length)
@@ -342,7 +337,6 @@
 		    	initial_page_load("search");
 		    });
 		    $('.search-btn').click(function(){
-		    	$('#search-loader').addClass('active');
 		    	search_ajax_call();
 		    });
 		    $('#users-tab').click(function(){
@@ -350,9 +344,10 @@
 		    });
 		    $('#add-user-send').on('click', function(){
 		    	add_user_ajax_call();
+		    	$('#addUserModal').modal('hide');	
 		    });
 		    $('#logout').click(function(){
-		    	logout_ajax_call();
+		    	logout_ajax_call(false);
 		    });
 
 			$('.date-picker').datepicker({
@@ -489,7 +484,7 @@
 				  //$('#generic-modal-form').attr("method","POST");
 			}
 			
-	};
+	});
 
 
 	var open_page = function(page){
@@ -553,6 +548,7 @@
 		else if($('.generic-save').attr('id') == "budget-save")
 		{
 			save_budget_ajax_call();
+			get_budget_ajax_call(month, year);
 		}
 	}
 	
@@ -585,14 +581,6 @@
 	 		<img src="images/left_icon.png" class="icon timespan-nav-icon left-icon" alt="Prev month">
 	 		<div id="selected_month"></div>
 	 		<img src="images/right_icon.png" class="icon timespan-nav-icon right-icon" alt="Next month">
-	 	</div>
-	 	
-	 	<div class="loaders">
-	 		<div class="loader" id="income-loader"><span></span><span></span><span></span></div>
-	 		<div class="loader" id="expense-loader"><span></span><span></span><span></span></div>
-	 		<div class="loader" id="budget-loader"><span></span><span></span><span></span></div>
-	 		<div class="loader" id="search-loader"><span></span><span></span><span></span></div>
-	 		<div class="loader" id="users-loader"><span></span><span></span><span></span></div>
 	 	</div>
 	 	
 		<div id="income-page" style="display:none;" class="tabcontent page">
@@ -738,7 +726,7 @@
 	 			<input type="radio" id="offline-radio" name="authentication_type" value="Offline"> Offline<br>
 				</div>
 				<div id="set-offline-code" style="display:none;">
-					<input type="text" id="offline-code" name="offline-code" class="text offline-code-input"/>
+					<input type="text" id="offline-code" name="offline-code" maxlength="6" class="text offline-code-input"/>
 				</div>
 	    </div>
 	    <div class="modal-footer">

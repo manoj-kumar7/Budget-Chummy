@@ -97,6 +97,20 @@ html, body {
 	font-size: 20px;
 }
 
+.join-acc-body{
+	margin: 15%;
+    text-align: center;
+}
+
+#first-page-logout{
+  background-color: #f4511e;
+  color: #fff;
+  padding: 7px 22px;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+}
+
 #login-form-div{
 	position: absolute;
 	margin: auto;
@@ -120,6 +134,16 @@ html, body {
 }
 
 #create-account-form-div{
+  position: absolute;
+  margin: auto;
+  left: 0;
+  right: 0;
+  top: 40%;
+  bottom: 0;
+  text-align: center;
+  width: 20%;
+}
+#join-acc-authentication{
   position: absolute;
   margin: auto;
   left: 0;
@@ -206,6 +230,9 @@ html, body {
     border: none;
     cursor: pointer;
     margin-left: 70px;
+}
+#join-acc-btn.btn{
+  width: 120px;
 }
 
 #accounts-list{
@@ -320,6 +347,9 @@ html, body {
 	height: 100% !important;
 	float:left;
 	background: #eaeaea;
+}
+#home-budgets-list .empty-data-text{
+  text-align: center;
 }
 .right-slide-toggle{
 	position: absolute;
@@ -448,7 +478,7 @@ html, body {
 	clear: both;
 	margin-top: 12%;
 }
-.logout{
+#logout{
     position: absolute;
     right: 1%;
     top: 1%;
@@ -742,7 +772,7 @@ div.tab button.active .tab-title{
 	height: 50%;
 }
 
-.empty-data .empty-data-text{
+.empty-data-text{
 	font-style: italic;
 }
 
@@ -875,54 +905,14 @@ div.tab button.active .tab-title{
 }
 
 
-/* Loaders */
-
-.loader.active span{
-  position: relative;
-  left: 45%;
-  top: 50%;
-  display: inline-block;
-  width: 15px;
-  height: 15px;
-  border-radius: 100%;
-  margin: 35px 5px;
-  opacity: 0;
+.error-body{
+	margin: 15%;
 }
-
-.loader.active span:nth-child(1){
-  animation: opacitychange 1s ease-in-out infinite;
+.already-loggedin{
+  margin: 15%;
+  text-align: center;
 }
-
-.loader.active span:nth-child(2){
-  animation: opacitychange 1s ease-in-out 0.33s infinite;
-}
-
-.loader.active span:nth-child(3){
-  animation: opacitychange 1s ease-in-out 0.66s infinite;
-}
-
-@keyframes opacitychange{
-  0%, 100%{
-    opacity: 0;
-  }
-
-  60%{
-    opacity: 1;
-  }
-}
-
-#income-loader span{
-	background-color: #43bf58;
-}
-#expense-loader span{
-	background-color: #C9353B;
-}
-#budget-loader span{
-	background-color: #368cb2;
-}
-#search-loader span{
-	background-color: #ffa500;
-}
-#users-loader span{
-	background-color: #ffff00;
+.already-loggedin .already-loggedin-text{
+	font-size: 30px;
+  padding-bottom: 15px;
 }

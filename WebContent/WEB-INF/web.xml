@@ -65,6 +65,14 @@
     <servlet-name>accountauthentication_jsp</servlet-name>
     <url-pattern>/AccountAuthentication</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>error_jsp</servlet-name>
+    <jsp-file>/error.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>error_jsp</servlet-name>
+    <url-pattern>/error</url-pattern>
+  </servlet-mapping>
   <session-config>
     <session-timeout>30</session-timeout>
   </session-config>

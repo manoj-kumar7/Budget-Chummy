@@ -27,7 +27,7 @@ var getTagExpense = function(expenses, tag_name, start_date, end_date){
 var filterBudget = function(budgets)
 {
 	budgets_in_month = [];
-	if(budgets != null || budgets != "" || budgets.length != 0)
+	if(budgets != null && budgets != "" && budgets.length != 0)
 	{
 		for(var i=0; i<budgets.length; i++)
 		{
@@ -44,8 +44,13 @@ var filterBudget = function(budgets)
 				budgets_in_month.push(obj);
 			}
 		}
+		analyseBudget();
 	}
-	analyseBudget();
+	else
+	{
+		$('#home-budgets-list').html("<div class='empty-data-text'>No budgets for this month</div>");
+	}
+	
 }
 
 var getStartEndDatesOfBudget = function(obj){

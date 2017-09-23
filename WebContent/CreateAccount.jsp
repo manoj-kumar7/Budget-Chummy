@@ -8,8 +8,8 @@
 <script type="text/javascript" src="app/jquery-3.1.1.js"></script>
 
 <script type="text/javascript">
+var enterKeyPressed = false;
 $(document).ready(function(){
-
 	$(document).on('focusout','.formvalidation',function(e){// No I18N
 		var text = $(this).val();
 		if($(e.target).hasClass('name'))
@@ -50,11 +50,13 @@ $(document).ready(function(){
 		else
 		{
 			create_account_ajax_call();
+			$('#create-account').prop('disabled',true);
+			enterKeyPressed = true;
 		}
 	}
 
 	$(document).on('keypress', function(e){
-		if(e.keyCode == 13 || e.which == 13){
+		if(!enterKeyPressed && e.keyCode == 13 || e.which == 13){
 			createAccount();
 		}
 	});

@@ -40,49 +40,49 @@
 		    });
 		    
 			      
-		    var budget_chart = function(){
-		         var data = google.visualization.arrayToDataTable([
-		               ['Date', 'Expense'],
-		               ['Sep 1', 1000],
-		               ['Sep 2', 1170],
-		               ['Sep 3', 660],
-		               ['Sep 4', 1030],
-		               ['Sep 1', 1000],
-		               ['Sep 2', 1170],
-		               ['Sep 3', 660],
-		               ['Sep 4', 1030],
-		               ['Sep 1', 1000],
-		               ['Sep 2', 1170],
-		               ['Sep 3', 660],
-		               ['Sep 4', 1030],
-		               ['Sep 1', 1000],
-		               ['Sep 2', 1170],
-		               ['Sep 3', 660],
-		               ['Sep 4', 1030],
-		               ['Sep 1', 1000],
-		               ['2', 1170],
-		               ['3', 660],
-		               ['4', 1030],
-		               ['1', 1000],
-		               ['2', 1170],
-		               ['3', 660],
-		               ['4', 1030],
-		               ['1', 1000],
-		               ['2', 1170],
-		               ['3', 660],
-		               ['4', 1030],
-		               ['1', 1000],
-		               ['2', 1170],
-		               ['3', 660],
-		               ['4', 1030],
-		             ]);
+		    // var budget_chart = function(){
+		    //      var data = google.visualization.arrayToDataTable([
+		    //            ['Date', 'Expense'],
+		    //            ['Sep 1', 1000],
+		    //            ['Sep 2', 1170],
+		    //            ['Sep 3', 660],
+		    //            ['Sep 4', 1030],
+		    //            ['Sep 1', 1000],
+		    //            ['Sep 2', 1170],
+		    //            ['Sep 3', 660],
+		    //            ['Sep 4', 1030],
+		    //            ['Sep 1', 1000],
+		    //            ['Sep 2', 1170],
+		    //            ['Sep 3', 660],
+		    //            ['Sep 4', 1030],
+		    //            ['Sep 1', 1000],
+		    //            ['Sep 2', 1170],
+		    //            ['Sep 3', 660],
+		    //            ['Sep 4', 1030],
+		    //            ['Sep 1', 1000],
+		    //            ['2', 1170],
+		    //            ['3', 660],
+		    //            ['4', 1030],
+		    //            ['1', 1000],
+		    //            ['2', 1170],
+		    //            ['3', 660],
+		    //            ['4', 1030],
+		    //            ['1', 1000],
+		    //            ['2', 1170],
+		    //            ['3', 660],
+		    //            ['4', 1030],
+		    //            ['1', 1000],
+		    //            ['2', 1170],
+		    //            ['3', 660],
+		    //            ['4', 1030],
+		    //          ]);
 
-		            var options = {
-		               chart: {
+		    //         var options = {
+		    //            chart: {
 		                 
-		               }
-		             };
+		    //            }
+		    //          };
 
-		             var chart = new google.charts.Bar(document.getElementById('budget-chart-space'));
-		             chart.draw(data, google.charts.Bar.convertOptions(options));
-		    };
+		    //          var chart = new google.charts.Bar(document.getElementById('budget-chart-space'));
+		    //          chart.draw(data, google.charts.Bar.convertOptions(options));
+		    // };

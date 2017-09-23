@@ -78,7 +78,6 @@ public class loginServlet extends HttpServlet
 		if(valid == true)
 		{
 			HttpSession session = request.getSession();
-			session.setAttribute("useremail",email);
 			session.setAttribute("user_id",userid);
 //			if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
 //			{

@@ -19,7 +19,7 @@
 							location.href = "AccountAuthentication?account_id="+account_id+"&invitation_id="+invitation_id;
 						}
 					},
-					error:function(data){
+					error:function(jqXHR, txtStatus, errThrown){
 						showAjaxFailureMessage("Invalid email and/or password");
 					}
 				});	
@@ -49,7 +49,7 @@
 						}
 					},
 					error:function(data){
-						showAjaxFailureMessage("This email address already has an BC account");
+						showAjaxFailureMessage("This email address already has a BC account");
 					}
 				});	
 			}
@@ -66,6 +66,8 @@
 						location.href = "home";
 					},
 					error:function(data){
+						$('#create-account').prop('disabled',false);
+						enterKeyPressed = false;
 						//showAjaxFailureMessage("");
 					}
 				});	
@@ -91,11 +93,13 @@
 
 			var get_income_ajax_call=function(month,year)
 		 	{
+				NProgress.start();
 				$.ajax({
 					type:"GET",
 					url:"/BudgetChummy/api/v1/income",
 					data:{month:month,year:year},
 					success:function(data){
+						NProgress.done();
 						$('.loader').removeClass('active');
 						if(data!=null)
 						{
@@ -146,6 +150,13 @@
 						else
 						{
 						}
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
+						if(jqXHR.status == 401)
+						{
+							location.href = "login";
+						}
 					}
 
 				});
@@ -153,11 +164,13 @@
 			
 			var get_expense_ajax_call=function(month,year,page)
 		 	{
+				NProgress.start();
 				$.ajax({
 					type:"GET",
 					url:"/BudgetChummy/api/v1/expense",
 					data:{month:month,year:year,page:page},
 					success:function(data){
+						NProgress.done();
 						$('.loader').removeClass('active');
 						if(page == "expense" && data != null)
 						{
@@ -218,6 +231,13 @@
 							}
 							get_budget_ajax_call(month, year);
 						}
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
+						if(jqXHR.status == 401)
+						{
+							location.href = "login";
+						}
 					}
 
 				});
@@ -225,19 +245,21 @@
 
 			var get_budget_ajax_call=function(month, year)
 			{
+				NProgress.start();
 				$.ajax({
 					type:"GET",
 					url:"/BudgetChummy/api/v1/budget",
 					data:{month:month,year:year},
 					success:function(data){
+						NProgress.done();
 						$('.loader').removeClass('active');
-						if(data!=null)
+						filterBudget(data);
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
+						if(jqXHR.status == 401)
 						{
-							filterBudget(data);
-						}
-						else
-						{
-							filterBudget(data);
+							location.href = "login";
 						}
 					}
 
@@ -246,6 +268,7 @@
 			
 			var save_income_ajax_call=function(month,year)
 		 	{
+				NProgress.start();
 				var amount = $('.generic-amount').val();
 				var date = dateToEpoch($('.generic-datepicker').val());
 				var tag_id = $('.saved-tags-dropdown').val();
@@ -261,8 +284,16 @@
 					url:"/BudgetChummy/api/v1/income",
 					data:{amount:amount, date:date, tag_id:tag_id, add_info:add_info, location: location, location_lat:lat, location_lon:lon, description:description, repeat:repeat, reminder:reminder},
 					success:function(data){
+						NProgress.done();
 						$('#generic-modal-form').find('.close-icon').click();
 						get_income_ajax_call(month, year);
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
+						if(jqXHR.status == 401)
+						{
+							location.href = "login";
+						}
 					}
 
 				});
@@ -270,6 +301,7 @@
 			
 			var save_expense_ajax_call=function(month,year)
 		 	{
+				NProgress.start();
 				var amount = $('.generic-amount').val();
 				var date = dateToEpoch($('.generic-datepicker').val());
 				var tag_id = $('.saved-tags-dropdown').val();
@@ -285,6 +317,7 @@
 					url:"/BudgetChummy/api/v1/expense",
 					data:{amount:amount, date:date, tag_id:tag_id, add_info:add_info, location: location, location_lat:lat, location_lon:lon, description:description, repeat:repeat, reminder:reminder},
 					success:function(data){
+						NProgress.done();
 						$('#generic-modal-form').find('.close-icon').click();
 						if($('#expense-tab').hasClass('active'))
 						{
@@ -294,6 +327,13 @@
 						{
 							get_expense_ajax_call(month, year, "budget");
 						}
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
+						if(jqXHR.status == 401)
+						{
+							location.href = "login";
+						}
 					}
 
 				});
@@ -301,6 +341,7 @@
 			
 			var save_budget_ajax_call=function(month,year)
 		 	{
+				NProgress.start();
 				var budget_type = $('#budget-type-dropdown').val();
 				var tag_id = $('.saved-tags-dropdown').val() || -1;
 				var budget_repeat = $('#budget-repeat-dropdown').val();
@@ -313,8 +354,16 @@
 					url:"/BudgetChummy/api/v1/budget",
 					data:{budget_type:budget_type, tag_id:tag_id, budget_repeat:budget_repeat, budget_start_date:start_date, budget_end_date:end_date, budget_amount:amount, budget_description:description},
 					success:function(data){
+						NProgress.done();
 						$('#generic-modal-form').find('.close-icon').click();
-						get_budget_ajax_call(month, year);
+						// get_budget_ajax_call(month, year);
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
+						if(jqXHR.status == 401)
+						{
+							location.href = "login";
+						}
 					}
 
 				});
@@ -322,12 +371,14 @@
 			
 			var search_ajax_call=function()
 		 	{
+				NProgress.start();
 				var date = dateToEpoch($('.date-picker').val());
 				$.ajax({
 					type:"GET",
 					url:"/BudgetChummy/api/v1/search",
 					data:{date:date},
 					success:function(data){
+						NProgress.done();
 						$('.loader').removeClass('active');
 						if(data!=null)
 						{
@@ -386,6 +437,13 @@
 						else
 						{
 						}
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
+						if(jqXHR.status == 401)
+						{
+							location.href = "login";
+						}
 					}
 
 				});
@@ -394,10 +452,12 @@
 		 	}
 			
 			var users_ajax_call = function(){
+				NProgress.start();
 				$.ajax({
 					type:"GET",
 					url:"/BudgetChummy/api/v1/getUsers",
 					success:function(data){
+						NProgress.done();
 						$('.loader').removeClass('active');
 						if(data != null)
 						{
@@ -420,33 +480,41 @@
 						{
 							$('.users-table-space').css("display","none");
 						}
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
+						if(jqXHR.status == 401)
+						{
+							location.href = "login";
+						}
 					}
 				});				
 			}
 			
 			var add_user_ajax_call = function(){
+				NProgress.start();
 				var to = $('#add-user-input').val();
 				var authentication_type = $('input[name=authentication_type]:checked').val();
 				if(authentication_type === "Offline")
 				{
-					var passcode = '-1';
+					var passcode = $('#offline-code').val();
 				}
 				else
 				{
-					var passcode = $('#offline-code').val();
+					var passcode = '-1';
 				}
 				$.ajax({
 					type:"POST",
 					url:"/BudgetChummy/api/v1/addUser",
 					data:{to: to, authentication_type: authentication_type, passcode: passcode},
 					success:function(data){
-						if(data != null)
+						NProgress.done();
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
+						if(jqXHR.status == 401)
 						{
-							for(var i=0;i<data.length;i++)
-							{
-								var obj = jQuery.parseJSON(data[i]);
-								$("#accounts-list").append("<div class='accounts' onclick=javascript:document.getElementById('account_id').value="+obj.account_id+";document.forms[0].submit();>"+obj.account_name+"</div><br>");
-							}
+							location.href = "login";
 						}
 					}
 				});				
@@ -526,6 +594,12 @@
 						{
 							
 						}
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						if(jqXHR.status == 401)
+						{
+							location.href = "login";
+						}
 					}
 				});				
 			}
@@ -546,6 +620,12 @@
 						{
 							
 						}
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						if(jqXHR.status == 401)
+						{
+							location.href = "login";
+						}
 					}
 				});				
 			}
@@ -563,14 +643,23 @@
 				});	
 			}
 			
-			var logout_ajax_call = function(){
+			var logout_ajax_call = function(join_account){
+				NProgress.start();
 				$.ajax({
 					type:"POST",
 					url:"/BudgetChummy/api/v1/logout",
 					async: false,
 					success:function()
 					{
-						location.href = "BC";
+						NProgress.done();
+						if(!join_account)
+						{
+							location.href = "BC";
+						}
+						else
+						{
+							location.reload(true);
+						}
 					}
 				});	
 			}

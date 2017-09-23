@@ -9,7 +9,27 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-	$("#login").click(function(){
+
+	if(<%= session.getAttribute("account_id") != null %> && <%=request.getParameter("account_id")%> != null && <%=request.getParameter("invitation_id")%> != null)
+	{
+		$('.org-first').css('display','none');
+		$('.already-loggedin').css('display','block');
+		$('.join-acc').css('display','none');
+	}
+	else if(<%=request.getParameter("account_id")%> != null && <%=request.getParameter("invitation_id")%> != null)
+	{
+		$('.org-first').css('display','none');
+		$('.already-loggedin').css('display','none');
+		$('.join-acc').css('display','block');
+	}
+	else
+	{
+		$('.org-first').css('display','block');
+		$('.already-loggedin').css('display','none');
+		$('.join-acc').css('display','none');
+	}
+
+	$("#login,#first-page-login").click(function(){
 		if(<%=request.getParameter("account_id")%> == null || <%=request.getParameter("invitation_id")%> == null)
 		{
 			location.href="login";
@@ -22,7 +42,7 @@ $(document).ready(function(){
 		}
 
 	});
-	$("#signup,.get-started-btn").click(function(){
+	$("#signup,.get-started-btn,#first-page-signup").click(function(){
 		if(<%=request.getParameter("account_id")%> == null || <%=request.getParameter("invitation_id")%> == null)
 		{
 			location.href="signup";
@@ -34,6 +54,9 @@ $(document).ready(function(){
             "&invitation_id="+<%=request.getParameter("invitation_id")%>;
 		}
 	});
+	$('#first-page-logout').click(function(){
+    	logout_ajax_call(true);
+    });
 	
 });
 
@@ -42,7 +65,11 @@ $(document).ready(function(){
 
 <body>
 <%
-if(session.getAttribute("account_id") != null)
+if(session.getAttribute("account_id") != null && request.getParameter("account_id") != null && request.getParameter("invitation_id") != null)
+{
+	
+}
+else if(session.getAttribute("account_id") != null)
 {
 	response.sendRedirect("home");
 }
@@ -51,25 +78,41 @@ else if(session.getAttribute("user_id") != null)
 	response.sendRedirect("ChooseAccount");
 }
 %>
-	<div id="firstpage-top-text" class="firstpage-top">Already have an account?<span id="login" class="firstpage-top-btn"> Login </span> or <span id="signup" class="firstpage-top-btn"> Signup </span></div>
-	
-	<div class="bc-lead-picture">
-		<img src="images/bcHome.jpg">
+	<div class="org-first" style="display: none;">
+		<div id="firstpage-top-text" class="firstpage-top">Already have an account?<span id="login" class="firstpage-top-btn"> Login </span> or <span id="signup" class="firstpage-top-btn"> Signup </span></div>
+		
+		<div class="bc-lead-picture">
+			<img src="images/bcHome.jpg">
+		</div>
+		
+		<div class="bc-lead-container">
+			<div class="bc-lead-tagline">
+				BUDGETING = AWARENESS
+			</div>
+			<div class="bc-lead-tagline-exp">	
+				And who doesn't want that for free
+			</div>
+			<div class="bc-lead-content">
+				Budget Chummy allows you to analyze past spending behaviors while also enabling you to budget for the future.
+			</div>
+		</div>
+		<div class="get-started-btn-div">
+			<button class="get-started-btn btn bc-firstpage-btn"><span>Get Started</span></button>
+		</div>
 	</div>
-	
-	<div class="bc-lead-container">
-		<div class="bc-lead-tagline">
-			BUDGETING = AWARENESS
+	<div class="already-loggedin" style="display: none;">
+		<div class="already-loggedin-text">
+			Already logged in as a different user. Logout and try again.
 		</div>
-		<div class="bc-lead-tagline-exp">	
-			And who doesn't want that for free
-		</div>
-		<div class="bc-lead-content">
-			Budget Chummy allows you to analyze past spending behaviors while also enabling you to budget for the future.
-		</div>
+		<button id="first-page-logout" class="logout" value="Logout">Logout</button>
 	</div>
-	<div class="get-started-btn-div">
-		<button class="get-started-btn btn bc-firstpage-btn"><span>Get Started</span></button>
+	<div class="join-acc" style="display: none;">
+		<div class="join-acc-body">
+			<button id="first-page-login" class="login bc-btn bc-firstpage-btn" value="Login"><span>Login</span></button>
+			<span class="or-text">or</span>
+			<button id="first-page-signup" class="signup bc-btn bc-firstpage-btn" value="Signup"><span>Signup</span></button>
+			<div class="to-join-text">to join the account</div>
+		</div>
 	</div>
 	<!--   div class="lead-impressions-div">
 		<div class="interface-desc lead-impressions">
@@ -85,6 +128,7 @@ else if(session.getAttribute("user_id") != null)
 			<div class="desc-text">Future savings prediction</div>
 		</div>
 	</div -->
-	
+
+<script type="text/javascript" src="js/ajax-calls.js"></script>
 </body>
 </html>
