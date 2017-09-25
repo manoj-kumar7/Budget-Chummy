@@ -53,12 +53,13 @@ public class addUserServlet extends HttpServlet {
 		HttpSession http_session = request.getSession(false);
 		if(http_session.getAttribute("user_id") == null)
 		{
-			response.setStatus(401);
+			response.setStatus(400);
 		}
 		else
 		{
 			long userid=0,accid=0;
-			
+			boolean invitationAlreadySent = false;
+			boolean isAdmin = false;
 			String url = APIConstants.POSTGRESQL_URL;
 			String user = APIConstants.POSTGRESQL_USERNAME;
 			String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
@@ -93,27 +94,73 @@ public class addUserServlet extends HttpServlet {
 				Object acc_attribute = http_session.getAttribute("account_id");
 				userid = Long.parseLong(String.valueOf(user_attribute));
 				accid = Long.parseLong(String.valueOf(acc_attribute));
-				st = con.prepareStatement("insert into invitations(sent_by,sent_to,passcode,invitation_status) values(?,?,?,?);");
-				st.setLong(1, userid);
-				st.setString(2, to);
-				st.setString(3, passcode);
-				st.setString(4, "not joined");
-				int i = st.executeUpdate();
 
-				st = con.prepareStatement("select lastval();");
+				st = con.prepareStatement("select role from adduser where user_id=? AND account_id=?;");
+				st.setLong(1, userid);
+				st.setLong(2, accid);
 				rs = st.executeQuery();
 				if(rs.next())
 				{
-					invitationid = rs.getInt(1);
+					String role = rs.getString("role");
+					if(role.equals("admin"))
+					{
+						isAdmin = true;
+					}
+					else
+					{
+						response.setStatus(401);
+					}
+					rs = null;
 				}
 
-				st1 = con.prepareStatement("select first_name from users where user_id=?;");
-				st1.setLong(1, userid);
-				rs1 = st1.executeQuery();
-				while(rs1.next())
+				if(isAdmin)
 				{
-					first_name = rs1.getString("first_name");
+					st = con.prepareStatement("select sent_by, sent_to, for_account, invitation_status from invitations where sent_to=? AND for_account=?;");
+					st.setString(1, to);
+					st.setLong(2, accid);
+					rs = st.executeQuery();
+					JSONArray ja = new JSONArray();
+					JSONObject jo = new JSONObject();
+					if(rs.next())
+					{
+						invitationAlreadySent = true;
+						String inv_status = rs.getString("invitation_status");
+						jo.put("sent_to", to);
+						jo.put("invitation_status", inv_status);
+						ja.add(jo.toJSONString());
+						response.setContentType("application/json");
+						response.setCharacterEncoding("UTF-8");
+						response.getWriter().print(ja.toString());
+						rs = null;
+					}
+					else
+					{
+						st = con.prepareStatement("insert into invitations(sent_by,sent_to,passcode,invitation_status, for_account) values(?,?,?,?,?);");
+						st.setLong(1, userid);
+						st.setString(2, to);
+						st.setString(3, passcode);
+						st.setString(4, "not joined");
+						st.setLong(5, accid);
+						int i = st.executeUpdate();
+
+						st = con.prepareStatement("select lastval();");
+						rs = st.executeQuery();
+						if(rs.next())
+						{
+							invitationid = rs.getInt(1);
+						}
+
+						st1 = con.prepareStatement("select first_name from users where user_id=?;");
+						st1.setLong(1, userid);
+						rs1 = st1.executeQuery();
+						while(rs1.next())
+						{
+							first_name = rs1.getString("first_name");
+						}
+					}
 				}
+				
+
 				if(rs != null)
 				{
 					rs.close();
@@ -129,17 +176,20 @@ public class addUserServlet extends HttpServlet {
 				e.printStackTrace();
 			}	
 
-			String rootURL = APIConstants.rootURL;
-			String subject = "Invitation to join Budget Chummy";
-			String message = "Hi "+to+"\n"+first_name+" has sent you an invitation to join his Budget Chummy account\n"+
-	                          "Click the below link to join\n"+
-	        		          rootURL + "BC?account_id="+accid+"&invitation_id="+invitationid+"\n";
-    		if(authentication_type.equals("Email"))
-          	{
-          		message += "Passcode : "+passcode;
-          	}
-	                          
-			emailUtil.sendMail(to, subject, message);
+			if(!invitationAlreadySent && isAdmin)
+			{
+				String rootURL = APIConstants.rootURL;
+				String subject = "Invitation to join Budget Chummy";
+				String message = "Hi "+to+"\n"+first_name+" has sent you an invitation to join his Budget Chummy account\n"+
+		                          "Click the below link to join\n"+
+		        		          rootURL + "BC?account_id="+accid+"&invitation_id="+invitationid+"\n";
+	    		if(authentication_type.equals("Email"))
+	          	{
+	          		message += "Passcode : "+passcode;
+	          	}
+		                          
+				emailUtil.sendMail(to, subject, message);
+			}
 		}
 		
 	}

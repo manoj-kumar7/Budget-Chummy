@@ -23,7 +23,7 @@ var formCustomDateFormat = function(dates){
 	var y = dates[0];
 	var m = dates[1];
 	var d = dates[2];
-	return months_shortform[m-1] + " " + d + ", " + y;
+	return globalObject.months_shortform[m-1] + " " + d + ", " + y;
 }
 
 var getCurrentRealMonth = function(){
@@ -57,13 +57,13 @@ var getTodayEpoch = function(){
 }
 
 var calculateWeekStartEndDates = function(start_date){
-	if(month == getCurrentRealMonth() && year == getCurrentRealYear())
+	if(globalObject.month == getCurrentRealMonth() && globalObject.year == getCurrentRealYear())
 	{
 		var today = getTodayEpoch();
 	}
 	else
 	{
-		var today = epochOfFirstDayOfMonth(month, year);
+		var today = epochOfFirstDayOfMonth(globalObject.month, globalObject.year);
 	}
 	var d_start = new Date(start_date);
 	var d_end = new Date(d_start);
@@ -86,21 +86,21 @@ var calculateMonthStartEndDates = function(start_date){
 	var d_start = new Date(start_date);
 	var d_end = new Date(start_date);
 	var date = d_start.getDate();
-	d_start.setFullYear(year, month-1, date);
-	var m = month;
+	d_start.setFullYear(globalObject.year, globalObject.month-1, date);
+	var m = globalObject.month;
 	if(m >= 12)
 	{
 		m = 0;
 	}
 	if(date == 1)
 	{
-		date = new Date(year, m, 0).getDate();
+		date = new Date(globalObject.year, m, 0).getDate();
 	}
 	else
 	{
 		date = date - 1;
 	}
-	d_end.setFullYear(year, m, date);
+	d_end.setFullYear(globalObject.year, m, date);
 	return [d_start.valueOf(), d_end.valueOf()];
 }
 
@@ -109,16 +109,16 @@ var calculateYearStartEndDates = function(start_date){
 	var d_end = new Date(start_date);
 	var date = d_start.getDate();
 	var m = d_start.getMonth();
-	d_start.setFullYear(year, month-1, date);
+	d_start.setFullYear(globalObject.year, globalObject.month-1, date);
 	if(date == 1)
 	{
-		date = new Date(year+1, month-1, 0).getDate();
+		date = new Date(globalObject.year+1, globalObject.month-1, 0).getDate();
 	}
 	else
 	{
 		date = date - 1;
 	}
-	d_end.setFullYear(year+1, month-1, date);
+	d_end.setFullYear(globalObject.year+1, globalObject.month-1, date);
 	return [d_start.valueOf(), d_end.valueOf()];
 }
 

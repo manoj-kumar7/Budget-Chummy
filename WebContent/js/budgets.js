@@ -26,7 +26,7 @@ var getTagExpense = function(expenses, tag_name, start_date, end_date){
 
 var filterBudget = function(budgets)
 {
-	budgets_in_month = [];
+	globalObject.budgets_in_month = [];
 	if(budgets != null && budgets != "" && budgets.length != 0)
 	{
 		for(var i=0; i<budgets.length; i++)
@@ -34,14 +34,14 @@ var filterBudget = function(budgets)
 			var obj = jQuery.parseJSON(budgets[i]);
 			if(obj.repeat_period == 0)
 			{
-				if(obj.end_date >= epochOfFirstDayOfMonth(month, year))
+				if(obj.end_date >= epochOfFirstDayOfMonth(globalObject.month, globalObject.year))
 				{
-					budgets_in_month.push(obj);
+					globalObject.budgets_in_month.push(obj);
 				}
 			}
 			else
 			{
-				budgets_in_month.push(obj);
+				globalObject.budgets_in_month.push(obj);
 			}
 		}
 		analyseBudget();
@@ -62,13 +62,13 @@ var getStartEndDatesOfBudget = function(obj){
 	}
 	else if(obj.repeat_period == 1)
 	{
-		if(month == getCurrentRealMonth())
+		if(globalObject.month == getCurrentRealMonth())
 		{
 			start_date = end_date = getTodayEpoch();
 		}
 		else
 		{
-			start_date = end_date = epochOfFirstDayOfMonth(month, year);
+			start_date = end_date = epochOfFirstDayOfMonth(globalObject.month, globalObject.year);
 		}
 	}
 	else if(obj.repeat_period == 2)
@@ -93,8 +93,8 @@ var getStartEndDatesOfBudget = function(obj){
 }
 
 var analyseBudget = function(){
-	var expenses= expenses_in_month;
-	var budgets = budgets_in_month;
+	var expenses= globalObject.expenses_in_month;
+	var budgets = globalObject.budgets_in_month;
 	$('#home-budgets-list').html("");
 	var tag_name, budget_amount, repeat_periods=["One time budget", "Daily", "Weekly", "Monthly", "Yearly"], repeat, amount_used, amount_used_text, amount_left, amount_over = 0, amount_left_or_over_text;
 	var budget_bar_spent, budget_bar_spent_width, budget_bar_left_width;
@@ -164,7 +164,7 @@ var analyseBudget = function(){
 }
 
 var getBudgetDataForStat = function(budget_number){
-	var obj = budgets_in_month[parseInt(budget_number)-1];
+	var obj = globalObject.budgets_in_month[parseInt(budget_number)-1];
 	var start_date, end_date, dates, dates1, amount_left_per_day, amount_left_per_day_text = "";
 	var timespan_string = "";
 	if(obj == undefined || obj == null)
@@ -223,11 +223,11 @@ var getBudgetDataForStat = function(budget_number){
 
 	if(obj.tag_name == null || obj.tag_name == "")
 	{
-		var amount_spent = getTotalExpense(expenses_in_month, start_date, end_date);
+		var amount_spent = getTotalExpense(globalObject.expenses_in_month, start_date, end_date);
 	}
 	else
 	{
-		var amount_spent = getTagExpense(expenses_in_month, obj.tag_name, start_date, end_date);
+		var amount_spent = getTagExpense(globalObject.expenses_in_month, obj.tag_name, start_date, end_date);
 	}
 	$("#budget-page-spent").html('<i class="icon-inr"></i><span>'+amount_spent+'</span>' + " spent");
 	

@@ -42,7 +42,7 @@ public class joinAccountServlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		if(session.getAttribute("user_id") == null)
 		{
-			response.setStatus(401);
+			response.setStatus(400);
 		}
 		else
 		{
@@ -53,7 +53,9 @@ public class joinAccountServlet extends HttpServlet {
 			long invitation_id = Long.parseLong(request.getParameter("invitation_id"));
 			String passcode_from_db = null,invitation_status=null;
 			String query = null;
-			
+			boolean isValidURL = false;
+			String logged_in_mail_id = null;
+
 			String url = APIConstants.POSTGRESQL_URL;
 			String user = APIConstants.POSTGRESQL_USERNAME;
 			String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
@@ -68,34 +70,59 @@ public class joinAccountServlet extends HttpServlet {
 				con = DriverManager.getConnection(url,user,mysql_password);
 				PreparedStatement st=null,st1=null;
 				ResultSet rs=null;
-				st = con.prepareStatement("select passcode,invitation_status from invitations where invitation_id=?;");
-				st.setLong(1, invitation_id);
+				st = con.prepareStatement("select email from users where user_id=?;");
+				st.setLong(1, userid);
 				rs = st.executeQuery();
-				while(rs.next())
+				if(rs.next())
 				{
+					logged_in_mail_id = rs.getString("email");
+				}
+				rs = null;
+
+				st = con.prepareStatement("select passcode,invitation_status from invitations where invitation_id=? AND for_account=? AND sent_to=?");
+				st.setLong(1, invitation_id);
+				st.setLong(2, account_id);
+				st.setString(3, logged_in_mail_id);
+				rs = st.executeQuery();
+				if(rs.next())
+				{
+					isValidURL = true;
 					passcode_from_db = rs.getString("passcode");
 					invitation_status = rs.getString("invitation_status");
+					rs = null;
 				}
-				if(invitation_status.equals("joined"))
+				else
 				{
-					
+					response.setStatus(402);
 				}
-				else if(passcode.equals(passcode_from_db))
+				if(isValidURL)
 				{
-					st1 = con.prepareStatement("insert into adduser(account_id,user_id,role) values(?,?,?);");
-					st1.setLong(1, account_id);
-					st1.setLong(2, userid);
-					st1.setString(3, "user");
-					int i;
-					i = st1.executeUpdate();
-					st1 = con.prepareStatement("update accounts set no_of_members=no_of_members+1 where account_id=?;");
-					st1.setLong(1, account_id);
-					i = st1.executeUpdate();
-					st1 = con.prepareStatement("update invitations set invitation_status='joined' where invitation_id=?;");
-					st1.setLong(1, invitation_id);
-					i = st1.executeUpdate();
-					session.setAttribute("account_id",account_id);
+					if(invitation_status.equals("joined"))
+					{
+						
+					}
+					else if(passcode.equals(passcode_from_db))
+					{
+						st1 = con.prepareStatement("insert into adduser(account_id,user_id,role) values(?,?,?);");
+						st1.setLong(1, account_id);
+						st1.setLong(2, userid);
+						st1.setString(3, "user");
+						int i;
+						i = st1.executeUpdate();
+						st1 = con.prepareStatement("update accounts set no_of_members=no_of_members+1 where account_id=?;");
+						st1.setLong(1, account_id);
+						i = st1.executeUpdate();
+						st1 = con.prepareStatement("update invitations set invitation_status='joined' where invitation_id=?;");
+						st1.setLong(1, invitation_id);
+						i = st1.executeUpdate();
+						session.setAttribute("account_id",account_id);
+					}
+					else if(!passcode.equals(passcode_from_db))
+					{
+						response.setStatus(401);
+					}				
 				}
+				
 				if(rs != null)
 				{
 					rs.close();
@@ -108,16 +135,6 @@ public class joinAccountServlet extends HttpServlet {
 				con.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}
-			if(passcode.equals(passcode_from_db))
-			{
-				// String homeurl = new String("home");
-				// response.setStatus(response.SC_MOVED_TEMPORARILY);
-		  //       response.setHeader("Location", homeurl);
-			}
-			else
-			{
-				response.setStatus(401);
 			}
 		}
 		

@@ -106,7 +106,6 @@ public class signUpServlet extends HttpServlet {
 					userid = rs.getInt("user_id");
 				}
 				HttpSession session = request.getSession();
-				session.setAttribute("useremail",email);
 				session.setAttribute("user_id",userid);
 			}
 

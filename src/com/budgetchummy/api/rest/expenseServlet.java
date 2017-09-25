@@ -202,8 +202,15 @@ public class expenseServlet extends HttpServlet {
 				if(additional_info.equals("true"))
 				{
 					String location = request.getParameter("location");
-					float latitude = Float.parseFloat(request.getParameter("location_lat"));
-					float longitude = Float.parseFloat(request.getParameter("location_lon"));
+					float latitude = -1, longitude = -1;
+					if(request.getParameter("location_lat") != null && request.getParameter("location_lat") != "")
+					{
+						latitude = Float.parseFloat(request.getParameter("location_lat"));
+					}
+					if(request.getParameter("location_lon") != null && request.getParameter("location_lon") != "")
+					{
+						longitude = Float.parseFloat(request.getParameter("location_lon"));
+					}
 					String description = request.getParameter("description");
 					int expense_repeat = Integer.parseInt(request.getParameter("repeat"));
 					int expense_reminder = Integer.parseInt(request.getParameter("reminder"));

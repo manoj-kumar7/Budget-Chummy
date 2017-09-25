@@ -85,8 +85,19 @@
 					success:function(data){
 						location.href = "home";
 					},
-					error:function(data){
-						showAjaxFailureMessage("Incorrect passcode");
+					error:function(jqXHR, txtStatus, errThrown){
+						if(jqXHR.status == 400)
+						{
+							location.href = "login";
+						}
+						else if(jqXHR.status == 401)
+						{
+							showAjaxFailureMessage("Incorrect passcode");
+						}
+						else if(jqXHR.status == 402)
+						{
+							showAjaxFailureMessage("An invitation is required to join this account");
+						}
 					}
 				});	
 			}
@@ -116,11 +127,19 @@
 								let user_name = obj.user_name || "-";
 								let added_date_time = obj.added_date_time || "-";
 								let location = obj.location || "-";
-								let lat = obj.latitude || "-";
-								let lon = obj.longitude || "-";
-								income_data.push({y:amount,indexLabel:amount+"(#percent%)",legendText:""+amount,description:description,date:date,tag:tag});
+								let lat = obj.latitude;
+								if(lat == null || lat == -1 || lat == 0)
+								{
+									lat = "-";
+								}
+								let lon = obj.longitude;
+								if(lon == null || lon == -1 || lon == 0)
+								{
+									lon = "-";
+								}
+								globalObject.income_data.push({y:amount,indexLabel:amount+"(#percent%)",legendText:""+amount,description:description,date:date,tag:tag});
 								let append_string = "<tr><td><i class='icon-inr'></i>"+amount+"</td><td>"+date+"</td><td>"+tag+"</td><td>"+description+"</td><td>"+user_name+"</td><td>"+location;
-								if(location != "-")
+								if(lat != "-" && lon != "-")
 								{
 									append_string += "<img src='images/show_location_icon.png' class='image location-icon' alt='Show in map' data-lat="+lat+" data-lon="+lon+"></td></tr>";
 								}
@@ -130,8 +149,8 @@
 								}
 								$('.income-table tbody').append(append_string);
 							}
-					    	income_chart.options.data[0].dataPoints = income_data;
-					    	if(income_data.length != 0)
+					    	income_chart.options.data[0].dataPoints = globalObject.income_data;
+					    	if(globalObject.income_data.length != 0)
 					    	{
 					    		$('#empty-income-data').css("display","none");
 					    		$('#chartContainer1').css("display","block");
@@ -145,7 +164,7 @@
 					    		$('#empty-income-data').css("display","block");
 					    		$('#empty-income-data').html("<img src='images/no_results.png'><div class='empty-data-text'>No income for this month</div>");
 					    	}
-					    	income_data=[];
+					    	globalObject.income_data=[];
 						}
 						else
 						{
@@ -187,11 +206,19 @@
 								let user_name = obj.user_name || "-";
 								let added_date_time = obj.added_date_time || "-";
 								let location = obj.location || "-";
-								let lat = obj.latitude || "-";
-								let lon = obj.longitude || "-";
-								expense_data.push({y:amount,indexLabel:amount+"(#percent%)",legendText:""+amount,description:description,date:date,tag:tag});
+								let lat = obj.latitude;
+								if(lat == null || lat == -1 || lat == 0)
+								{
+									lat = "-";
+								}
+								let lon = obj.longitude;
+								if(lon == null || lon == -1 || lon == 0)
+								{
+									lon = "-";
+								}
+								globalObject.expense_data.push({y:amount,indexLabel:amount+"(#percent%)",legendText:""+amount,description:description,date:date,tag:tag});
 								let append_string = "<tr><td><i class='icon-inr'></i>"+amount+"</td><td>"+date+"</td><td>"+tag+"</td><td>"+description+"</td><td>"+user_name+"</td><td>"+location;
-								if(location != "-")
+								if(lat != "-" && lon != "-")
 								{
 									append_string += "<img src='images/show_location_icon.png' class='image location-icon' alt='Show in map' data-lat="+lat+" data-lon="+lon+"></td></tr>";
 								}
@@ -201,8 +228,8 @@
 								}
 								$('.expense-table tbody').append(append_string);
 							}
-					    	expense_chart.options.data[0].dataPoints = expense_data;
-					    	if(expense_data.length != 0)
+					    	expense_chart.options.data[0].dataPoints = globalObject.expense_data;
+					    	if(globalObject.expense_data.length != 0)
 					    	{
 					    		$('#empty-expense-data').css("display","none");
 					    		$('#chartContainer2').css("display","block");
@@ -216,20 +243,20 @@
 					    		$('#empty-expense-data').css("display","block");
 					    		$('#empty-expense-data').html("<img src='images/no_results.png'><div class='empty-data-text'>No expense for this month</div>");
 					    	}		
-					    	expense_data=[];
+					    	globalObject.expense_data=[];
 						}
 						else if(page == "budget")
 						{
-							expenses_in_month = [];
+							globalObject.expenses_in_month = [];
 							if(data != null && data.length != 0)
 							{
 								for(var i=0;i<data.length;i++)
 								{
 									var obj = jQuery.parseJSON(data[i]);
-									expenses_in_month.push(obj);
+									globalObject.expenses_in_month.push(obj);
 								}
 							}
-							get_budget_ajax_call(month, year);
+							get_budget_ajax_call(globalObject.month, globalObject.year);
 						}
 					},
 					error:function(jqXHR, txtStatus, errThrown){
@@ -268,9 +295,8 @@
 			
 			var save_income_ajax_call=function(month,year)
 		 	{
-				NProgress.start();
 				var amount = $('.generic-amount').val();
-				var date = dateToEpoch($('.generic-datepicker').val());
+				var date = $('.generic-datepicker').val();
 				var tag_id = $('.saved-tags-dropdown').val();
 				var add_info = $('.generic-additional-info').val();
 				var location = $('.generic-location').val();
@@ -279,6 +305,17 @@
 				var description = $('.generic-description').val();
 				var repeat = $('.generic-repeat-dropdown').val();
 				var reminder = $('.generic-reminder-dropdown').val();
+				var ok = validateIncomeExpenseData(amount, date, tag_id, add_info, location, lat, lon, description, repeat, reminder);
+				if(!ok)
+				{
+					$('#ajax-failure-box .content').text("Invalid input");
+  					$('#ajax-failure-box').show();
+ 					$('#ajax-failure-box').stop( true, true ).fadeOut(3000);
+					return;
+				}
+				amount = parseFloat(amount).toFixed(2);
+				date = dateToEpoch(date);
+				NProgress.start();
 				$.ajax({
 					type:"POST",
 					url:"/BudgetChummy/api/v1/income",
@@ -286,7 +323,7 @@
 					success:function(data){
 						NProgress.done();
 						$('#generic-modal-form').find('.close-icon').click();
-						get_income_ajax_call(month, year);
+						get_income_ajax_call(globalObject.month, globalObject.year);
 					},
 					error:function(jqXHR, txtStatus, errThrown){
 						NProgress.done();
@@ -301,9 +338,8 @@
 			
 			var save_expense_ajax_call=function(month,year)
 		 	{
-				NProgress.start();
 				var amount = $('.generic-amount').val();
-				var date = dateToEpoch($('.generic-datepicker').val());
+				var date = $('.generic-datepicker').val();
 				var tag_id = $('.saved-tags-dropdown').val();
 				var add_info = $('.generic-additional-info').val();
 				var location = $('.generic-location').val();
@@ -312,6 +348,17 @@
 				var description = $('.generic-description').val();
 				var repeat = $('.generic-repeat-dropdown').val();
 				var reminder = $('.generic-reminder-dropdown').val();
+				var ok = validateIncomeExpenseData(amount, date, tag_id, add_info, location, lat, lon, description, repeat, reminder);
+				if(!ok)
+				{
+					$('#ajax-failure-box .content').text("Invalid input");
+  					$('#ajax-failure-box').show();
+ 					$('#ajax-failure-box').stop( true, true ).fadeOut(3000);
+					return;
+				}
+				amount = parseFloat(amount).toFixed(2);
+				date = dateToEpoch(date);
+				NProgress.start();
 				$.ajax({
 					type:"POST",
 					url:"/BudgetChummy/api/v1/expense",
@@ -321,11 +368,11 @@
 						$('#generic-modal-form').find('.close-icon').click();
 						if($('#expense-tab').hasClass('active'))
 						{
-							get_expense_ajax_call(month, year, "expense");
+							get_expense_ajax_call(globalObject.month, globalObject.year, "expense");
 						}
 						else if($('#budget-tab').hasClass('active'))
 						{
-							get_expense_ajax_call(month, year, "budget");
+							get_expense_ajax_call(globalObject.month, globalObject.year, "budget");
 						}
 					},
 					error:function(jqXHR, txtStatus, errThrown){
@@ -341,14 +388,25 @@
 			
 			var save_budget_ajax_call=function(month,year)
 		 	{
-				NProgress.start();
 				var budget_type = $('#budget-type-dropdown').val();
 				var tag_id = $('.saved-tags-dropdown').val() || -1;
 				var budget_repeat = $('#budget-repeat-dropdown').val();
-				var start_date = dateToEpoch($('#budget-start-datepicker').val()) || -1;
-				var end_date = dateToEpoch($('#budget-end-datepicker').val()) || -1;
+				var start_date = $('#budget-start-datepicker').val() || -1;
+				var end_date = $('#budget-end-datepicker').val() || -1;
 				var amount = $('#budget-amount').val();
 				var description = $('#budget-description').val();
+				var ok = validateBudgetData(budget_type, tag_id, budget_repeat, start_date, end_date, amount, description);
+				if(!ok)
+				{
+					$('#ajax-failure-box .content').text("Invalid input");
+  					$('#ajax-failure-box').show();
+ 					$('#ajax-failure-box').stop( true, true ).fadeOut(3000);
+					return;
+				}
+				amount = parseFloat(amount).toFixed(2);
+				start_date = dateToEpoch(start_date);
+				end_date = dateToEpoch(end_date);
+				NProgress.start();
 				$.ajax({
 					type:"POST",
 					url:"/BudgetChummy/api/v1/budget",
@@ -371,8 +429,16 @@
 			
 			var search_ajax_call=function()
 		 	{
+				var date = $('.date-picker').val();
+				if(!validateDate(date))
+				{
+					$('#ajax-failure-box .content').text("Invalid input");
+  					$('#ajax-failure-box').show();
+ 					$('#ajax-failure-box').stop( true, true ).fadeOut(3000);
+					return;
+				}
+				date = dateToEpoch(date);
 				NProgress.start();
-				var date = dateToEpoch($('.date-picker').val());
 				$.ajax({
 					type:"GET",
 					url:"/BudgetChummy/api/v1/search",
@@ -389,7 +455,7 @@
 									for(var i=0;i<value.length;i++)
 									{
 										obj = jQuery.parseJSON(value[i]);
-										income_search_data.push(obj);
+										globalObject.income_search_data.push(obj);
 									}
 								}
 								else
@@ -397,11 +463,11 @@
 									for(var i=0;i<value.length;i++)
 									{
 										obj = jQuery.parseJSON(value[i]);
-										expense_search_data.push(obj);
+										globalObject.expense_search_data.push(obj);
 									}									
 								}
 							});
-							if(income_search_data.length == 0)
+							if(globalObject.income_search_data.length == 0)
 							{
 								$('#income_search_data').css('display','none');
 								$('#empty-search-income-data').css('display','block');
@@ -411,13 +477,13 @@
 								$('#income_search_data').css('display','block');
 								$('#empty-search-income-data').css('display','none');
 								var income_search_data_string = "";
-								for(var i=0;i<income_search_data.length;i++)
+								for(var i=0;i<globalObject.income_search_data.length;i++)
 								{
-									income_search_data_string += '<div class="income-bag search-bag"><div class="search-tag"><div class="tag-label">Tag</div><div class="tag-value">' + income_search_data[i].tag_name + '</div></div><div class="search-amount"><div class="amount-label">Amount</div><div class="amount-value">' + income_search_data[i].amount + '</div></div></div>';			
+									income_search_data_string += '<div class="income-bag search-bag"><div class="search-tag"><div class="tag-label">Tag</div><div class="tag-value">' + globalObject.income_search_data[i].tag_name + '</div></div><div class="search-amount"><div class="amount-label">Amount</div><div class="amount-value">' + globalObject.income_search_data[i].amount + '</div></div></div>';			
 								}
 							}
 							$('#income_search_data').html(income_search_data_string);
-							if(expense_search_data.length == 0)
+							if(globalObject.expense_search_data.length == 0)
 							{
 								$('#expense_search_data').css('display','none');
 								$('#empty-search-expense-data').css('display','block');
@@ -427,9 +493,9 @@
 								$('#expense_search_data').css('display','block');
 								$('#empty-search-expense-data').css('display','none');
 								var expense_search_data_string = "";
-								for(var i=0;i<expense_search_data.length;i++)
+								for(var i=0;i<globalObject.expense_search_data.length;i++)
 								{
-									expense_search_data_string += '<div class="expense-bag search-bag"><div class="search-tag"><div class="tag-label">Tag</div><div class="tag-value">' + expense_search_data[i].tag_name + '</div></div><div class="search-amount"><div class="amount-label">Amount</div><div class="amount-value">' + expense_search_data[i].amount + '</div></div></div>';			
+									expense_search_data_string += '<div class="expense-bag search-bag"><div class="search-tag"><div class="tag-label">Tag</div><div class="tag-value">' + globalObject.expense_search_data[i].tag_name + '</div></div><div class="search-amount"><div class="amount-label">Amount</div><div class="amount-value">' + globalObject.expense_search_data[i].amount + '</div></div></div>';			
 								}
 							}
 							$('#expense_search_data').html(expense_search_data_string);
@@ -447,8 +513,8 @@
 					}
 
 				});
-				income_search_data=[];
-				expense_search_data=[];
+				globalObject.income_search_data=[];
+				globalObject.expense_search_data=[];
 		 	}
 			
 			var users_ajax_call = function(){
@@ -492,29 +558,66 @@
 			}
 			
 			var add_user_ajax_call = function(){
-				NProgress.start();
 				var to = $('#add-user-input').val();
+				if(!validateEmail(to))
+				{
+					$('#ajax-failure-box .content').text("Invalid email id");
+  					$('#ajax-failure-box').show();
+ 					$('#ajax-failure-box').stop( true, true ).fadeOut(3000);
+					return;
+				}
 				var authentication_type = $('input[name=authentication_type]:checked').val();
 				if(authentication_type === "Offline")
 				{
 					var passcode = $('#offline-code').val();
+					if(!validatePasscode(passcode))
+					{
+						$('#ajax-failure-box .content').text("Invalid passcode");
+	  					$('#ajax-failure-box').show();
+	 					$('#ajax-failure-box').stop( true, true ).fadeOut(3000);
+						return;
+					}
 				}
 				else
 				{
 					var passcode = '-1';
 				}
+				NProgress.start();
 				$.ajax({
 					type:"POST",
 					url:"/BudgetChummy/api/v1/addUser",
 					data:{to: to, authentication_type: authentication_type, passcode: passcode},
 					success:function(data){
 						NProgress.done();
+						if(data == "" || data == null)
+						{
+							$('#addUserModal').find('.invitation-not-sent').html("");
+							$('#addUserModal').modal('hide');
+						}
+						else
+						{
+							var obj = jQuery.parseJSON(data[0]);
+							if(obj.invitation_status === "joined")
+							{
+								$('#addUserModal').find('.invitation-not-sent').html("The user already exists in this account");
+							}
+							else if(obj.invitation_status === "not joined")
+							{
+								$('#addUserModal').find('.invitation-not-sent').html("An invitation is already sent to this email");
+							}
+						}
 					},
 					error:function(jqXHR, txtStatus, errThrown){
 						NProgress.done();
-						if(jqXHR.status == 401)
+						$('#addUserModal').find('.invitation-not-sent').html("");
+						if(jqXHR.status == 400)
 						{
+							$('#addUserModal').modal('hide');
 							location.href = "login";
+						}
+						else if(jqXHR.status == 401)
+						{
+							$('#addUserModal').find('.invitation-not-sent').html("You need to be an admin to send invitations");
 						}
 					}
 				});				
@@ -586,7 +689,7 @@
 							for(var i=0;i<data.length;i++)
 							{
 								var obj = jQuery.parseJSON(data[i]);
-								tags_list.push(obj.tag_name);
+								globalObject.tags_list.push(obj.tag_name);
 								$("#saved-tags-dropdown").append("<option value='"+obj.tag_id+"'>"+obj.tag_name+"</option>");
 							}
 						}
@@ -644,14 +747,12 @@
 			}
 			
 			var logout_ajax_call = function(join_account){
-				NProgress.start();
 				$.ajax({
 					type:"POST",
 					url:"/BudgetChummy/api/v1/logout",
 					async: false,
 					success:function()
 					{
-						NProgress.done();
 						if(!join_account)
 						{
 							location.href = "BC";

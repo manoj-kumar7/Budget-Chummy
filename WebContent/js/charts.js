@@ -14,7 +14,7 @@
 		    	      {
 		   	    	   showInLegend: true,
 		    	       type: "doughnut",
-		    	       dataPoints: income_data
+		    	       dataPoints: globalObject.income_data
 		    	     }
 		    	     ]
 		    });
@@ -34,7 +34,7 @@
 		    	      {
 		   	    	   showInLegend: true,
 		    	       type: "doughnut",
-		    	       dataPoints: expense_data
+		    	       dataPoints: globalObject.expense_data
 		    	     }
 		    	     ]
 		    });

@@ -36,19 +36,22 @@
 	<link rel="stylesheet" href="styles/nprogress.css" type="text/css">
 	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDtFLcyhDfgarOIcwf-4qiScchMGJS25jo"></script>
 	<script type="text/javascript">
-	var month_array=["January","February","March","April","May","June","July","August","September","October","November","December"];
-	var months_shortform = ["Jan", "Feb", "Mar", "Apr", "May" ,"Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-	var income_data = [];
-	var expense_data = [];
-	var income_search_data = [];
-	var expense_search_data = [];
-	var expenses_in_month = [];
-	var budgets_in_month = [];
-	var d = new Date();
-	var month = d.getMonth() + 1;
-	var year = d.getFullYear();
-	var current_page = "income";
-	var tags_list = [];
+	function globalFunction(){
+		this.month_array=["January","February","March","April","May","June","July","August","September","October","November","December"];
+		this.months_shortform = ["Jan", "Feb", "Mar", "Apr", "May" ,"Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+		this.income_data = [];
+		this.expense_data = [];
+		this.income_search_data = [];
+		this.expense_search_data = [];
+		this.expenses_in_month = [];
+		this.budgets_in_month = [];
+		this.d = new Date();
+		this.month = this.d.getMonth() + 1;
+		this.year = this.d.getFullYear();
+		this.current_page = "income";
+		this.tags_list = [];	
+	}
+	var globalObject = new globalFunction();
 	
 	$(document).ready(function(){
 		getAccounts_ajax_call("home");
@@ -59,7 +62,7 @@
 			if(page == "expense")
 			{
 				open_page('expense');
-				get_expense_ajax_call(month,year,"expense");
+				get_expense_ajax_call(globalObject.month,globalObject.year,"expense");
 				$('#expense-tab').addClass("active");
 				$('#budgets-right-slider').hide();
 				//$('#accounts-right-slider').show('slide', {direction: 'right'}, 300);
@@ -69,7 +72,7 @@
 			{
 				open_page('budget');
 				//get_budget_ajax_call(month,year);
-				get_expense_ajax_call(month, year, "budget");
+				get_expense_ajax_call(globalObject.month, globalObject.year, "budget");
 				$('#budget-tab').addClass("active");
 				$('#accounts-right-slider').hide();
 				//$('#budgets-right-slider').show('slide', {direction: 'right'}, 300);
@@ -86,7 +89,7 @@
 			else if(page == "users")
 			{
 				open_page('users');
-				users_ajax_call(month,year);
+				users_ajax_call(globalObject.month,globalObject.year);
 				$('#users-tab').addClass("active");
 				$('#budgets-right-slider').hide();
 				//$('#accounts-right-slider').show('slide', {direction: 'right'}, 300);
@@ -95,7 +98,7 @@
 			else
 			{
 				open_page('income');
-				get_income_ajax_call(month,year);
+				get_income_ajax_call(globalObject.month,globalObject.year);
 				$('#income-tab').addClass("active");	
 				$('#budgets-right-slider').hide();
 				//$('#accounts-right-slider').show('slide', {direction: 'right'}, 300);
@@ -104,7 +107,7 @@
 		}
 		initial_page_load("income");
 		
-		document.getElementById("selected_month").innerHTML = month_array[month-1]+", "+year;
+		document.getElementById("selected_month").innerHTML = globalObject.month_array[globalObject.month-1]+", "+globalObject.year;
 		  
 		  
 		  $(document).on('focus',"#income-datepicker", function(){
@@ -118,22 +121,22 @@
 		  });	
 		  $(document).on('click','.plus',function(){
 			  $('.generic-modal').modal('show');
-			  if(current_page == "income")
+			  if(globalObject.current_page == "income")
 			  {
 				  open_income_modal();
 			  }
-			  else if(current_page == "expense")
+			  else if(globalObject.current_page == "expense")
 			  {
 				  open_expense_modal();
 			  }
-			  else if(current_page == "budget")
+			  else if(globalObject.current_page == "budget")
 			  {
 				  open_budget_modal();
 			  }
 		  });
 		  $(document).on('click','.home-accounts',function(){
 			  var id = $(this).attr("id");
-			  accountChosen_ajax_call(id, current_page);
+			  accountChosen_ajax_call(id, globalObject.current_page);
 		  });
 		  
 		  //$('.center').slimscroll();
@@ -278,47 +281,47 @@
 	      });
 			
 		    $(document).on('click','.left-icon',function(){
-		    	month=month-1;
-		    	if(month == 0)
+		    	globalObject.month=globalObject.month-1;
+		    	if(globalObject.month == 0)
 		    	{
-		    		month = 12;
-		    		year = year-1;
+		    		globalObject.month = 12;
+		    		globalObject.year = globalObject.year-1;
 		    	}
-		    	document.getElementById("selected_month").innerHTML = month_array[month-1]+", "+year;
+		    	document.getElementById("selected_month").innerHTML = globalObject.month_array[globalObject.month-1]+", "+globalObject.year;
 		    	if($('#income-tab').hasClass('active'))
 		    	{
-		    		get_income_ajax_call(month,year);
+		    		get_income_ajax_call(globalObject.month,globalObject.year);
 		    	}
 		    	else if($('#expense-tab').hasClass('active'))
 		    	{
-		    		get_expense_ajax_call(month,year,"expense");
+		    		get_expense_ajax_call(globalObject.month,globalObject.year,"expense");
 		    	}
 		    	else if($('#budget-tab').hasClass('active'))
 		    	{
 		    		//get_budget_ajax_call(month,year);
-		    		get_expense_ajax_call(month,year,"budget");
+		    		get_expense_ajax_call(globalObject.month,globalObject.year,"budget");
 		    	}
 		    });
 		    $(document).on('click','.right-icon',function(){
-		    	month=month+1;
-		    	if(month == 13)
+		    	globalObject.month=globalObject.month+1;
+		    	if(globalObject.month == 13)
 		    	{
-		    		month = 1;
-		    		year = year+1;
+		    		globalObject.month = 1;
+		    		globalObject.year = globalObject.year+1;
 		    	}
-		    	document.getElementById("selected_month").innerHTML = month_array[month-1]+", "+year;
+		    	document.getElementById("selected_month").innerHTML = globalObject.month_array[globalObject.month-1]+", "+globalObject.year;
 		    	if($('#income-tab').hasClass('active'))
 		    	{
-		    		get_income_ajax_call(month,year);
+		    		get_income_ajax_call(globalObject.month,globalObject.year);
 		    	}
 		    	else if($('#expense-tab').hasClass('active'))
 		    	{
-		    		get_expense_ajax_call(month,year,"expense");
+		    		get_expense_ajax_call(globalObject.month,globalObject.year,"expense");
 		    	}
 		    	else if($('#budget-tab').hasClass('active'))
 		    	{
 		    		//get_budget_ajax_call(month,year);
-		    		get_expense_ajax_call(month,year,"budget");
+		    		get_expense_ajax_call(globalObject.month,globalObject.year,"budget");
 		    	}
 		    });
 		    
@@ -343,8 +346,7 @@
 		    	initial_page_load("users");
 		    });
 		    $('#add-user-send').on('click', function(){
-		    	add_user_ajax_call();
-		    	$('#addUserModal').modal('hide');	
+		    	add_user_ajax_call();	
 		    });
 		    $('#logout').click(function(){
 		    	logout_ajax_call(false);
@@ -389,9 +391,9 @@
 			
 			var is_in_tags_list = function(text){
 				text = text.trim();
-				for(var i=0; i<tags_list.length ;i++)
+				for(var i=0; i<globalObject.tags_list.length ;i++)
 				{
-					if(tags_list[i].toLowerCase() == text.toLowerCase())
+					if(globalObject.tags_list[i].toLowerCase() == text.toLowerCase())
 					{
 						return true;
 					}
@@ -488,7 +490,7 @@
 
 
 	var open_page = function(page){
-		current_page = page;
+		globalObject.current_page = page;
 		if(page == "search" || page == "users")
 		{
 			$('.month-changer').css("display","none");
@@ -539,21 +541,21 @@
 	var modal_ajax_call = function(){
 		if($('.generic-save').attr('id') == "income-save")
 		{
-			save_income_ajax_call(month, year);
+			save_income_ajax_call(globalObject.month, globalObject.year);
 		}
 		else if($('.generic-save').attr('id') == "expense-save")
 		{
-			save_expense_ajax_call(month, year);
+			save_expense_ajax_call(globalObject.month, globalObject.year);
 		}
 		else if($('.generic-save').attr('id') == "budget-save")
 		{
 			save_budget_ajax_call();
-			get_budget_ajax_call(month, year);
+			get_budget_ajax_call(globalObject.month, globalObject.year);
 		}
 	}
 	
 	var setCurrentPage = function(){
-		$('.page_name').val(current_page);
+		$('.page_name').val(globalObject.current_page);
 		modal_ajax_call();
 	}
 
@@ -716,18 +718,24 @@
 			<h4 class="modal-title">Add User</h4>
 	    </div>
 	    <div class="modal-body">
-	    	Enter the email address of the user to send invitation
+	    	<div class="add-user-email-text">Enter the email address of the user to send invitation</div>
 	    	<div>
 				<input type="text" id="add-user-input" name="add-user-input" class="text add-user-input"/>
 			</div>
-			Set authentication
-			<div>
+			<div class="add-user-passcode-text">Set authentication</div>
+			<div class="radio-div">
+			<span class="email-radio-div">
 				<input type="radio" id="email-radio" name="authentication_type" value="Email" checked> Email
-	 			<input type="radio" id="offline-radio" name="authentication_type" value="Offline"> Offline<br>
-				</div>
-				<div id="set-offline-code" style="display:none;">
-					<input type="text" id="offline-code" name="offline-code" maxlength="6" class="text offline-code-input"/>
-				</div>
+			</span>
+			<span class="offline-radio-div">
+	 			<input type="radio" id="offline-radio" name="authentication_type" value="Offline"> Offline
+ 			</span>
+			</div>
+			<div id="set-offline-code" style="display:none;">
+				<input type="text" id="offline-code" name="offline-code" maxlength="6" class="text offline-code-input"/>
+			</div>
+			<div class="invitation-not-sent">
+			</div>
 	    </div>
 	    <div class="modal-footer">
 	    	<button id="add-user-send" class="add-user-send btn" value="Send invitation">Send invitation</button>
@@ -853,6 +861,10 @@
 </div>
 
 </div>
+	<div id="ajax-failure-box" style="display:none;">
+		<div class="content"></div>
+	</div>
+<script type="text/javascript" src="js/security_regex.js"></script>
 <script type="text/javascript" src="js/map-api.js"></script>
 <script type="text/javascript" src="js/charts.js"></script>
 <script type="text/javascript" src="js/ajax-calls.js"></script>
