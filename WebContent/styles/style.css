@@ -916,6 +916,36 @@ div.tab button.active .tab-title{
 	font-size: 30px;
   padding-bottom: 15px;
 }
+.activation-link-sent{
+  margin: 15%;
+  text-align: center; 
+}
+.activation-link-sent .activation-link-sent-text{
+  font-size: 25px;
+}
+.account-activated{
+  margin: 15%;
+  text-align: center; 
+}
+.account-activated .account-activated-text{
+  font-size: 30px;
+  padding-bottom: 15px;
+}
+.account-activated #activation-page-login{
+  background-color: #f4511e;
+  color: #fff;
+  padding: 7px 22px;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+}
+.account-not-activated{
+  margin: 15%;
+  text-align: center; 
+}
+.account-not-activated .account-not-activated-text{
+  font-size: 30px;
+}
 
 #addUserModal .add-user-email-text{
   padding-top: 5px;

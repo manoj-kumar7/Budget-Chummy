@@ -26,6 +26,7 @@
 			}
 			
 			var signup_ajax_call=function(){
+				NProgress.start();
 				var firstname = $('#firstname').val();
 				var lastname = $('#lastname').val();
 				var email = $('#email').val();
@@ -38,22 +39,41 @@
 					data:{first_name:firstname,last_name:lastname,email:email,pword:pword,account_id:account_id,invitation_id:invitation_id},
 					async: false,
 					success:function(data){
+						NProgress.done();
 						//showAjaxSuccessMessage("Signed up successfully");
 						if(account_id=="null" || invitation_id=="null")
 						{
-							location.href = "CreateAccount";
+							// location.href = "CreateAccount";
+							$('#signup-form-div').css('display', 'none');
+							$('.activation-link-sent').css('display', 'block');
 						}
 						else
 						{
 							location.href = "AccountAuthentication?account_id="+account_id+"&invitation_id="+invitation_id;
 						}
 					},
-					error:function(data){
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
 						showAjaxFailureMessage("This email address already has a BC account");
 					}
 				});	
 			}
 			
+			var activate_account_ajax_call = function(code, email){
+				$.ajax({
+					type:"POST",
+					url:"/BudgetChummy/api/v1/activateAccount",
+					data:{code:code, email:email},
+					async: false,
+					success:function(data){
+						$('.account-activated').css('display','block');
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						$('.account-not-activated').css('display','block');
+					}
+				});	
+			}
+
 			var create_account_ajax_call=function(){
 				var accountname = $('#accountname').val();
 				$.ajax({
@@ -65,7 +85,7 @@
 						//showAjaxSuccessMessage("Signed up successfully");
 						location.href = "home";
 					},
-					error:function(data){
+					error:function(jqXHR, txtStatus, errThrown){
 						$('#create-account').prop('disabled',false);
 						enterKeyPressed = false;
 						//showAjaxFailureMessage("");

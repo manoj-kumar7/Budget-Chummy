@@ -20,6 +20,8 @@ import javax.servlet.http.HttpSession;
 import com.budgetchummy.api.util.APIConstants;
 import com.budgetchummy.api.util.Datehelper;
 import com.budgetchummy.api.util.PasswordUtil;
+import com.budgetchummy.api.util.emailUtil;
+import com.budgetchummy.api.util.messageDigestUtil;
 
 import java.util.Date;
 import java.text.DateFormat;
@@ -88,25 +90,34 @@ public class signUpServlet extends HttpServlet {
 			}
 			else
 			{
-				st = con.prepareStatement("insert into users(first_name,last_name,email,password,created_date_time) values(?,?,?,?,?);");
+				String activation_code = messageDigestUtil.getMD5Hash(email);
+				st = con.prepareStatement("insert into users(first_name,last_name,email,password,created_date_time,verified,activation_code) values(?,?,?,?,?,?,?);");
 				st.setString(1, first_name);
 				st.setString(2, last_name);
 				st.setString(3, email);
 				st.setString(4, generatedPassword);
 				st.setLong(5, added_date);
+				st.setBoolean(6, false);
+				st.setString(7, activation_code);
 				int i = st.executeUpdate();
 
-				rs = null;
-				st = con.prepareStatement("select user_id from users where email=?;");
-				st.setString(1, email);
-				rs = st.executeQuery();
+				String rootURL = APIConstants.rootURL;
+				String subject = "Activate your Budget Chummy account";
+				String message = "Hi " + first_name + "\n Before you set your first budget, please take a moment to verify your email address \n"+
+								 rootURL+"activate?code='"+activation_code+"'&email='"+email+"'";
+				emailUtil.sendMail(email, subject, message);
+				// rs = null;
+				// st = con.prepareStatement("select user_id from users where email=?;");
+				// st.setString(1, email);
+				// rs = st.executeQuery();
 
-				while(rs.next())
-				{
-					userid = rs.getInt("user_id");
-				}
-				HttpSession session = request.getSession();
-				session.setAttribute("user_id",userid);
+				// while(rs.next())
+				// {
+				// 	userid = rs.getInt("user_id");
+				// }
+				// HttpSession session = request.getSession();
+				// session.setAttribute("user_id",userid);
+
 			}
 
 			rs.close();

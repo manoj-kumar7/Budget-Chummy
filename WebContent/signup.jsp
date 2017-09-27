@@ -6,7 +6,8 @@
 <title>Sign up | BC</title>
 <link rel="stylesheet" href="styles/style.css" type="text/css">
 <script type="text/javascript" src="app/jquery-3.1.1.js"></script>
-
+<script type="text/javascript" src="app/nprogress.js"></script>
+<link rel="stylesheet" href="styles/nprogress.css" type="text/css">
 <script type="text/javascript">
 $(document).ready(function(){
 	$(document).on('focusout','.formvalidation',function(e){// No I18N
@@ -134,6 +135,11 @@ if(session.getAttribute("account_id") != null)
 				<button id="signup" class="signup bc-btn bc-firstpage-btn" value="Signup"><span>Signup</span></button>
 			</div>
 		
+	</div>
+	<div class="activation-link-sent" style="display:none;">
+		<div class="activation-link-sent-text">
+			Activation link is sent to your email address. Please activate your account to proceed.
+		</div>
 	</div>
 	<div id="hintbox" style="display:none;">
 		<div class="content"></div>
