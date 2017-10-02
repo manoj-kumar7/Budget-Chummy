@@ -49,6 +49,12 @@ var filterBudget = function(budgets)
 	else
 	{
 		$('#home-budgets-list').html("<div class='empty-data-text'>No budgets for this month</div>");
+		$('#budget-page-header').css("display","none");
+		$('#budget-page-stat').css("display","none");
+		$('#budget-chart-space').css("display","none");
+		$('#budget-timespan').css("display","none");
+		$('#empty-budget-data').css("display","block");
+		return;
 	}
 	
 }
@@ -174,7 +180,6 @@ var getBudgetDataForStat = function(budget_number){
 		$('#budget-chart-space').css("display","none");
 		$('#budget-timespan').css("display","none");
 		$('#empty-budget-data').css("display","block");
-		$('#empty-budget-data').html("<img src='images/no_results.png'><div class='empty-data-text'>No budgets for this month</div>");
 		return;
 	}
 	$('.budget-container').removeClass('active');

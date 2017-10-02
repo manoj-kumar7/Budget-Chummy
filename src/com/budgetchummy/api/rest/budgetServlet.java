@@ -171,14 +171,11 @@ public class budgetServlet extends HttpServlet {
 			}
 			int budget_repeat = Integer.parseInt(request.getParameter("budget_repeat"));
 			long start_date=-1,end_date=-1;
-		    DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
-		    Date dateobj = new Date();
-		    df.setTimeZone(TimeZone.getTimeZone("IST"));
-		    start_date = Datehelper.dateToEpoch(df.format(dateobj));
+
+		    start_date = Long.parseLong(request.getParameter("budget_start_date"));
 
 			if(budget_repeat == 0)
 			{
-				start_date = Long.parseLong(request.getParameter("budget_start_date"));
 				end_date = Long.parseLong(request.getParameter("budget_end_date"));
 			}
 

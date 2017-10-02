@@ -7,6 +7,17 @@ var epochOfFirstDayOfMonth = function(month, year){
 	return new Date(year+"/"+month+"/"+01).valueOf();
 }
 
+var epochOfLastDayOfMonth = function(month, year){
+	var m = month + 1;
+	var y = year;
+	if(m > 12)
+	{
+		m = 0;
+		y = y + 1;
+	}
+	var last_date_of_month = new Date(y, m - 1, 0).getDate();
+	return new Date(year+"/"+month+"/"+last_date_of_month).valueOf();
+}
 // var epochOfFirstDayOfYear = function(year){
 // 	return new Date(year+"/"+01+"/"+01).valueOf();
 // }
@@ -56,7 +67,76 @@ var getTodayEpoch = function(){
 	return d1.valueOf();
 }
 
+var addDaysToDate = function(date, no_of_days)
+{
+	return (date.getTime() + (no_of_days * 86400000));
+}
+
+var getEndDateOfBudget = function(start_date, yearly_budget){
+	var end_d = start_date.getDate();
+	if(yearly_budget)
+	{
+		var end_m = start_date.getMonth() - 1;
+		var end_y = start_date.getFullYear() + 1;
+	}
+	else
+	{
+		var end_m = start_date.getMonth();
+		var end_y = start_date.getFullYear();
+	}
+
+	if(end_d == 1)
+	{
+		let temp_end_m = end_m + 1;
+		let temp_end_y = end_y;
+		if(temp_end_m > 11)
+		{
+			temp_end_m = 0;
+			temp_end_y = temp_end_y + 1;
+		}
+		end_d = new Date(temp_end_y, temp_end_m, 0).getDate();
+		return [end_d, end_m, end_y];
+	}
+	else
+	{
+		end_m = end_m + 1;
+	}
+
+	if(end_m > 11)
+	{
+		end_m = 0;
+		end_y = end_y + 1;
+	}
+
+	if(end_d >= 29 && end_d <=31)
+	{
+		let temp_end_m = end_m + 1;
+		let temp_end_y = end_y;
+		if(temp_end_m > 11)
+		{
+			temp_end_m = 0;
+			temp_end_y = temp_end_y + 1;
+		}
+		let last_date = new Date(temp_end_y, temp_end_m, 0).getDate();
+		while(end_d > last_date)
+		{
+			end_d = end_d - 1;
+		}
+		end_d = end_d - 1;
+	}
+	else
+	{
+		end_d = end_d - 1;
+	}
+	return [end_d, end_m, end_y];
+}
+
 var calculateWeekStartEndDates = function(start_date){
+	var d_start = new Date(start_date);
+	var d_end = new Date(d_start);
+	// d_end.setDate(d_start.getDate() + 6);
+	d_end.setTime(addDaysToDate(d_start, 6));
+
 	if(globalObject.month == getCurrentRealMonth() && globalObject.year == getCurrentRealYear())
 	{
 		var today = getTodayEpoch();
@@ -65,9 +145,10 @@ var calculateWeekStartEndDates = function(start_date){
 	{
 		var today = epochOfFirstDayOfMonth(globalObject.month, globalObject.year);
 	}
-	var d_start = new Date(start_date);
-	var d_end = new Date(d_start);
-	d_end.setDate(d_start.getDate() + 6);
+	if(d_start > today)
+	{
+		return [d_start.valueOf(), d_end.valueOf()];
+	}
 	while(1)
 	{
 		if(today >= d_start && today <= d_end)
@@ -76,8 +157,10 @@ var calculateWeekStartEndDates = function(start_date){
 		}
 		else
 		{
-			d_start.setDate(d_start.getDate() + 7);
-			d_end.setDate(d_start.getDate() + 6);
+			// d_start.setDate(d_start.getDate() + 7);
+			d_start.setTime(addDaysToDate(d_start, 7));
+			// d_end.setDate(d_start.getDate() + 6);
+			d_end.setTime(addDaysToDate(d_start, 6));
 		}
 	}
 }
@@ -85,40 +168,77 @@ var calculateWeekStartEndDates = function(start_date){
 var calculateMonthStartEndDates = function(start_date){
 	var d_start = new Date(start_date);
 	var d_end = new Date(start_date);
-	var date = d_start.getDate();
-	d_start.setFullYear(globalObject.year, globalObject.month-1, date);
-	var m = globalObject.month;
-	if(m >= 12)
+	
+	// var date = d_start.getDate();
+	// d_start.setFullYear(globalObject.year, globalObject.month-1, date);
+
+	var today = epochOfLastDayOfMonth(globalObject.month, globalObject.year);
+	if(d_start.valueOf() > today)
 	{
-		m = 0;
+		return [d_start.valueOf(), d_end.valueOf()];
 	}
-	if(date == 1)
+
+	var end_date_arr = getEndDateOfBudget(d_start, false);
+	var end_d = end_date_arr[0];
+	var end_m = end_date_arr[1];
+	var end_y = end_date_arr[2];
+	d_end.setFullYear(end_y, end_m, end_d);
+
+	while(1)
 	{
-		date = new Date(globalObject.year, m, 0).getDate();
+		if(today >= d_start && today <= d_end)
+		{
+			return [d_start.valueOf(), d_end.valueOf()];
+		}
+		else
+		{
+			d_start.setTime(addDaysToDate(d_end, 1));
+
+			end_date_arr = getEndDateOfBudget(d_start, false);
+			end_d = end_date_arr[0];
+			end_m = end_date_arr[1];
+			end_y = end_date_arr[2];
+			d_end.setFullYear(end_y, end_m, end_d);
+		}
 	}
-	else
-	{
-		date = date - 1;
-	}
-	d_end.setFullYear(globalObject.year, m, date);
+
 	return [d_start.valueOf(), d_end.valueOf()];
 }
 
 var calculateYearStartEndDates = function(start_date){
 	var d_start = new Date(start_date);
 	var d_end = new Date(start_date);
-	var date = d_start.getDate();
-	var m = d_start.getMonth();
-	d_start.setFullYear(globalObject.year, globalObject.month-1, date);
-	if(date == 1)
+
+	var today = epochOfLastDayOfMonth(globalObject.month, globalObject.year);
+	if(d_start.valueOf() > today)
 	{
-		date = new Date(globalObject.year+1, globalObject.month-1, 0).getDate();
+		return [d_start.valueOf(), d_end.valueOf()];
 	}
-	else
+
+	var end_date_arr = getEndDateOfBudget(d_start, true);
+	var end_d = end_date_arr[0];
+	var end_m = end_date_arr[1];
+	var end_y = end_date_arr[2];
+	d_end.setFullYear(end_y, end_m, end_d);
+
+	while(1)
 	{
-		date = date - 1;
+		if(today >= d_start && today <= d_end)
+		{
+			return [d_start.valueOf(), d_end.valueOf()];
+		}
+		else
+		{
+			d_start.setTime(addDaysToDate(d_end, 1));
+
+			end_date_arr = getEndDateOfBudget(d_start, true);
+			end_d = end_date_arr[0];
+			end_m = end_date_arr[1];
+			end_y = end_date_arr[2];
+			d_end.setFullYear(end_y, end_m, end_d);
+		}
 	}
-	d_end.setFullYear(globalObject.year+1, globalObject.month-1, date);
+
 	return [d_start.valueOf(), d_end.valueOf()];
 }
 

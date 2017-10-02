@@ -315,6 +315,7 @@
 			
 			var save_income_ajax_call=function(month,year)
 		 	{
+		 		$('.generic-save').attr("disabled", "disabled");
 				var amount = $('.generic-amount').val();
 				var date = $('.generic-datepicker').val();
 				var tag_id = $('.saved-tags-dropdown').val();
@@ -342,11 +343,13 @@
 					data:{amount:amount, date:date, tag_id:tag_id, add_info:add_info, location: location, location_lat:lat, location_lon:lon, description:description, repeat:repeat, reminder:reminder},
 					success:function(data){
 						NProgress.done();
+						$('.generic-save').removeAttr("disabled")
 						$('#generic-modal-form').find('.close-icon').click();
 						get_income_ajax_call(globalObject.month, globalObject.year);
 					},
 					error:function(jqXHR, txtStatus, errThrown){
 						NProgress.done();
+						$('.generic-save').removeAttr("disabled")
 						if(jqXHR.status == 401)
 						{
 							location.href = "login";
@@ -358,6 +361,7 @@
 			
 			var save_expense_ajax_call=function(month,year)
 		 	{
+		 		$('.generic-save').attr("disabled", "disabled");
 				var amount = $('.generic-amount').val();
 				var date = $('.generic-datepicker').val();
 				var tag_id = $('.saved-tags-dropdown').val();
@@ -385,6 +389,7 @@
 					data:{amount:amount, date:date, tag_id:tag_id, add_info:add_info, location: location, location_lat:lat, location_lon:lon, description:description, repeat:repeat, reminder:reminder},
 					success:function(data){
 						NProgress.done();
+						$('.generic-save').removeAttr("disabled")
 						$('#generic-modal-form').find('.close-icon').click();
 						if($('#expense-tab').hasClass('active'))
 						{
@@ -397,6 +402,7 @@
 					},
 					error:function(jqXHR, txtStatus, errThrown){
 						NProgress.done();
+						$('.generic-save').removeAttr("disabled")
 						if(jqXHR.status == 401)
 						{
 							location.href = "login";
@@ -408,6 +414,7 @@
 			
 			var save_budget_ajax_call=function(month,year)
 		 	{
+		 		$('.generic-save').attr("disabled", "disabled");
 				var budget_type = $('#budget-type-dropdown').val();
 				var tag_id = $('.saved-tags-dropdown').val() || -1;
 				var budget_repeat = $('#budget-repeat-dropdown').val();
@@ -433,11 +440,13 @@
 					data:{budget_type:budget_type, tag_id:tag_id, budget_repeat:budget_repeat, budget_start_date:start_date, budget_end_date:end_date, budget_amount:amount, budget_description:description},
 					success:function(data){
 						NProgress.done();
+						$('.generic-save').removeAttr("disabled")
 						$('#generic-modal-form').find('.close-icon').click();
 						// get_budget_ajax_call(month, year);
 					},
 					error:function(jqXHR, txtStatus, errThrown){
 						NProgress.done();
+						$('.generic-save').removeAttr("disabled")
 						if(jqXHR.status == 401)
 						{
 							location.href = "login";

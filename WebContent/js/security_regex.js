@@ -98,7 +98,7 @@ function validateBudgetData(budget_type, tag_id, budget_repeat, start_date, end_
 	var budgetTypeSafe = parseInt(budget_type) == 0 || parseInt(budget_type) == 1;
 	var tagSafe = parseInt(tag_id) == -1 || (tag_id != null && tag_id != "null" && tag_id != "" && parseInt(tag_id) > 0);
 	var repeatSafe = parseInt(budget_repeat) >= 0 && parseInt(budget_repeat) <= 4;
-	var startSafe = parseInt(start_date) == -1 || validateDate(start_date);
+	var startSafe = validateDate(start_date);
 	var endSafe = parseInt(end_date) == -1 || validateDate(end_date);
 	var amountSafe = amountRegex.test(""+amount);
 	var descriptionSafe = descriptionRegex.test(""+description);

@@ -215,11 +215,11 @@
 			 var value = $('#budget-repeat-dropdown').val();
 			 if(value == 0)
 			 {
-				 $(".one-time-budget-div").css("display","block");
+			 	$(".one-time-budget-div .budget-end-datepicker").css("display","block");
 			 }
 			 else
 			 {
-				 $(".one-time-budget-div").css("display","none");
+				$(".one-time-budget-div .budget-end-datepicker").css("display","none");
 			 }
 		 });	 
 		  $(document).on('click','.add-btn',function(){
@@ -620,7 +620,10 @@
 			</div>
 			<div id="budget-chart-space" class="budget-chart-space chart-space" style="display:none;">
 		   	</div>
-		   	<div id="empty-budget-data" class="empty-data" style="display:none;"></div>
+		   	<div id="empty-budget-data" class="empty-data" style="display:none;">
+		   		<img src='images/no_results.png'>
+		   		<div class='empty-data-text'>No budgets for this month</div>
+		   	</div>
 		</div>
 		
 		<div id="search-page" style="display:none;" class="tabcontent page">
@@ -834,11 +837,11 @@
 						    <option value="4">Yearly</option>
 					</select>
 				</div>
-				<div class="one-time-budget-div" style="display:none;">
-					<div class="textbox_space">
+				<div class="one-time-budget-div">
+					<div class="textbox_space budget-start-datepicker">
 						<label>Start date</label><input type="text" id="budget-start-datepicker" class="budget-datepicker textbox" name="budget-start-date">
 					</div>
-					<div class="textbox_space">
+					<div class="textbox_space budget-end-datepicker" style="display:none;">
 						<label>End date</label><input type="text" id="budget-end-datepicker" class="budget-datepicker textbox" name="budget-end-date">
 					</div>
 				</div>
