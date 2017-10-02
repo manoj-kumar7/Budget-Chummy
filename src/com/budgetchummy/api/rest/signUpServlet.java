@@ -104,7 +104,7 @@ public class signUpServlet extends HttpServlet {
 				String rootURL = APIConstants.rootURL;
 				String subject = "Activate your Budget Chummy account";
 				String message = "Hi " + first_name + "\n Before you set your first budget, please take a moment to verify your email address \n"+
-								 rootURL+"activate?code='"+activation_code+"'&email='"+email+"'";
+								 rootURL+"activate?code=%27"+activation_code+"%27&email=%27"+email+"%27";
 				emailUtil.sendMail(email, subject, message);
 				// rs = null;
 				// st = con.prepareStatement("select user_id from users where email=?;");
