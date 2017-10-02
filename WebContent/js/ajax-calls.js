@@ -587,6 +587,7 @@
 			}
 			
 			var add_user_ajax_call = function(){
+				$('#add-user-send').attr("disabled", "disabled");
 				var to = $('#add-user-input').val();
 				if(!validateEmail(to))
 				{
@@ -618,6 +619,7 @@
 					data:{to: to, authentication_type: authentication_type, passcode: passcode},
 					success:function(data){
 						NProgress.done();
+						$('#add-user-send').removeAttr("disabled");
 						if(data == "" || data == null)
 						{
 							$('#addUserModal').find('.invitation-not-sent').html("");
@@ -638,6 +640,7 @@
 					},
 					error:function(jqXHR, txtStatus, errThrown){
 						NProgress.done();
+						$('#add-user-send').removeAttr("disabled");
 						$('#addUserModal').find('.invitation-not-sent').html("");
 						if(jqXHR.status == 400)
 						{
