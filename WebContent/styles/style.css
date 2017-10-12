@@ -102,7 +102,7 @@ html, body {
     text-align: center;
 }
 
-#first-page-logout{
+#first-page-logout, #error-page-logout{
   background-color: #f4511e;
   color: #fff;
   padding: 7px 22px;
@@ -287,16 +287,33 @@ html, body {
 	border-color: #f4511e !important;
 }
 
-#ajax-failure-box{
+#ajax-failure-box,#home-ajax-failure-box{
     position: fixed;
     z-index: 99999;
     width: 100%;
     text-align: center;
     top: 0px;
 }
-#ajax-failure-box .content{
+#ajax-failure-box,#home-ajax-failure-box .content{
     background: #e66150;
     border: 1px solid #e66150;
+    width: 550px;
+    margin: 0 auto;
+    line-height: 40px;
+    color: white;
+    position: relative;
+    height: 40px;
+}
+#ajax-success-box,#home-ajax-success-box{
+    position: fixed;
+    z-index: 99999;
+    width: 100%;
+    text-align: center;
+    top: 0px;
+}
+#ajax-success-box,#home-ajax-success-box .content{
+    background: #51d2b7;
+    border: 1px solid #51d2b7;
     width: 550px;
     margin: 0 auto;
     line-height: 40px;
@@ -907,6 +924,11 @@ div.tab button.active .tab-title{
 
 .error-body{
 	margin: 15%;
+  text-align: center;
+}
+.error-body .error-text{
+  font-size: 30px;
+  padding-bottom: 15px;
 }
 .already-loggedin{
   margin: 15%;
@@ -932,6 +954,14 @@ div.tab button.active .tab-title{
   padding-bottom: 15px;
 }
 .account-activated #activation-page-login{
+  background-color: #f4511e;
+  color: #fff;
+  padding: 7px 22px;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+}
+.account-activated #activation-page-access{
   background-color: #f4511e;
   color: #fff;
   padding: 7px 22px;

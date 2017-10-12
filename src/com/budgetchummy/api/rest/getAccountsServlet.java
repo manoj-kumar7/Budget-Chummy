@@ -52,7 +52,7 @@ public class getAccountsServlet extends HttpServlet {
 			String url = APIConstants.POSTGRESQL_URL;
 			String user = APIConstants.POSTGRESQL_USERNAME;
 			String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
-			
+			boolean verified = false;
 			try {
 				Class.forName("org.postgresql.Driver");
 			} catch (ClassNotFoundException e) {
@@ -72,47 +72,63 @@ public class getAccountsServlet extends HttpServlet {
 					accid = Long.parseLong(String.valueOf(acc_attribute));				
 				}
 				String query=null;
-				st = con.prepareStatement("select account_id from adduser where user_id=?;");
+				st = con.prepareStatement("select verified from users where user_id=?");
 				st.setLong(1, userid);
 				ResultSet rs = st.executeQuery();
-				ResultSet rs1 = null;
-				JSONArray ja = new JSONArray();
-				JSONObject jo = new JSONObject();
-				long acc_id = 0;
-				while(rs.next())
+				if(rs.next())
 				{
-					acc_id = rs.getInt("account_id");
-					jo.put("account_id", acc_id);
-					st1 = con.prepareStatement("select account_name from accounts where account_id=?;");
-					st1.setLong(1, acc_id);
-					rs1 = st1.executeQuery();
-					while(rs1.next())
+					verified = rs.getBoolean("verified");
+					rs = null;
+				}
+				if(verified)
+				{
+					st = con.prepareStatement("select account_id from adduser where user_id=?;");
+					st.setLong(1, userid);
+					rs = st.executeQuery();
+					ResultSet rs1 = null;
+					JSONArray ja = new JSONArray();
+					JSONObject jo = new JSONObject();
+					long acc_id = 0;
+					while(rs.next())
 					{
-						String acc_name = rs1.getString("account_name");
-						jo.put("account_name",acc_name);
+						acc_id = rs.getInt("account_id");
+						jo.put("account_id", acc_id);
+						st1 = con.prepareStatement("select account_name from accounts where account_id=?;");
+						st1.setLong(1, acc_id);
+						rs1 = st1.executeQuery();
+						while(rs1.next())
+						{
+							String acc_name = rs1.getString("account_name");
+							jo.put("account_name",acc_name);
+							ja.add(jo.toJSONString());
+						}
+					}
+					jo.clear();
+					if(page.equals("home"))
+					{
+						jo.put("current_account", accid);
 						ja.add(jo.toJSONString());
 					}
+					response.setContentType("application/json");
+					response.setCharacterEncoding("UTF-8");
+					response.getWriter().print(ja.toString());
+					if(rs1!=null)
+					{
+						rs1.close();
+						st1.close();
+					}
 				}
-				jo.clear();
-				if(page.equals("home"))
+				else
 				{
-					jo.put("current_account", accid);
-					ja.add(jo.toJSONString());
+					response.setStatus(403);
 				}
 				if(rs != null)
 				{
 					rs.close();
 					st.close();
 				}
-				if(rs1!=null)
-				{
-					rs1.close();
-					st1.close();
-				}
+
 				con.close();
-				response.setContentType("application/json");
-				response.setCharacterEncoding("UTF-8");
-				response.getWriter().print(ja.toString());
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

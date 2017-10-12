@@ -106,17 +106,17 @@ public class signUpServlet extends HttpServlet {
 				String message = "Hi " + first_name + "\n Before you set your first budget, please take a moment to verify your email address \n"+
 								 rootURL+"activate?code=%27"+activation_code+"%27&email=%27"+email+"%27";
 				emailUtil.sendMail(email, subject, message);
-				// rs = null;
-				// st = con.prepareStatement("select user_id from users where email=?;");
-				// st.setString(1, email);
-				// rs = st.executeQuery();
+				rs = null;
+				st = con.prepareStatement("select user_id from users where email=?;");
+				st.setString(1, email);
+				rs = st.executeQuery();
 
-				// while(rs.next())
-				// {
-				// 	userid = rs.getInt("user_id");
-				// }
-				// HttpSession session = request.getSession();
-				// session.setAttribute("user_id",userid);
+				while(rs.next())
+				{
+					userid = rs.getInt("user_id");
+				}
+				HttpSession session = request.getSession();
+				session.setAttribute("user_id",userid);
 
 			}
 

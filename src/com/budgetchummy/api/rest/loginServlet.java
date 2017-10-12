@@ -44,6 +44,7 @@ public class loginServlet extends HttpServlet
 		String user = APIConstants.POSTGRESQL_USERNAME;
 		String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
 		long userid=-1;
+		boolean verified = false;
 		try {
 			Class.forName("org.postgresql.Driver");
 		} catch (ClassNotFoundException e) {
@@ -54,7 +55,7 @@ public class loginServlet extends HttpServlet
 			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
 			PreparedStatement st=null;
-			st = con.prepareStatement("select password,user_id from users where email=?;");
+			st = con.prepareStatement("select password,user_id,verified from users where email=?;");
 			st.setString(1, email);
 			ResultSet rs=null;
 			rs = st.executeQuery();
@@ -63,6 +64,7 @@ public class loginServlet extends HttpServlet
 			{
 				password = rs.getString("password");
 				userid = rs.getLong("user_id");
+				verified = rs.getBoolean("verified");
 				// if(password.equals(pword))
 				// {
 				// 	valid = true;
@@ -78,7 +80,11 @@ public class loginServlet extends HttpServlet
 		if(valid == true)
 		{
 			HttpSession session = request.getSession();
-			session.setAttribute("user_id",userid);
+			session.setAttribute("user_id",userid);	
+			if(verified == false)
+			{	
+				response.setStatus(403);	
+			}
 //			if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
 //			{
 //				String homeurl = new String("ChooseAccount");

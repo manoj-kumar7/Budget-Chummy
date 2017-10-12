@@ -6,6 +6,7 @@
 <title>Create Account | BC</title>
 <link rel="stylesheet" href="styles/style.css" type="text/css">
 <script type="text/javascript" src="app/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="app/jstz.min.js"></script>
 
 <script type="text/javascript">
 var enterKeyPressed = false;

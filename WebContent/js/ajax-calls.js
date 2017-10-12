@@ -1,4 +1,5 @@
 			var login_ajax_call=function(){
+				NProgress.start();
 				var email = $('#email').val();
 				var pword = $('#pword').val();
 				var account_id = $('#account_id').val();
@@ -9,6 +10,7 @@
 					data:{email:email,pword:pword,account_id:account_id,invitation_id:invitation_id},
 					async: false,
 					success:function(data){
+						NProgress.done();
 						//showAjaxSuccessMessage("Logged in successfully");
 						if(account_id=="null" || invitation_id=="null")
 						{
@@ -20,7 +22,15 @@
 						}
 					},
 					error:function(jqXHR, txtStatus, errThrown){
-						showAjaxFailureMessage("Invalid email and/or password");
+						NProgress.done();
+						if(jqXHR.status == 401)
+						{
+							showAjaxFailureMessage("Invalid email and/or password");
+						}
+						else if(jqXHR.status == 403)
+						{
+							location.href = "error";
+						}
 					}
 				});	
 			}
@@ -54,7 +64,10 @@
 					},
 					error:function(jqXHR, txtStatus, errThrown){
 						NProgress.done();
-						showAjaxFailureMessage("This email address already has a BC account");
+						if(jqXHR.status == 401)
+						{
+							showAjaxFailureMessage("This email address already has a BC account");
+						}
 					}
 				});	
 			}
@@ -329,9 +342,7 @@
 				var ok = validateIncomeExpenseData(amount, date, tag_id, add_info, location, lat, lon, description, repeat, reminder);
 				if(!ok)
 				{
-					$('#ajax-failure-box .content').text("Invalid input");
-  					$('#ajax-failure-box').show();
- 					$('#ajax-failure-box').stop( true, true ).fadeOut(3000);
+					showAjaxFailureMessageHome("Invalid Input");
 					return;
 				}
 				amount = parseFloat(amount).toFixed(2);
@@ -375,9 +386,7 @@
 				var ok = validateIncomeExpenseData(amount, date, tag_id, add_info, location, lat, lon, description, repeat, reminder);
 				if(!ok)
 				{
-					$('#ajax-failure-box .content').text("Invalid input");
-  					$('#ajax-failure-box').show();
- 					$('#ajax-failure-box').stop( true, true ).fadeOut(3000);
+					showAjaxFailureMessageHome("Invalid Input");
 					return;
 				}
 				amount = parseFloat(amount).toFixed(2);
@@ -425,9 +434,7 @@
 				var ok = validateBudgetData(budget_type, tag_id, budget_repeat, start_date, end_date, amount, description);
 				if(!ok)
 				{
-					$('#ajax-failure-box .content').text("Invalid input");
-  					$('#ajax-failure-box').show();
- 					$('#ajax-failure-box').stop( true, true ).fadeOut(3000);
+					showAjaxFailureMessageHome("Invalid Input");
 					return;
 				}
 				amount = parseFloat(amount).toFixed(2);
@@ -461,9 +468,7 @@
 				var date = $('.date-picker').val();
 				if(!validateDate(date))
 				{
-					$('#ajax-failure-box .content').text("Invalid input");
-  					$('#ajax-failure-box').show();
- 					$('#ajax-failure-box').stop( true, true ).fadeOut(3000);
+					showAjaxFailureMessageHome("Invalid Input");
 					return;
 				}
 				date = dateToEpoch(date);
@@ -591,9 +596,8 @@
 				var to = $('#add-user-input').val();
 				if(!validateEmail(to))
 				{
-					$('#ajax-failure-box .content').text("Invalid email id");
-  					$('#ajax-failure-box').show();
- 					$('#ajax-failure-box').stop( true, true ).fadeOut(3000);
+					showAjaxFailureMessageHome("Invalid email id");
+ 					$('#add-user-send').removeAttr("disabled");
 					return;
 				}
 				var authentication_type = $('input[name=authentication_type]:checked').val();
@@ -602,9 +606,8 @@
 					var passcode = $('#offline-code').val();
 					if(!validatePasscode(passcode))
 					{
-						$('#ajax-failure-box .content').text("Invalid passcode");
-	  					$('#ajax-failure-box').show();
-	 					$('#ajax-failure-box').stop( true, true ).fadeOut(3000);
+						showAjaxFailureMessageHome("Invalid passcode");
+	 					$('#add-user-send').removeAttr("disabled");
 						return;
 					}
 				}
@@ -624,6 +627,7 @@
 						{
 							$('#addUserModal').find('.invitation-not-sent').html("");
 							$('#addUserModal').modal('hide');
+							showAjaxSuccessMessageHome("Invitation sent successfully");
 						}
 						else
 						{
@@ -704,6 +708,16 @@
 							{
 								$("#accounts-list").append("You dont have any accounts...");
 							}
+						}
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						if(jqXHR.status == 401)
+						{
+							location.href = "login";
+						}
+						else if(jqXHR.status == 403)
+						{
+							location.href = "error";
 						}
 					}
 				});
@@ -807,4 +821,15 @@
 				$('#ajax-failure-box .content').text(data);
 				$('#ajax-failure-box').show();
 				$('#ajax-failure-box').stop( true, true ).fadeOut(3000);
+			}
+			var showAjaxSuccessMessageHome=function(data){
+				$('#home-ajax-success-box .content').text(data);
+				$('#home-ajax-success-box').show();
+				$('#home-ajax-success-box').stop( true, true ).fadeOut(3000);
+			}
+			
+			var showAjaxFailureMessageHome=function(data){
+				$('#home-ajax-failure-box .content').text(data);
+				$('#home-ajax-failure-box').show();
+				$('#home-ajax-failure-box').stop( true, true ).fadeOut(3000);
 			}

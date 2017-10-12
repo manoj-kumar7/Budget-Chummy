@@ -252,3 +252,8 @@ var calculateNoOfDaysToEndBudget = function(start_date, end_date){
 	var diff = Math.round((end_date - today) / one_day);
 	return diff + 1;
 }
+
+// var getAccountTimeZone = function(){
+// 	const timezone = jstz.determine();
+// 	return timezone.name();
+// }

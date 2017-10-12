@@ -81,11 +81,12 @@ public class createAccountServlet extends HttpServlet {
 				userid = Long.parseLong(String.valueOf(user_attribute));
 				added_date = Datehelper.dateToEpoch(df.format(dateobj));
 
-				st = con.prepareStatement("insert into accounts(account_name,created_by,no_of_members,created_date_time) values(?,?,?,?);");
+				st = con.prepareStatement("insert into accounts(account_name,created_by,no_of_members,created_date_time,timezone) values(?,?,?,?,?);");
 				st.setString(1, account_name);
 				st.setLong(2, userid);
 				st.setInt(3, 1);
 				st.setLong(4, added_date);
+				st.setString(5, "sample");
 				int i = st.executeUpdate();
 				st = con.prepareStatement("select lastval();");
 				rs = st.executeQuery();

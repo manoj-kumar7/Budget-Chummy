@@ -29,6 +29,7 @@
 	<script type="text/javascript" src="app/jquery.slimscroll.min.js"></script>
 	<script type="text/javascript" src="app/canvasjs.min.js"></script>
 	<script type="text/javascript" src="app/nprogress.js"></script>
+	<script type="text/javascript" src="app/jstz.min.js"></script>
 
 	<link rel="stylesheet" href="styles/bootstrap.min.css" type="text/css">
 	<link rel="stylesheet" href="styles/font-awesome.css" type="text/css">
@@ -864,9 +865,12 @@
 </div>
 
 </div>
-	<div id="ajax-failure-box" style="display:none;">
-		<div class="content"></div>
-	</div>
+<div id="home-ajax-success-box" style="display:none;">
+	<div class="content"></div>
+</div>
+<div id="home-ajax-failure-box" style="display:none;">
+	<div class="content"></div>
+</div>
 <script type="text/javascript" src="js/security_regex.js"></script>
 <script type="text/javascript" src="js/map-api.js"></script>
 <script type="text/javascript" src="js/charts.js"></script>
