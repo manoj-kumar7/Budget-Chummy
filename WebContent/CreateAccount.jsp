@@ -6,7 +6,6 @@
 <title>Create Account | BC</title>
 <link rel="stylesheet" href="styles/style.css" type="text/css">
 <script type="text/javascript" src="app/jquery-3.1.1.js"></script>
-<script type="text/javascript" src="app/jstz.min.js"></script>
 
 <script type="text/javascript">
 var enterKeyPressed = false;
@@ -98,6 +97,9 @@ else if(session.getAttribute("user_id") == null)
 	<div id="ajax-failure-box" style="display:none;">
 		<div class="content"></div>
 	</div>
+	<script type="text/javascript" src="app/moment.js"></script>
+	<script type="text/javascript" src="app/moment-timezone-with-data.js"></script>
+	<script type="text/javascript" src="js/Datehelper.js"></script>
 	<script type="text/javascript" src="js/security_regex.js"></script>
 	<script type="text/javascript" src="js/ajax-calls.js"></script>
 </body>

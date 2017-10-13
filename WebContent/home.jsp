@@ -29,7 +29,8 @@
 	<script type="text/javascript" src="app/jquery.slimscroll.min.js"></script>
 	<script type="text/javascript" src="app/canvasjs.min.js"></script>
 	<script type="text/javascript" src="app/nprogress.js"></script>
-	<script type="text/javascript" src="app/jstz.min.js"></script>
+	<script type="text/javascript" src="app/moment.js"></script>
+	<script type="text/javascript" src="app/moment-timezone-with-data.js"></script>
 
 	<link rel="stylesheet" href="styles/bootstrap.min.css" type="text/css">
 	<link rel="stylesheet" href="styles/font-awesome.css" type="text/css">
@@ -46,7 +47,7 @@
 		this.expense_search_data = [];
 		this.expenses_in_month = [];
 		this.budgets_in_month = [];
-		this.d = new Date();
+		this.d = new Date(moment.tz(moment.tz.guess()).format());
 		this.month = this.d.getMonth() + 1;
 		this.year = this.d.getFullYear();
 		this.current_page = "income";
@@ -871,6 +872,7 @@
 <div id="home-ajax-failure-box" style="display:none;">
 	<div class="content"></div>
 </div>
+
 <script type="text/javascript" src="js/security_regex.js"></script>
 <script type="text/javascript" src="js/map-api.js"></script>
 <script type="text/javascript" src="js/charts.js"></script>

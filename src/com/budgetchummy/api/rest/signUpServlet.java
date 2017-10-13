@@ -56,7 +56,8 @@ public class signUpServlet extends HttpServlet {
 		String pword = request.getParameter("pword");
 		String account_id = request.getParameter("account_id");
 		String invitation_id = request.getParameter("invitation_id");
-		long userid=0,added_date=0;
+		long added_date = Long.parseLong(request.getParameter("created_date_time"));
+		long userid=0;
 		
 		String url = APIConstants.POSTGRESQL_URL;
 		String user = APIConstants.POSTGRESQL_USERNAME;
@@ -77,10 +78,10 @@ public class signUpServlet extends HttpServlet {
 			ResultSet rs = null;
 			String query=null;
 
-		    DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-		    Date dateobj = new Date();
-		    df.setTimeZone(TimeZone.getTimeZone("IST"));
-		    added_date = Datehelper.dateToEpoch(df.format(dateobj));
+		    // DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		    // Date dateobj = new Date();
+		    // df.setTimeZone(TimeZone.getTimeZone("IST"));
+		    // added_date = Datehelper.dateToEpoch(df.format(dateobj));
 		    st = con.prepareStatement("select * from users where email=?");
 		    st.setString(1, email);
 		    rs = st.executeQuery();
@@ -90,6 +91,11 @@ public class signUpServlet extends HttpServlet {
 			}
 			else
 			{
+				boolean activationNeeded = false;
+				if(account_id.equals("null") || invitation_id.equals("null") || account_id.equals(null) || invitation_id.equals(null))
+				{
+					activationNeeded = true;
+				}
 				String activation_code = messageDigestUtil.getMD5Hash(email);
 				st = con.prepareStatement("insert into users(first_name,last_name,email,password,created_date_time,verified,activation_code) values(?,?,?,?,?,?,?);");
 				st.setString(1, first_name);
@@ -97,15 +103,18 @@ public class signUpServlet extends HttpServlet {
 				st.setString(3, email);
 				st.setString(4, generatedPassword);
 				st.setLong(5, added_date);
-				st.setBoolean(6, false);
+				st.setBoolean(6, !activationNeeded);
 				st.setString(7, activation_code);
 				int i = st.executeUpdate();
 
-				String rootURL = APIConstants.rootURL;
-				String subject = "Activate your Budget Chummy account";
-				String message = "Hi " + first_name + "\n Before you set your first budget, please take a moment to verify your email address \n"+
-								 rootURL+"activate?code=%27"+activation_code+"%27&email=%27"+email+"%27";
-				emailUtil.sendMail(email, subject, message);
+				if(activationNeeded)
+				{
+					String rootURL = APIConstants.rootURL;
+					String subject = "Activate your Budget Chummy account";
+					String message = "Hi " + first_name + "\n Before you set your first budget, please take a moment to verify your email address \n"+
+									 rootURL+"activate?code=%27"+activation_code+"%27&email=%27"+email+"%27";
+					emailUtil.sendMail(email, subject, message);
+				}
 				rs = null;
 				st = con.prepareStatement("select user_id from users where email=?;");
 				st.setString(1, email);

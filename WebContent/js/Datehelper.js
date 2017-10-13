@@ -3,8 +3,8 @@ var dateToEpoch = function(date){
 	return new Date(date).valueOf();
 }
 
-var epochOfFirstDayOfMonth = function(month, year){
-	return new Date(year+"/"+month+"/"+01).valueOf();
+var epochOfDayOfMonth = function(date, month, year){
+	return new Date(year+"/"+month+"/"+date).valueOf();
 }
 
 var epochOfLastDayOfMonth = function(month, year){
@@ -38,12 +38,14 @@ var formCustomDateFormat = function(dates){
 }
 
 var getCurrentRealMonth = function(){
-	var d = new Date();
+	var timezone = getAccountTimeZone();
+	var d = new Date(moment.tz(timezone).format());
 	return d.getMonth() + 1;
 }
 
 var getCurrentRealYear = function(){
-	var d = new Date();
+	var timezone = getAccountTimeZone();
+	var d = new Date(moment.tz(timezone).format());
 	return d.getFullYear();
 }
 
@@ -58,7 +60,19 @@ var getCurrentRealYear = function(){
 // }
 
 var getTodayEpoch = function(){
-	var d = new Date();
+	var timezone = getAccountTimeZone();
+	var d = new Date(moment.tz(timezone).format());
+	let date = d.getDate();
+	let m = d.getMonth() + 1;
+	let y = d.getFullYear();
+	let date_string = y+"/"+m+"/"+date;
+	var d1 = new Date(date_string);
+	return d1.valueOf();
+}
+var getTomorrowEpoch = function(){
+	var timezone = getAccountTimeZone();
+	var d = new Date(moment.tz(timezone).format());
+	d.setTime(addDaysToDate(d, 1));
 	let date = d.getDate();
 	let m = d.getMonth() + 1;
 	let y = d.getFullYear();
@@ -143,9 +157,9 @@ var calculateWeekStartEndDates = function(start_date){
 	}
 	else
 	{
-		var today = epochOfFirstDayOfMonth(globalObject.month, globalObject.year);
+		var today = epochOfDayOfMonth(1, globalObject.month, globalObject.year);
 	}
-	if(d_start > today)
+	if(d_start >= today)
 	{
 		return [d_start.valueOf(), d_end.valueOf()];
 	}
@@ -173,7 +187,7 @@ var calculateMonthStartEndDates = function(start_date){
 	// d_start.setFullYear(globalObject.year, globalObject.month-1, date);
 
 	var today = epochOfLastDayOfMonth(globalObject.month, globalObject.year);
-	if(d_start.valueOf() > today)
+	if(d_start.valueOf() >= today)
 	{
 		return [d_start.valueOf(), d_end.valueOf()];
 	}
@@ -210,7 +224,7 @@ var calculateYearStartEndDates = function(start_date){
 	var d_end = new Date(start_date);
 
 	var today = epochOfLastDayOfMonth(globalObject.month, globalObject.year);
-	if(d_start.valueOf() > today)
+	if(d_start.valueOf() >= today)
 	{
 		return [d_start.valueOf(), d_end.valueOf()];
 	}
@@ -253,7 +267,12 @@ var calculateNoOfDaysToEndBudget = function(start_date, end_date){
 	return diff + 1;
 }
 
-// var getAccountTimeZone = function(){
-// 	const timezone = jstz.determine();
-// 	return timezone.name();
-// }
+var getAccountTimeZone = function(){
+	return moment.tz.guess();
+}
+
+var getAccountTimeZoneEpoch = function(){
+	var timezone = getAccountTimeZone();
+	var epochOfTimeZone = new Date(moment.tz(timezone).format()).valueOf();
+	return epochOfTimeZone;
+}

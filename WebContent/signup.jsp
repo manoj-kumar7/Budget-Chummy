@@ -150,6 +150,9 @@ if(session.getAttribute("account_id") != null)
 	<div id="ajax-failure-box" style="display:none;">
 		<div class="content"></div>
 	</div>
+	<script type="text/javascript" src="app/moment.js"></script>
+	<script type="text/javascript" src="app/moment-timezone-with-data.js"></script>
+	<script type="text/javascript" src="js/Datehelper.js"></script>
 	<script type="text/javascript" src="js/security_regex.js"></script>
 	<script type="text/javascript" src="js/ajax-calls.js"></script>
 </body>

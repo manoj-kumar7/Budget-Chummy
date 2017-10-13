@@ -43,10 +43,11 @@
 				var pword = $('#pword').val();
 				var account_id = $('#account_id').val();
 				var invitation_id = $('#invitation_id').val();
+				var created_date_time = getAccountTimeZoneEpoch();
 				$.ajax({
 					type:"POST",
 					url:"/BudgetChummy/api/v1/signUp",
-					data:{first_name:firstname,last_name:lastname,email:email,pword:pword,account_id:account_id,invitation_id:invitation_id},
+					data:{first_name:firstname,last_name:lastname,email:email,pword:pword,account_id:account_id,invitation_id:invitation_id, created_date_time:created_date_time},
 					async: false,
 					success:function(data){
 						NProgress.done();
@@ -89,10 +90,12 @@
 
 			var create_account_ajax_call=function(){
 				var accountname = $('#accountname').val();
+				var timezone = getAccountTimeZone();
+				var created_date_time = getAccountTimeZoneEpoch();
 				$.ajax({
 					type:"POST",
 					url:"/BudgetChummy/api/v1/createAccount",
-					data:{account_name:accountname},
+					data:{account_name:accountname, timezone:timezone, created_date_time:created_date_time},
 					async: false,
 					success:function(data){
 						//showAjaxSuccessMessage("Signed up successfully");
@@ -339,6 +342,7 @@
 				var description = $('.generic-description').val();
 				var repeat = $('.generic-repeat-dropdown').val();
 				var reminder = $('.generic-reminder-dropdown').val();
+				var created_date_time = getAccountTimeZoneEpoch();
 				var ok = validateIncomeExpenseData(amount, date, tag_id, add_info, location, lat, lon, description, repeat, reminder);
 				if(!ok)
 				{
@@ -351,7 +355,7 @@
 				$.ajax({
 					type:"POST",
 					url:"/BudgetChummy/api/v1/income",
-					data:{amount:amount, date:date, tag_id:tag_id, add_info:add_info, location: location, location_lat:lat, location_lon:lon, description:description, repeat:repeat, reminder:reminder},
+					data:{amount:amount, date:date, tag_id:tag_id, add_info:add_info, location: location, location_lat:lat, location_lon:lon, description:description, repeat:repeat, reminder:reminder, created_date_time:created_date_time},
 					success:function(data){
 						NProgress.done();
 						$('.generic-save').removeAttr("disabled")
@@ -383,6 +387,7 @@
 				var description = $('.generic-description').val();
 				var repeat = $('.generic-repeat-dropdown').val();
 				var reminder = $('.generic-reminder-dropdown').val();
+				var created_date_time = getAccountTimeZoneEpoch();
 				var ok = validateIncomeExpenseData(amount, date, tag_id, add_info, location, lat, lon, description, repeat, reminder);
 				if(!ok)
 				{
@@ -395,7 +400,7 @@
 				$.ajax({
 					type:"POST",
 					url:"/BudgetChummy/api/v1/expense",
-					data:{amount:amount, date:date, tag_id:tag_id, add_info:add_info, location: location, location_lat:lat, location_lon:lon, description:description, repeat:repeat, reminder:reminder},
+					data:{amount:amount, date:date, tag_id:tag_id, add_info:add_info, location: location, location_lat:lat, location_lon:lon, description:description, repeat:repeat, reminder:reminder, created_date_time:created_date_time},
 					success:function(data){
 						NProgress.done();
 						$('.generic-save').removeAttr("disabled")

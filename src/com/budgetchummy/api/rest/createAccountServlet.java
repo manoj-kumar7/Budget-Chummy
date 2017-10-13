@@ -52,9 +52,10 @@ public class createAccountServlet extends HttpServlet {
 		else
 		{
 			String account_name = request.getParameter("account_name");
+			String timezone = request.getParameter("timezone");
+			long added_date= Long.parseLong(request.getParameter("created_date_time"));
 			String role = "admin";
 			long userid=0,accountid=0;
-			long added_date=0;
 			
 			String url = APIConstants.POSTGRESQL_URL;
 			String user = APIConstants.POSTGRESQL_USERNAME;
@@ -74,19 +75,19 @@ public class createAccountServlet extends HttpServlet {
 				ResultSet rs = null;
 				String query=null;
 
-			    DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
-			    Date dateobj = new Date();
-			    df.setTimeZone(TimeZone.getTimeZone("IST"));
+			    // DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+			    // Date dateobj = new Date();
+			    // df.setTimeZone(TimeZone.getTimeZone("IST"));
+				// added_date = Datehelper.dateToEpoch(df.format(dateobj));
 				Object user_attribute = session.getAttribute("user_id");
 				userid = Long.parseLong(String.valueOf(user_attribute));
-				added_date = Datehelper.dateToEpoch(df.format(dateobj));
 
 				st = con.prepareStatement("insert into accounts(account_name,created_by,no_of_members,created_date_time,timezone) values(?,?,?,?,?);");
 				st.setString(1, account_name);
 				st.setLong(2, userid);
 				st.setInt(3, 1);
 				st.setLong(4, added_date);
-				st.setString(5, "sample");
+				st.setString(5, timezone);
 				int i = st.executeUpdate();
 				st = con.prepareStatement("select lastval();");
 				rs = st.executeQuery();

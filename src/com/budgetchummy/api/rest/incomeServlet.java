@@ -160,7 +160,7 @@ public class incomeServlet extends HttpServlet {
 			float amount = Float.parseFloat(request.getParameter("amount"));
 			long date = Long.parseLong(request.getParameter("date"));
 			long tag_id = Long.parseLong(request.getParameter("tag_id"));
-			long added_date=0;
+			long added_date=Long.parseLong(request.getParameter("created_date_time"));
 			String transaction_type = "income";
 			String additional_info = request.getParameter("add_info");
 			
@@ -183,10 +183,10 @@ public class incomeServlet extends HttpServlet {
 				long userid = Long.parseLong(String.valueOf(user_attribute));
 				long accid = Long.parseLong(String.valueOf(acc_attribute));
 				String query=null;
-			    DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			    Date dateobj = new Date();
-			    df.setTimeZone(TimeZone.getTimeZone("IST"));
-			    added_date = Datehelper.dateToEpoch(df.format(dateobj));
+			    // DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			    // Date dateobj = new Date();
+			    // df.setTimeZone(TimeZone.getTimeZone("IST"));
+			    // added_date = Datehelper.dateToEpoch(df.format(dateobj));
 				if(additional_info.equals("true"))
 				{
 					String location = request.getParameter("location");

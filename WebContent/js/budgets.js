@@ -34,7 +34,7 @@ var filterBudget = function(budgets)
 			var obj = jQuery.parseJSON(budgets[i]);
 			if(obj.repeat_period == 0)
 			{
-				if(obj.end_date >= epochOfFirstDayOfMonth(globalObject.month, globalObject.year))
+				if(obj.end_date >= epochOfDayOfMonth(1, globalObject.month, globalObject.year))
 				{
 					globalObject.budgets_in_month.push(obj);
 				}
@@ -71,10 +71,12 @@ var getStartEndDatesOfBudget = function(obj){
 		if(globalObject.month == getCurrentRealMonth())
 		{
 			start_date = end_date = getTodayEpoch();
+			// end_date = getTomorrowEpoch();
 		}
 		else
 		{
-			start_date = end_date = epochOfFirstDayOfMonth(globalObject.month, globalObject.year);
+			start_date = end_date = epochOfDayOfMonth(1, globalObject.month, globalObject.year);
+			// end_date = epochOfDayOfMonth(2, globalObject.month, globalObject.year);
 		}
 	}
 	else if(obj.repeat_period == 2)
