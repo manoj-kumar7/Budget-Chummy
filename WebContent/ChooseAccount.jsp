@@ -16,12 +16,12 @@
 	<script type="text/javascript">
 	$(document).ready(function(){
 		getAccounts_ajax_call("chooseaccount");
-		$('#create-new-account').click(function(){
-			location.href="CreateAccount";
-		});
-		$(document).on('click','.accounts',function(){
+		$('#accounts-list').on('click','.accounts',function(){
 			var id = $(this).attr("id");
 			accountChosen_ajax_call(id, "income");
+		});
+		$('#accounts-list').on('click','.create-new-account-div.accounts',function(){
+			location.href="CreateAccount";
 		});
 	});
 
@@ -40,7 +40,6 @@ else if(session.getAttribute("user_id") == null)
 %>
 <div id="choose-account-form-div">
 	<div id="accounts-list"></div>
-	<input type="button" id="create-new-account" class="btn" value="Create new Account">
 </div>
 </body>
 </html>

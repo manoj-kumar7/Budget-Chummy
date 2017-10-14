@@ -221,15 +221,12 @@ html, body {
   right: 0;
 }
 
-#create-new-account.btn{
-    background-color: #f4511e;
-    color: #fff;
-    padding: 7px 30px;
-    border-radius: 0px !important;
-    font-size: 14px;
-    border: none;
-    cursor: pointer;
-    margin-left: 70px;
+#create-new-account{
+    color: #000;
+    font-size: 17px;
+    font-family: "Trebuchet MS";
+    margin-top: 25%;
+    letter-spacing: 1px;
 }
 #join-acc-btn.btn{
   width: 120px;
@@ -246,15 +243,28 @@ html, body {
 }
 #accounts-list .accounts{
 	border: 1px solid;
-    width: 300px;
-    height: 120px;
+    width: 215px;
+    height: 250px;
     margin: 20px 20px;
     float: left;
     padding: 3px 3px;
     cursor: pointer;
+    font-family: "Trebuchet MS";
+    letter-spacing: 1px;
+}
+#accounts-list .create-new-account-div{
+  border: 1px dashed;
+  text-align: center;
+}
+#accounts-list .create-new-account-div .create-account-img{
+  width: 125px;
+  margin-top: 10%;
 }
 #accounts-list .accounts:hover{
 	background-color: #51d2b7;
+}
+#accounts-list .create-new-account-div:hover{
+  background-color: #e0e0e0 !important;
 }
 #accounts-list .accounts span{
     font-size: 20px;
@@ -997,4 +1007,42 @@ div.tab button.active .tab-title{
   font-style: italic;
   font-size: 13px;
   color: #f4511e;
+}
+
+#pendingInvitationsModal .invitations-table-header{
+  background-color: #dedede;
+  height: 25px;
+}
+#pendingInvitationsModal .invitations-table-header .invitation-email{
+  width: 70%;
+  float: left;
+  padding-left: 5px;
+}
+#pendingInvitationsModal .invitations-table-header .invitation-passcode{
+  width: 30%;
+  float: right;
+  padding-left: 5px;
+}
+#pendingInvitationsModal .no-pending-invitations{
+  font-style: italic;
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+#pendingInvitationsModal .invitation-item{
+  font-size: 14px;
+  margin-top: 10px;
+  height: 25px;
+}
+#pendingInvitationsModal .invitation-item .invitation-item-email{
+  width: 70%;
+  float: left;
+  padding-left: 5px;
+  overflow: hidden;
+}
+#pendingInvitationsModal .invitation-item .invitation-item-passcode{
+  width: 30%;
+  float: right;
+  padding-left: 5px;
+  overflow: hidden;
 }

@@ -350,6 +350,19 @@
 		    $('#add-user-send').on('click', function(){
 		    	add_user_ajax_call();	
 		    });
+		    $('#users-invitations').on('click', function(){
+		    	pending_invitations_ajax_call();
+		    	$('#pendingInvitationsModal').modal('show');	
+		    });
+		    $('.users-table-space').on('click', '.delete-user-icon', function(){
+		    	var delete_user_id = $(this).closest('tr').attr('user_id');
+		    	$('#confirmDeleteUserModal').modal('show');
+		    	$('#confirmDeleteUserModal').attr('for-user',delete_user_id);
+		    });
+		    $('#delete-user').on('click', function(){
+		    	var delete_user_id = $('#confirmDeleteUserModal').attr('for-user');
+		    	delete_user_ajax_call(delete_user_id);
+		    });
 		    $('#logout').click(function(){
 		    	logout_ajax_call(false);
 		    });
@@ -747,6 +760,48 @@
 	    </div>
 	  </div>
 	  
+	</div>
+</div>
+
+<div class="modal pending_invitations-modal" id="pendingInvitationsModal" role="dialog" style="display:none;">
+	<div class="modal-dialog">
+
+	  <div class="modal-content">
+	    <div class="modal-header">
+	    	<img src="images/close-icon.png" class="icon close-icon" alt="Close" data-dismiss="modal">
+			<h4 class="modal-title">Pending Invitations</h4>
+	    </div>
+	    <div class="modal-body">
+	    	<div class="invitations-table-header">
+	    		<span class="invitation-email">Email</span>
+	    		<span class="invitation-passcode">Passcode</span>
+	    	</div>
+	    	<div class="no-pending-invitations" style="display:none;">No pending invitations</div>
+	    	<div class="invitations-list" style="display:none;">
+	    		
+	    	</div>
+	    </div>
+	  </div>
+	</div>
+</div>
+
+<div class="modal confirm-delete-user-modal" id="confirmDeleteUserModal" role="dialog" style="display:none;">
+	<div class="modal-dialog">
+
+	  <div class="modal-content">
+	    <div class="modal-header">
+	    	<img src="images/close-icon.png" class="icon close-icon" alt="Close" data-dismiss="modal">
+			<h4 class="modal-title">Confirm Delete</h4>
+	    </div>
+	    <div class="modal-body">
+	    	<div class="confirm-delete-user-text">
+	    		Are you sure you want to delete user from this account?
+	    	</div>
+	    </div>
+    	<div class="modal-footer">
+	    	<button id="delete-user" class="delete-user btn" value="Yes">Yes</button>
+	    </div>
+	  </div>
 	</div>
 </div>
 

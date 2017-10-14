@@ -577,7 +577,7 @@
 							for(var i=1;i<data.length;i++)
 							{
 								obj = jQuery.parseJSON(data[i]);
-								$('.users-table tbody').append("<tr><td>"+obj.first_name+"</td><td>"+obj.email+"</td><td>"+obj.role+"</td><td><i class='icon-trash delete-user-icon'></i></td></tr>");
+								$('.users-table tbody').append("<tr user_id='"+obj.user_id+"'><td>"+obj.first_name+"</td><td>"+obj.email+"</td><td>"+obj.role+"</td><td><i class='icon-trash delete-user-icon'></i></td></tr>");
 							}
 							$('.users-table-space').css("display","block");
 						}
@@ -663,6 +663,65 @@
 					}
 				});				
 			}
+			var delete_user_ajax_call = function(delete_user_id){
+				NProgress.start();
+				$.ajax({
+					type:"POST",
+					url:"/BudgetChummy/api/v1/deleteUser",
+					data:{delete_user_id:delete_user_id},
+					success:function(data){
+						NProgress.done();
+						showAjaxSuccessMessageHome("User deleted");
+						$('#confirmDeleteUserModal').modal('hide');
+						location.reload(true);
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
+						if(jqXHR.status == 400)
+						{
+							location.href = "login";
+						}
+						else if(jqXHR.status == 401)
+						{
+							showAjaxFailureMessageHome("You need to be an admin to delete users");
+						}
+						$('#confirmDeleteUserModal').modal('hide');
+					}
+				});					
+			}
+			var pending_invitations_ajax_call = function(){
+				NProgress.start();
+				$.ajax({
+					type:"GET",
+					url:"/BudgetChummy/api/v1/invitations",
+					success:function(data){
+						NProgress.done();
+						if(data == "" || data == null)
+						{
+							$('#pendingInvitationsModal').find('.no-pending-invitations').css('display', 'block');
+							$('#pendingInvitationsModal').find('.invitations-list').css('display', 'none');
+						}
+						else
+						{
+							$('#pendingInvitationsModal').find('.no-pending-invitations').css('display', 'none');
+							$('#pendingInvitationsModal').find('.invitations-list').css('display', 'block');
+							$('#pendingInvitationsModal').find('.invitations-list').html("");
+							for(var i=0; i<data.length; i++)
+							{
+								var obj = jQuery.parseJSON(data[i]);
+								$('#pendingInvitationsModal').find('.invitations-list').append("<div class='invitation-item'><div class='invitation-item-email'>"+obj.sent_to+"</div><div class='invitation-item-passcode'>"+obj.passcode+"</div></div>");
+							}
+						}
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
+						if(jqXHR.status == 400)
+						{
+							location.href = "login";
+						}
+					}
+				});				
+			}
 			var getAccounts_ajax_call = function(page)
 			{
 				$.ajax({
@@ -701,6 +760,10 @@
 									$("#home-accounts-list").find("#"+obj.current_account).addClass("active");
 									$("#home-accounts-list").find("#"+obj.current_account).prepend("<i class='icon-ok'></i>");
 								}
+							}
+							else
+							{
+								$("#accounts-list").append('<div class="create-new-account-div accounts"><img src="images/create-account-img.svg" class="create-account-img"><div id="create-new-account">CREATE ACCOUNT</div></div>');
 							}
 						}
 						else
