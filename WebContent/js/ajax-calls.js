@@ -763,7 +763,7 @@
 							}
 							else
 							{
-								$("#accounts-list").append('<div class="create-new-account-div accounts"><img src="images/create-account-img.svg" class="create-account-img"><div id="create-new-account">CREATE ACCOUNT</div></div>');
+								$("#accounts-list").append('<div class="create-new-account-div"><img src="images/create-account-img.svg" class="create-account-img"><div id="create-new-account">CREATE ACCOUNT</div></div>');
 							}
 						}
 						else

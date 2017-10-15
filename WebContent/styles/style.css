@@ -116,7 +116,7 @@ html, body {
 	margin: auto;
 	left: 0;
 	right: 0;
-	top: 35%;
+	top: 30%;
 	bottom: 0;
 	text-align: center;
 	width: 20%;
@@ -127,18 +127,35 @@ html, body {
   margin: auto;
   left: 0;
   right: 0;
-  top: 25%;
+  top: 20%;
   bottom: 0;
   text-align: center;
   width: 20%;
 }
 
+.create-account-page, .choose-account-page, .login-page, .signup-page{
+  margin: 2% 5%;
+}
+.page-heading{
+  font-family: "Trebuchet MS";
+  font-size: 30px;
+  letter-spacing: 1px;
+  color: #5d5d5d;
+  margin-bottom: 40px;
+}
+.help-text{
+  font-family: "Trebuchet MS";
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+  color: #717171;
+}
 #create-account-form-div{
   position: absolute;
   margin: auto;
   left: 0;
   right: 0;
-  top: 40%;
+  top: 35%;
   bottom: 0;
   text-align: center;
   width: 20%;
@@ -162,7 +179,7 @@ html, body {
 	margin: 10px 10px;
 }
 .firstpage-textbox-space .textbox_space .textbox { 
-    height: 35px; 
+    height: 45px; 
     width: 100%; 
     background-color: transparent;  
     border-style: solid;  
@@ -236,7 +253,6 @@ html, body {
     overflow-x: auto;
     overflow-y: hidden;
     padding: 0;
-    margin: 10px 50px;
     width: auto;
     left: 0;
     right: 0;
@@ -245,7 +261,7 @@ html, body {
 	border: 1px solid;
     width: 215px;
     height: 250px;
-    margin: 20px 20px;
+    margin-right: 40px;
     float: left;
     padding: 3px 3px;
     cursor: pointer;
@@ -255,6 +271,14 @@ html, body {
 #accounts-list .create-new-account-div{
   border: 1px dashed;
   text-align: center;
+  width: 215px;
+  height: 250px;
+  margin-right: 40px;
+  float: left;
+  padding: 3px 3px;
+  cursor: pointer;
+  font-family: "Trebuchet MS";
+  letter-spacing: 1px;
 }
 #accounts-list .create-new-account-div .create-account-img{
   width: 125px;
@@ -264,7 +288,7 @@ html, body {
 	background-color: #51d2b7;
 }
 #accounts-list .create-new-account-div:hover{
-  background-color: #e0e0e0 !important;
+  background-color: #e0e0e0;
 }
 #accounts-list .accounts span{
     font-size: 20px;

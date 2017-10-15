@@ -115,26 +115,28 @@ if(session.getAttribute("account_id") != null)
 	response.sendRedirect("home");
 }
 %>
-	<div id="signup-form-div">
-		
-			<div class="firstpage-textbox-space">
-				<div class="textbox_space">
-					<input type="text" placeholder="First name" name="first_name" id="firstname" class="textbox name first_name formvalidation">
+	<div class="signup-page">
+		<div id="signup-page-heading" class="page-heading">SIGN UP</div>
+		<div id="signup-form-div">
+				<div class="firstpage-textbox-space">
+					<div class="textbox_space">
+						<input type="text" placeholder="First name" name="first_name" id="firstname" class="textbox name first_name formvalidation">
+					</div>
+					<div class="textbox_space">
+						<input type="text" placeholder="Last name" name="last_name" id="lastname" class="textbox name last_name formvalidation">
+					</div>
+					<div class="textbox_space">
+						<input type="text" placeholder="Email" name="email" id="email" class="textbox email formvalidation">
+					</div>
+					<div class="textbox_space">
+						<input type="password" placeholder="Password" name="pword" id="pword" class="textbox pword formvalidation">
+					</div>
+					<input type="hidden" id="account_id" value="<%=request.getParameter("account_id") %>" name="account_id">
+					<input type="hidden" id="invitation_id" value="<%=request.getParameter("invitation_id") %>" name="invitation_id">
+					<button id="signup" class="signup bc-btn bc-firstpage-btn" value="Signup"><span>Signup</span></button>
 				</div>
-				<div class="textbox_space">
-					<input type="text" placeholder="Last name" name="last_name" id="lastname" class="textbox name last_name formvalidation">
-				</div>
-				<div class="textbox_space">
-					<input type="text" placeholder="Email" name="email" id="email" class="textbox email formvalidation">
-				</div>
-				<div class="textbox_space">
-					<input type="password" placeholder="Password" name="pword" id="pword" class="textbox pword formvalidation">
-				</div>
-				<input type="hidden" id="account_id" value="<%=request.getParameter("account_id") %>" name="account_id">
-				<input type="hidden" id="invitation_id" value="<%=request.getParameter("invitation_id") %>" name="invitation_id">
-				<button id="signup" class="signup bc-btn bc-firstpage-btn" value="Signup"><span>Signup</span></button>
-			</div>
-		
+			
+		</div>
 	</div>
 	<div class="activation-link-sent" style="display:none;">
 		<div class="activation-link-sent-text">

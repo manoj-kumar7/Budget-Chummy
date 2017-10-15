@@ -103,20 +103,23 @@ if(session.getAttribute("account_id") != null)
 	response.sendRedirect("home");
 }
 %>
-	<div id="login-form-div">
-		
-			<div class="firstpage-textbox-space">
-				<div class="textbox_space">
-					<input type="text" placeholder="Email" name="email" id="email" class="textbox email formvalidation">
+	<div class="login-page">
+		<div id="login-page-heading" class="page-heading">LOGIN</div>
+		<div id="login-form-div">
+			
+				<div class="firstpage-textbox-space">
+					<div class="textbox_space">
+						<input type="text" placeholder="Email" name="email" id="email" class="textbox email formvalidation">
+					</div>
+					<div class="textbox_space">
+						<input type="password" placeholder="Password" name="pword" id="pword" class="textbox pword formvalidation">
+					</div>
+					<input type="hidden" id="account_id" value="<%=request.getParameter("account_id") %>" name="account_id">
+					<input type="hidden" id="invitation_id" value="<%=request.getParameter("invitation_id") %>" name="invitation_id">
+					<button id="login" class="login bc-btn bc-firstpage-btn" value="Login"><span>Login</span></button>
 				</div>
-				<div class="textbox_space">
-					<input type="password" placeholder="Password" name="pword" id="pword" class="textbox pword formvalidation">
-				</div>
-				<input type="hidden" id="account_id" value="<%=request.getParameter("account_id") %>" name="account_id">
-				<input type="hidden" id="invitation_id" value="<%=request.getParameter("invitation_id") %>" name="invitation_id">
-				<button id="login" class="login bc-btn bc-firstpage-btn" value="Login"><span>Login</span></button>
-			</div>
-		
+			
+		</div>
 	</div>
 	<div id="hintbox" style="display:none;">
 		<div class="content"></div>

@@ -80,12 +80,16 @@ else if(session.getAttribute("user_id") == null)
 	response.sendRedirect("login");
 }
 %>
-	<div id="create-account-form-div">
-		<div class="firstpage-textbox-space">
-			<div class="textbox_space">
-				<input type="text" name="account_name" placeholder="Account name" id="accountname" class="textbox formvalidation name">
-			</div>	
-			<button id="create-account" class="create-account bc-btn bc-firstpage-btn" value="Create"><span>Create</span></button>
+	<div class="create-account-page">
+		<div id="create-account-page-heading" class="page-heading">CREATE ACCOUNT</div>
+		<div id="create-account-help-text" class="create-account-help-text help-text">You can have different accounts setup in Budget Chummy and work with them independently for example You can have seperate accounts for your Office, Home, Travel etc...</div>
+		<div id="create-account-form-div">
+			<div class="firstpage-textbox-space">
+				<div class="textbox_space">
+					<input type="text" name="account_name" placeholder="Account name" id="accountname" class="textbox formvalidation name">
+				</div>	
+				<button id="create-account" class="create-account bc-btn bc-firstpage-btn" value="Create"><span>Create</span></button>
+			</div>
 		</div>
 	</div>
 	<div id="hintbox" style="display:none;">

@@ -20,7 +20,7 @@
 			var id = $(this).attr("id");
 			accountChosen_ajax_call(id, "income");
 		});
-		$('#accounts-list').on('click','.create-new-account-div.accounts',function(){
+		$('#accounts-list').on('click','.create-new-account-div',function(){
 			location.href="CreateAccount";
 		});
 	});
@@ -38,8 +38,11 @@ else if(session.getAttribute("user_id") == null)
 	response.sendRedirect("/BudgetChummy/");
 }
 %>
-<div id="choose-account-form-div">
-	<div id="accounts-list"></div>
+<div class="choose-account-page">
+	<div id="choose-account-page-heading" class="page-heading">CHOOSE ACCOUNT</div>
+	<div id="choose-account-form-div">
+		<div id="accounts-list"></div>
+	</div>
 </div>
 </body>
 </html>
