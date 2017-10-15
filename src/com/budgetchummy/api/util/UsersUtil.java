@@ -251,14 +251,20 @@ public class UsersUtil {
 			if(!invitationAlreadySent && isAdmin)
 			{
 				String rootURL = APIConstants.rootURL;
+				String finalURL = rootURL + "BC?account_id="+accid+"&invitation_id="+invitationid;
 				String subject = "Invitation to join Budget Chummy";
-				String message = "Hi "+to+"\n"+first_name+" has sent you an invitation to join his Budget Chummy account\n"+
-		                          "Click the below link to join\n"+
-		        		          rootURL + "BC?account_id="+accid+"&invitation_id="+invitationid+"\n";
-	    		if(authentication_type.equals("Email"))
+				String email_welcome_html = "<div class='email-welcome-text' style='padding: 10px;font-size: 16px;font-family:\"Trebuchet MS\";'>Hello " + to + "!</div>";
+				String email_content_html = "<div class='email-content-text' style='padding: 10px;font-size: 16px;font-family:\"Trebuchet MS\";'>"+first_name+" has sent you an invitation to join his Budget Chummy account</div>";
+				String email_passcode_html = "";
+				if(authentication_type.equals("Email"))
 	          	{
-	          		message += "Passcode : "+passcode;
+	          		email_passcode_html = "<div class='email-passcode-text' style='padding: 10px;font-size: 16px;font-family:\"Trebuchet MS\";'>Passcode : "+passcode+ "</div>";
 	          	}
+				String email_button_html = "<div style='margin: 0 auto;width: 200px;margin-top: 30px;margin-bottom: 30px;'><a href='"+finalURL+"' id='verify-email-btn' class='email-btn' style='display: inline-block;background-color: #f4511e;border: none;color: #FFFFFF;text-align: center;font-size: 17px;padding: 12px;width: 200px;font-family: \"Trebuchet MS\";letter-spacing: 1px;text-decoration: none;border-radius: 3px;cursor: pointer;'>JOIN ACCOUNT</a></div>";
+				String message = "<div class='email-box' style='width:70%;height:100%;background-color:#e2e2e2;margin:0 auto;'>"+email_welcome_html+
+									 email_content_html+
+									 email_passcode_html+
+									 email_button_html+ "</div>";
 		                          
 				emailUtil.sendMail(to, subject, message);
 			}

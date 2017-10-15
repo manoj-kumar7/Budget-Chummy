@@ -44,7 +44,7 @@ public class emailUtil {
           	message.setFrom(new InternetAddress(emailId));
           	message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
           	message.setSubject(subject);
-          	message.setText(messageBody);	        	  
+          	message.setContent(messageBody, "text/html");	        	  
           	Transport.send(message);
 	          
         }catch (MessagingException mex) {

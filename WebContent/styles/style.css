@@ -1070,3 +1070,20 @@ div.tab button.active .tab-title{
   padding-left: 5px;
   overflow: hidden;
 }
+
+
+
+/* Email button styles */
+#verify-email-btn{
+  display: block;
+  background-color: #f4511e;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 17px;
+  padding: 12px;
+  width: 300px;
+  font-family: "Trebuchet MS";
+  letter-spacing: 1px;
+  text-decoration: none;
+}

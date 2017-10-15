@@ -110,9 +110,15 @@ public class signUpServlet extends HttpServlet {
 				if(activationNeeded)
 				{
 					String rootURL = APIConstants.rootURL;
+					String finalURL = rootURL + "activate?code=%27"+activation_code+"%27&email=%27"+email+"%27";
 					String subject = "Activate your Budget Chummy account";
-					String message = "Hi " + first_name + "\n Before you set your first budget, please take a moment to verify your email address \n"+
-									 rootURL+"activate?code=%27"+activation_code+"%27&email=%27"+email+"%27";
+					String email_welcome_html = "<div class='email-welcome-text' style='padding: 10px;font-size: 16px;font-family:\"Trebuchet MS\";'>Hello " + first_name + "!</div>";
+					String email_content_html = "<div class='email-content-text' style='padding: 10px;font-size: 16px;font-family:\"Trebuchet MS\";'>Before you set your first budget, please take a moment to verify your email address</div>";
+					String email_button_html = "<div style='margin: 0 auto;width: 300px;margin-top: 30px;margin-bottom: 30px;'><a href='"+finalURL+"' id='verify-email-btn' class='email-btn' style='display: inline-block;background-color: #f4511e;border: none;color: #FFFFFF;text-align: center;font-size: 17px;padding: 12px;width: 300px;font-family: \"Trebuchet MS\";letter-spacing: 1px;text-decoration: none;border-radius: 3px;cursor: pointer;'>VERIFY YOUR EMAIL ADDRESS</a></div>";
+
+					String message = "<div class='email-box' style='width:70%;height:100%;background-color:#e2e2e2;margin:0 auto;'>"+email_welcome_html+
+									 email_content_html+
+									 email_button_html+ "</div>";
 					emailUtil.sendMail(email, subject, message);
 				}
 				rs = null;
