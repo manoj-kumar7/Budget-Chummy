@@ -45,9 +45,11 @@
 		this.expense_data = [];
 		this.income_search_data = [];
 		this.expense_search_data = [];
+		this.incomes_in_month = [];
 		this.expenses_in_month = [];
 		this.budgets_in_month = [];
 		this.d = new Date(moment.tz(moment.tz.guess()).format());
+		this.date = this.d.getDate();
 		this.month = this.d.getMonth() + 1;
 		this.year = this.d.getFullYear();
 		this.current_page = "income";
@@ -851,8 +853,6 @@
 					 	    <option value="2">Weekly</option>
 						    <option value="3">Monthly</option>
 						    <option value="4">Yearly</option>
-						    <option value="5">Weekdays</option>
-						    <option value="6">Weekends</option>
 						</select>
 					</div>
 					<div class="textbox_space">
@@ -934,6 +934,8 @@
 <script type="text/javascript" src="js/ajax-calls.js"></script>
 <script type="text/javascript" src="js/Datehelper.js"></script>
 <script type="text/javascript" src="js/budgets.js"></script>
+<script type="text/javascript" src="js/incomes.js"></script>
+<script type="text/javascript" src="js/expenses.js"></script>
 </body>
 
 </html>

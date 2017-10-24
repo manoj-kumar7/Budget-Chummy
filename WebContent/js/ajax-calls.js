@@ -150,57 +150,7 @@
 						$('.loader').removeClass('active');
 						if(data!=null)
 						{
-							$('.income-table tbody').html("");
-							$('.income-table tbody').append("<tr><th class='amount-col'>Amount</th><th class='date-col'>Date</th><th class='tag-col'>Tag</th><th class='description-col'>Description</th><th class='addedby-col'>Added by</th><th class='location-col'>Location</th></tr>");
-							for(var i=0;i<data.length;i++)
-							{
-								var obj = jQuery.parseJSON(data[i]);
-								let amount = obj.amount || "-";
-								let dates = getDateFromEpoch(obj.date);
-								let date = formCustomDateFormat(dates);
-								let tag = obj.tag_name || "-";
-								let description = obj.description || "-";
-								let user_name = obj.user_name || "-";
-								let added_date_time = obj.added_date_time || "-";
-								let location = obj.location || "-";
-								let lat = obj.latitude;
-								if(lat == null || lat == -1 || lat == 0)
-								{
-									lat = "-";
-								}
-								let lon = obj.longitude;
-								if(lon == null || lon == -1 || lon == 0)
-								{
-									lon = "-";
-								}
-								globalObject.income_data.push({y:amount,indexLabel:amount+"(#percent%)",legendText:""+amount,description:description,date:date,tag:tag});
-								let append_string = "<tr><td><i class='icon-inr'></i>"+amount+"</td><td>"+date+"</td><td>"+tag+"</td><td>"+description+"</td><td>"+user_name+"</td><td>"+location;
-								if(lat != "-" && lon != "-")
-								{
-									append_string += "<img src='images/show_location_icon.png' class='image location-icon' alt='Show in map' data-lat="+lat+" data-lon="+lon+"></td></tr>";
-								}
-								else
-								{
-									append_string += "</td></tr>";
-								}
-								$('.income-table tbody').append(append_string);
-							}
-					    	income_chart.options.data[0].dataPoints = globalObject.income_data;
-					    	if(globalObject.income_data.length != 0)
-					    	{
-					    		$('#empty-income-data').css("display","none");
-					    		$('#chartContainer1').css("display","block");
-					    		$('.income-table-space').css("display","block");
-					    		income_chart.render();
-					    	}
-					    	else
-					    	{
-					    		$('#chartContainer1').css("display","none");
-					    		$('.income-table-space').css("display","none");
-					    		$('#empty-income-data').css("display","block");
-					    		$('#empty-income-data').html("<img src='images/no_results.png'><div class='empty-data-text'>No income for this month</div>");
-					    	}
-					    	globalObject.income_data=[];
+							findIncomes(data);
 						}
 						else
 						{
@@ -229,57 +179,7 @@
 						$('.loader').removeClass('active');
 						if(page == "expense" && data != null)
 						{
-							$('.expense-table tbody').html("");
-							$('.expense-table tbody').append("<tr><th class='amount-col'>Amount</th><th class='date-col'>Date</th><th class='tag-col'>Tag</th><th class='description-col'>Description</th><th class='addedby-col'>Added by</th><th class='location-col'>Location</th></tr>");
-							for(var i=0;i<data.length;i++)
-							{
-								var obj = jQuery.parseJSON(data[i]);
-								let amount = obj.amount || "-";
-								let dates = getDateFromEpoch(obj.date);
-								let date = formCustomDateFormat(dates);
-								let tag = obj.tag_name || "-";
-								let description = obj.description || "-";
-								let user_name = obj.user_name || "-";
-								let added_date_time = obj.added_date_time || "-";
-								let location = obj.location || "-";
-								let lat = obj.latitude;
-								if(lat == null || lat == -1 || lat == 0)
-								{
-									lat = "-";
-								}
-								let lon = obj.longitude;
-								if(lon == null || lon == -1 || lon == 0)
-								{
-									lon = "-";
-								}
-								globalObject.expense_data.push({y:amount,indexLabel:amount+"(#percent%)",legendText:""+amount,description:description,date:date,tag:tag});
-								let append_string = "<tr><td><i class='icon-inr'></i>"+amount+"</td><td>"+date+"</td><td>"+tag+"</td><td>"+description+"</td><td>"+user_name+"</td><td>"+location;
-								if(lat != "-" && lon != "-")
-								{
-									append_string += "<img src='images/show_location_icon.png' class='image location-icon' alt='Show in map' data-lat="+lat+" data-lon="+lon+"></td></tr>";
-								}
-								else
-								{
-									append_string += "</td></tr>";
-								}
-								$('.expense-table tbody').append(append_string);
-							}
-					    	expense_chart.options.data[0].dataPoints = globalObject.expense_data;
-					    	if(globalObject.expense_data.length != 0)
-					    	{
-					    		$('#empty-expense-data').css("display","none");
-					    		$('#chartContainer2').css("display","block");
-					    		$('.expense-table-space').css("display","block");
-					    		expense_chart.render();
-					    	}
-					    	else
-					    	{
-					    		$('#chartContainer2').css("display","none");
-					    		$('.expense-table-space').css("display","none");
-					    		$('#empty-expense-data').css("display","block");
-					    		$('#empty-expense-data').html("<img src='images/no_results.png'><div class='empty-data-text'>No expense for this month</div>");
-					    	}		
-					    	globalObject.expense_data=[];
+							findExpenses(data, page);
 						}
 						else if(page == "budget")
 						{
@@ -292,7 +192,8 @@
 									globalObject.expenses_in_month.push(obj);
 								}
 							}
-							get_budget_ajax_call(globalObject.month, globalObject.year);
+							findExpenses(data, page);
+							//get_budget_ajax_call(globalObject.month, globalObject.year);
 						}
 					},
 					error:function(jqXHR, txtStatus, errThrown){
@@ -331,7 +232,6 @@
 			
 			var save_income_ajax_call=function(month,year)
 		 	{
-		 		$('.generic-save').attr("disabled", "disabled");
 				var amount = $('.generic-amount').val();
 				var date = $('.generic-datepicker').val();
 				var tag_id = $('.saved-tags-dropdown').val();
@@ -351,6 +251,7 @@
 				}
 				amount = parseFloat(amount).toFixed(2);
 				date = dateToEpoch(date);
+				$('.generic-save').attr("disabled", "disabled");
 				NProgress.start();
 				$.ajax({
 					type:"POST",
@@ -376,7 +277,6 @@
 			
 			var save_expense_ajax_call=function(month,year)
 		 	{
-		 		$('.generic-save').attr("disabled", "disabled");
 				var amount = $('.generic-amount').val();
 				var date = $('.generic-datepicker').val();
 				var tag_id = $('.saved-tags-dropdown').val();
@@ -396,6 +296,7 @@
 				}
 				amount = parseFloat(amount).toFixed(2);
 				date = dateToEpoch(date);
+				$('.generic-save').attr("disabled", "disabled");
 				NProgress.start();
 				$.ajax({
 					type:"POST",
@@ -428,7 +329,6 @@
 			
 			var save_budget_ajax_call=function(month,year)
 		 	{
-		 		$('.generic-save').attr("disabled", "disabled");
 				var budget_type = $('#budget-type-dropdown').val();
 				var tag_id = $('.saved-tags-dropdown').val() || -1;
 				var budget_repeat = $('#budget-repeat-dropdown').val();
@@ -445,6 +345,7 @@
 				amount = parseFloat(amount).toFixed(2);
 				start_date = dateToEpoch(start_date);
 				end_date = dateToEpoch(end_date);
+				$('.generic-save').attr("disabled", "disabled");
 				NProgress.start();
 				$.ajax({
 					type:"POST",

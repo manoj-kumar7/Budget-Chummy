@@ -80,6 +80,10 @@ var getTomorrowEpoch = function(){
 	var d1 = new Date(date_string);
 	return d1.valueOf();
 }
+var getNoOfDaysInThisMonth = function(month, year){
+	var no_of_days = new Date(year, month, 0).getDate();
+	return no_of_days;
+}
 
 var addDaysToDate = function(date, no_of_days)
 {

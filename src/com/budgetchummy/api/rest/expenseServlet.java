@@ -70,15 +70,14 @@ public class expenseServlet extends HttpServlet {
 				String query="";
 				if(page.equals("expense"))
 				{
-					st = con.prepareStatement("select user_id,date,amount,tag_id,description,location,latitude,longitude,added_date_time from transactions where  extract(year from to_timestamp(floor(date/1000)))=? AND extract(month from to_timestamp(floor(date/1000)))=? AND transaction_type=? AND account_id=?;");
+					st = con.prepareStatement("select user_id,date,amount,tag_id,description,location,latitude,longitude,added_date_time,repeat_period,reminder_period from transactions where  extract(year from to_timestamp(floor(date/1000)))<=? AND transaction_type=? AND account_id=?;");
 					st.setInt(1, year);
-					st.setInt(2, month);
-					st.setString(3, "expense");
-					st.setLong(4, accid);			
+					st.setString(2, "expense");
+					st.setLong(3, accid);			
 				}
 				else if(page.equals("budget"))
 				{
-					st = con.prepareStatement("select user_id,date,amount,tag_id,description,location,latitude,longitude,added_date_time from transactions where  extract(year from to_timestamp(floor(date/1000)))=? AND transaction_type=? AND account_id=?;");
+					st = con.prepareStatement("select user_id,date,amount,tag_id,description,location,latitude,longitude,added_date_time,repeat_period,reminder_period from transactions where  extract(year from to_timestamp(floor(date/1000)))<=? AND transaction_type=? AND account_id=?;");
 					st.setInt(1, year);
 					st.setString(2, "expense");
 					st.setLong(3, accid);				
@@ -87,7 +86,7 @@ public class expenseServlet extends HttpServlet {
 				rs = st.executeQuery();
 				String description=null,tag_name=null,location=null,first_name=null;
 				float amount=-1;
-				long user_id=-1,tag_id=-1,added_date_time=-1,date=-1;
+				long user_id=-1,tag_id=-1,added_date_time=-1,date=-1,repeat_period=-1,reminder_period=-1;
 				float lat,lon;
 				JSONArray ja = new JSONArray();
 				JSONObject jo = new JSONObject();
@@ -117,6 +116,8 @@ public class expenseServlet extends HttpServlet {
 					lat=rs.getFloat("latitude");
 					lon=rs.getFloat("longitude");
 					added_date_time=rs.getLong("added_date_time");
+					repeat_period=rs.getLong("repeat_period");
+					reminder_period=rs.getLong("reminder_period");
 					jo.put("user_name", first_name);
 					jo.put("date", date);
 					jo.put("amount", amount);
@@ -126,6 +127,8 @@ public class expenseServlet extends HttpServlet {
 					jo.put("latitude", lat);
 					jo.put("longitude", lon);
 					jo.put("added_date_time", added_date_time);
+					jo.put("repeat_period", repeat_period);
+					jo.put("reminder_period", reminder_period);
 					ja.add(jo.toJSONString());
 					jo.clear();
 				}
