@@ -46,7 +46,8 @@ public class searchServlet extends HttpServlet {
 		}
 		else
 		{
-			long date = Long.parseLong(request.getParameter("date"));
+			long date_from = Long.parseLong(request.getParameter("date_from"));
+			long date_to = Long.parseLong(request.getParameter("date_to"));
 			String url = APIConstants.POSTGRESQL_URL;
 			String user = APIConstants.POSTGRESQL_USERNAME;
 			String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
@@ -79,29 +80,51 @@ public class searchServlet extends HttpServlet {
 				}
 				rs=null;
 
-				st1 = con.prepareStatement("select amount,tag_id from transactions where account_id=? AND date=? AND transaction_type=?;");
+				st1 = con.prepareStatement("select user_id,date,amount,tag_id,description,location,latitude,longitude,added_date_time,repeat_period,reminder_period from transactions where account_id=? AND date<=? AND transaction_type=?;");
 				st1.setLong(1, accid);
-				st1.setLong(2, date);
+				st1.setLong(2, date_to);
 				st1.setString(3, "income");
 				rs = st1.executeQuery();
+				String description=null,tag_name=null,location=null,first_name=null;
 				float amount=-1;
-				String tag_name=null;
+				long user_id=-1,tag_id=-1,added_date_time=-1,date=-1,repeat_period=-1,reminder_period=-1;
+				float lat,lon;
 				JSONArray income_arr = new JSONArray();
 				JSONObject income_obj = new JSONObject();
 				while(rs.next())
 				{
 					tag_name=tags.get(rs.getLong("tag_id"));
 					amount=rs.getFloat("amount");
+					user_id=rs.getLong("user_id");
+					date=rs.getLong("date");
+					description=rs.getString("description");
+					location=rs.getString("location");
+					lat=rs.getFloat("latitude");
+					lon=rs.getFloat("longitude");
+					added_date_time=rs.getLong("added_date_time");	
+					repeat_period=rs.getLong("repeat_period");
+					reminder_period=rs.getLong("reminder_period");
+
 					income_obj.put("tag_name", tag_name);
 					income_obj.put("amount", amount);
+					income_obj.put("user_id", user_id);
+					income_obj.put("date", date);
+					income_obj.put("description", description);
+					income_obj.put("location", location);
+					income_obj.put("latitude", lat);
+					income_obj.put("longitude", lon);
+					income_obj.put("added_date_time", added_date_time);
+					income_obj.put("repeat_period", repeat_period);
+					income_obj.put("reminder_period", reminder_period);
+
 					income_arr.add(income_obj.toJSONString());
 					income_obj.clear();
 				}
 				rs=null;
 
-				st1 = con.prepareStatement("select amount,tag_id from transactions where account_id=? AND date=? AND transaction_type=?;");
+				st1 = con.prepareStatement("select user_id,date,amount,tag_id,description,location,latitude,longitude,added_date_time,repeat_period,reminder_period from transactions where account_id=? AND date<=? AND transaction_type=?;");
 				st1.setLong(1, accid);
-				st1.setLong(2, date);
+				st1.setLong(2, date_to);
 				st1.setString(3, "expense");
 				rs = st1.executeQuery();
 				JSONArray expense_arr = new JSONArray();
@@ -110,8 +133,28 @@ public class searchServlet extends HttpServlet {
 				{
 					tag_name=tags.get(rs.getLong("tag_id"));
 					amount=rs.getFloat("amount");
+					user_id=rs.getLong("user_id");
+					date=rs.getLong("date");
+					description=rs.getString("description");
+					location=rs.getString("location");
+					lat=rs.getFloat("latitude");
+					lon=rs.getFloat("longitude");
+					added_date_time=rs.getLong("added_date_time");	
+					repeat_period=rs.getLong("repeat_period");
+					reminder_period=rs.getLong("reminder_period");
+
 					expense_obj.put("tag_name", tag_name);
 					expense_obj.put("amount", amount);
+					expense_obj.put("user_id", user_id);
+					expense_obj.put("date", date);
+					expense_obj.put("description", description);
+					expense_obj.put("location", location);
+					expense_obj.put("latitude", lat);
+					expense_obj.put("longitude", lon);
+					expense_obj.put("added_date_time", added_date_time);
+					expense_obj.put("repeat_period", repeat_period);
+					expense_obj.put("reminder_period", reminder_period);
+
 					expense_arr.add(expense_obj.toJSONString());
 					expense_obj.clear();
 				}

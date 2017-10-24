@@ -544,12 +544,17 @@ html, body {
 .search-container{
   margin: 3%;
 }
-.search-container .search-label{
+.search-container .search-label-from{
   float: left;
-  width: 15%;
+  width: 7%;
+}
+.search-container .search-label-to{
+  float: left;
+  width: 5%;
 }
 .search-container .search-input{
   float: left;
+  width: 23%;
 }
 #income-expense-search-btn{
   background-color: #f4511e;
@@ -602,11 +607,18 @@ html, body {
 .search-bag .search-amount{
   padding: 5px;
 }
+.search-bag .search-date{
+  padding: 5px;
+}
 .search-bag .search-tag .tag-label{
   float: left;
   width: 25%;
 }
 .search-bag .search-amount .amount-label{
+  float: left;
+  width: 25%;
+}
+.search-bag .search-date .date-label{
   float: left;
   width: 25%;
 }

@@ -44,36 +44,106 @@ var findStartOfWeeklyIncome = function(start_date, epochOfFirstDayOfMonth){
 	}
 	return temp;
 }
-var findStartOfMonthlyIncome = function(start_date, today_date, today_month, today_year){
-	var noOfDaysInCurrentMonth = getNoOfDaysInThisMonth(today_month, today_year);
-	var start_date_arr = getDateFromEpoch(start_date);
-	var start_date_date = start_date_arr[2];
-	if(start_date_date > noOfDaysInCurrentMonth)
+var findStartOfMonthlyIncome = function(start_date, today_date, today_month, today_year, page, date_from, date_to){
+	if(page == "search")
 	{
-		return dateToEpoch(today_year + '/' + today_month + '/' + noOfDaysInCurrentMonth);
+		var date = start_date;
+		while(date <= date_to)
+		{
+			var start_date_arr = getDateFromEpoch(start_date);
+			var start_date_date = start_date_arr[2];
+			var start_date_month = start_date_arr[1];
+			var start_date_year = start_date_arr[0];
+			var noOfDaysInNextMonth = getNoOfDaysInThisMonth(start_date_month + 1, start_date_year);
+			start_date_month = start_date_month + 1;
+
+			if(start_date_date > noOfDaysInNextMonth)
+			{
+				date = dateToEpoch(start_date_year + '/' + start_date_month + '/' + noOfDaysInNextMonth);
+			}
+			else
+			{
+				date = dateToEpoch(start_date_year + '/' + start_date_month + '/' + start_date_date);
+			}
+			if(date >= date_from && date <= date_to)
+			{
+				return date;
+			}
+			start_date = date;
+		}
+		return -1;
 	}
 	else
 	{
-		return dateToEpoch(today_year + '/' + today_month + '/' + start_date_date);
+		var noOfDaysInCurrentMonth = getNoOfDaysInThisMonth(today_month, today_year);
+		var start_date_arr = getDateFromEpoch(start_date);
+		var start_date_date = start_date_arr[2];
+		if(start_date_date > noOfDaysInCurrentMonth)
+		{
+			return dateToEpoch(today_year + '/' + today_month + '/' + noOfDaysInCurrentMonth);
+		}
+		else
+		{
+			return dateToEpoch(today_year + '/' + today_month + '/' + start_date_date);
+		}
 	}
 }
-var findStartOfYearlyIncome = function(start_date, today_date, today_month, today_year){
-	var start_date_arr = getDateFromEpoch(start_date);
-	var start_date_month = start_date_arr[1];
-	if(start_date_month == today_month)
+var findStartOfYearlyIncome = function(start_date, today_date, today_month, today_year, page, date_from, date_to){
+	if(page == "search")
 	{
-		return findStartOfMonthlyIncome(start_date, today_date, today_month, today_year);
+		var date = start_date;
+		while(date <= date_to)
+		{
+			var start_date_arr = getDateFromEpoch(start_date);
+			var start_date_date = start_date_arr[2];
+			var start_date_month = start_date_arr[1];
+			var start_date_year = start_date_arr[0];
+			var noOfDaysInNextMonth = getNoOfDaysInThisMonth(start_date_month, start_date_year + 1);
+			start_date_year = start_date_year + 1;
+
+			if(start_date_date > noOfDaysInNextMonth)
+			{
+				date = dateToEpoch(start_date_year + '/' + start_date_month + '/' + noOfDaysInNextMonth);
+			}
+			else
+			{
+				date = dateToEpoch(start_date_year + '/' + start_date_month + '/' + start_date_date);
+			}
+			if(date >= date_from && date <= date_to)
+			{
+				return date;
+			}
+			start_date = date;
+		}
+		return -1;
 	}
 	else
 	{
-		return -1;
+		var start_date_arr = getDateFromEpoch(start_date);
+		var start_date_month = start_date_arr[1];
+		if(start_date_month == today_month)
+		{
+			return findStartOfMonthlyIncome(start_date, today_date, today_month, today_year, page, date_from, date_to);
+		}
+		else
+		{
+			return -1;
+		}
 	}
 }
 
-var calculateDailyIncomes = function(obj, today_date, today_month, today_year){
+var calculateDailyIncomes = function(obj, today_date, today_month, today_year, page, date_from, date_to){
 	var income_date = obj.date;
-	var epochOfFirstDayOfMonth = epochOfDayOfMonth(1, today_month, today_year);
-	var _epochOfLastDayOfMonth = epochOfLastDayOfMonth(today_month, today_year);
+	if(page == "search")
+	{
+		var epochOfFirstDayOfMonth = date_from;
+		var _epochOfLastDayOfMonth = date_to;
+	}
+	else
+	{
+		var epochOfFirstDayOfMonth = epochOfDayOfMonth(1, today_month, today_year);
+		var _epochOfLastDayOfMonth = epochOfLastDayOfMonth(today_month, today_year);
+	}
 	var epochOfToday = getTodayEpoch();
 	if(epochOfToday >= epochOfFirstDayOfMonth && epochOfToday <= _epochOfLastDayOfMonth)
 	{
@@ -120,10 +190,18 @@ var calculateDailyIncomes = function(obj, today_date, today_month, today_year){
 		}
 	}
 }
-var calculateWeeklyIncomes = function(obj, today_date, today_month, today_year){
+var calculateWeeklyIncomes = function(obj, today_date, today_month, today_year, page, date_from, date_to){
 	var income_date = obj.date;
-	var epochOfFirstDayOfMonth = epochOfDayOfMonth(1, today_month, today_year);
-	var _epochOfLastDayOfMonth = epochOfLastDayOfMonth(today_month, today_year);
+	if(page == "search")
+	{
+		var epochOfFirstDayOfMonth = date_from;
+		var _epochOfLastDayOfMonth = date_to;
+	}
+	else
+	{
+		var epochOfFirstDayOfMonth = epochOfDayOfMonth(1, today_month, today_year);
+		var _epochOfLastDayOfMonth = epochOfLastDayOfMonth(today_month, today_year);
+	}
 	var epochOfToday = getTodayEpoch();
 	if(epochOfToday >= epochOfFirstDayOfMonth && epochOfToday <= _epochOfLastDayOfMonth)
 	{
@@ -172,10 +250,18 @@ var calculateWeeklyIncomes = function(obj, today_date, today_month, today_year){
 		}
 	}
 }
-var calculateMonthlyIncomes = function(obj, today_date, today_month, today_year){
+var calculateMonthlyIncomes = function(obj, today_date, today_month, today_year, page, date_from, date_to){
 	var income_date = obj.date;
-	var epochOfFirstDayOfMonth = epochOfDayOfMonth(1, today_month, today_year);
-	var _epochOfLastDayOfMonth = epochOfLastDayOfMonth(today_month, today_year);
+	if(page == "search")
+	{
+		var epochOfFirstDayOfMonth = date_from;
+		var _epochOfLastDayOfMonth = date_to;
+	}
+	else
+	{
+		var epochOfFirstDayOfMonth = epochOfDayOfMonth(1, today_month, today_year);
+		var _epochOfLastDayOfMonth = epochOfLastDayOfMonth(today_month, today_year);
+	}
 	var epochOfToday = getTodayEpoch();
 	if(epochOfToday >= epochOfFirstDayOfMonth && epochOfToday <= _epochOfLastDayOfMonth)
 	{
@@ -199,59 +285,7 @@ var calculateMonthlyIncomes = function(obj, today_date, today_month, today_year)
 	{
 		if(income_date <= epochOfFirstDayOfMonth)
 		{
-			var start_date = findStartOfMonthlyIncome(income_date, today_date, today_month, today_year);
-			addIncomesToArray(obj, start_date, _epochOfLastDayOfMonth, false);
-		}
-		else if(income_date > epochOfFirstDayOfMonth && income_date <= _epochOfLastDayOfMonth)
-		{
-			addIncomesToArray(obj, income_date, _epochOfLastDayOfMonth, false);
-		}
-	}
-	else
-	{
-		if(income_date <= epochOfFirstDayOfMonth)
-		{
-			var start_date = findStartOfMonthlyIncome(income_date, today_date, today_month, today_year);
-			addIncomesToArray(obj, start_date, epochOfToday, false);
-		}
-		else if(income_date > epochOfFirstDayOfMonth && income_date <= epochOfToday)
-		{
-			addIncomesToArray(obj, income_date, epochOfToday, false);
-		}
-		else if(income_date > epochOfToday && income_date <= _epochOfLastDayOfMonth)
-		{
-			addIncomesToArray(obj, income_date, _epochOfLastDayOfMonth, true);
-		}
-	}
-}
-var calculateYearlyIncomes = function(obj, today_date, today_month, today_year){
-	var income_date = obj.date;
-	var epochOfFirstDayOfMonth = epochOfDayOfMonth(1, today_month, today_year);
-	var _epochOfLastDayOfMonth = epochOfLastDayOfMonth(today_month, today_year);
-	var epochOfToday = getTodayEpoch();
-	if(epochOfToday >= epochOfFirstDayOfMonth && epochOfToday <= _epochOfLastDayOfMonth)
-	{
-		var todayLiesInThisMonth = true;
-	}
-	else
-	{
-		var todayLiesInThisMonth = false;
-		if(epochOfToday < epochOfFirstDayOfMonth)
-		{
-			if(income_date >= epochOfFirstDayOfMonth && income_date <= _epochOfLastDayOfMonth)
-			{
-				addIncomesToArray(obj, income_date, _epochOfLastDayOfMonth, true);
-			}
-			return;
-		}
-	}
-
-
-	if(!todayLiesInThisMonth) //Here today lies after this current month
-	{
-		if(income_date <= epochOfFirstDayOfMonth)
-		{
-			var start_date = findStartOfYearlyIncome(income_date, today_date, today_month, today_year);
+			var start_date = findStartOfMonthlyIncome(income_date, today_date, today_month, today_year, page, date_from, date_to);
 			if(start_date != -1)
 			{
 				addIncomesToArray(obj, start_date, _epochOfLastDayOfMonth, false);
@@ -266,7 +300,73 @@ var calculateYearlyIncomes = function(obj, today_date, today_month, today_year){
 	{
 		if(income_date <= epochOfFirstDayOfMonth)
 		{
-			var start_date = findStartOfYearlyIncome(income_date, today_date, today_month, today_year);
+			var start_date = findStartOfMonthlyIncome(income_date, today_date, today_month, today_year, page, date_from, date_to);
+			if(start_date != -1)
+			{
+				addIncomesToArray(obj, start_date, epochOfToday, false);
+			}
+		}
+		else if(income_date > epochOfFirstDayOfMonth && income_date <= epochOfToday)
+		{
+			addIncomesToArray(obj, income_date, epochOfToday, false);
+		}
+		else if(income_date > epochOfToday && income_date <= _epochOfLastDayOfMonth)
+		{
+			addIncomesToArray(obj, income_date, _epochOfLastDayOfMonth, true);
+		}
+	}
+}
+var calculateYearlyIncomes = function(obj, today_date, today_month, today_year, page, date_from, date_to){
+	var income_date = obj.date;
+	if(page == "search")
+	{
+		var epochOfFirstDayOfMonth = date_from;
+		var _epochOfLastDayOfMonth = date_to;
+	}
+	else
+	{
+		var epochOfFirstDayOfMonth = epochOfDayOfMonth(1, today_month, today_year);
+		var _epochOfLastDayOfMonth = epochOfLastDayOfMonth(today_month, today_year);
+	}
+	var epochOfToday = getTodayEpoch();
+	if(epochOfToday >= epochOfFirstDayOfMonth && epochOfToday <= _epochOfLastDayOfMonth)
+	{
+		var todayLiesInThisMonth = true;
+	}
+	else
+	{
+		var todayLiesInThisMonth = false;
+		if(epochOfToday < epochOfFirstDayOfMonth)
+		{
+			if(income_date >= epochOfFirstDayOfMonth && income_date <= _epochOfLastDayOfMonth)
+			{
+				addIncomesToArray(obj, income_date, _epochOfLastDayOfMonth, true);
+			}
+			return;
+		}
+	}
+
+
+	if(!todayLiesInThisMonth) //Here today lies after this current month
+	{
+		if(income_date <= epochOfFirstDayOfMonth)
+		{
+			var start_date = findStartOfYearlyIncome(income_date, today_date, today_month, today_year, page, date_from, date_to);
+			if(start_date != -1)
+			{
+				addIncomesToArray(obj, start_date, _epochOfLastDayOfMonth, false);
+			}
+		}
+		else if(income_date > epochOfFirstDayOfMonth && income_date <= _epochOfLastDayOfMonth)
+		{
+			addIncomesToArray(obj, income_date, _epochOfLastDayOfMonth, false);
+		}
+	}
+	else
+	{
+		if(income_date <= epochOfFirstDayOfMonth)
+		{
+			var start_date = findStartOfYearlyIncome(income_date, today_date, today_month, today_year, page, date_from, date_to);
 			if(start_date != -1)
 			{
 				addIncomesToArray(obj, start_date, epochOfToday, false);
@@ -339,8 +439,10 @@ var printIncomes = function(){
 	globalObject.incomes_in_month = [];
 }
 
-var findIncomes = function(data)
+var findIncomes = function(data, page, date_from, date_to)
 {
+	var date_from = date_from || -1;
+	var date_to = date_to || -1;
 	globalObject.incomes_in_month = [];
 	for(var i=0;i<data.length;i++)
 	{
@@ -358,30 +460,40 @@ var findIncomes = function(data)
 			var repeat_period = obj.repeat_period;
 			if(repeat_period == 0)
 			{
-				if(income_year == today_year && income_month == today_month)
+				if(page == "search")
+				{
+					if(obj.date >= date_from && obj.date <= date_to)
+					{
+						globalObject.incomes_in_month.push(obj);
+					}
+				}
+				else if(income_year == today_year && income_month == today_month)
 				{
 					globalObject.incomes_in_month.push(obj);
 				}
 			}
 			else if(repeat_period == 1)
 			{
-				calculateDailyIncomes(obj, today_date, today_month, today_year);
+				calculateDailyIncomes(obj, today_date, today_month, today_year, page, date_from, date_to);
 			}
 			else if(repeat_period == 2)
 			{
-				calculateWeeklyIncomes(obj, today_date, today_month, today_year);
+				calculateWeeklyIncomes(obj, today_date, today_month, today_year, page, date_from, date_to);
 			}
 			else if(repeat_period == 3)
 			{
-				calculateMonthlyIncomes(obj, today_date, today_month, today_year);
+				calculateMonthlyIncomes(obj, today_date, today_month, today_year, page, date_from, date_to);
 			}
 			else if(repeat_period == 4)
 			{
-				calculateYearlyIncomes(obj, today_date, today_month, today_year);
+				calculateYearlyIncomes(obj, today_date, today_month, today_year, page, date_from, date_to);
 			}
 		}
 	}
-	printIncomes();
+	if(page == "income")
+	{
+		printIncomes();
+	}
 }
 
 

@@ -645,8 +645,10 @@
 		
 		<div id="search-page" style="display:none;" class="tabcontent page">
 			<div class="search-container">
-				<div class="search-label">Select date</div>
-				<div class="search-input"><input type="text" class="date-picker"></div>
+				<div class="search-label-from">From</div>
+				<div class="search-input"><input type="text" id="search-from" class="date-picker"></div>
+				<div class="search-label-to">To</div>
+				<div class="search-input"><input type="text" id="search-to" class="date-picker"></div>
 				<input type="button" id="income-expense-search-btn" class="search-btn" value="Search"><br>
 			</div>
 			<div class="search-results-container">

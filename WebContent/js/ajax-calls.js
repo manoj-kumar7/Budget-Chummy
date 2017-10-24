@@ -147,10 +147,9 @@
 					data:{month:month,year:year},
 					success:function(data){
 						NProgress.done();
-						$('.loader').removeClass('active');
 						if(data!=null)
 						{
-							findIncomes(data);
+							findIncomes(data, "income");
 						}
 						else
 						{
@@ -176,7 +175,6 @@
 					data:{month:month,year:year,page:page},
 					success:function(data){
 						NProgress.done();
-						$('.loader').removeClass('active');
 						if(page == "expense" && data != null)
 						{
 							findExpenses(data, page);
@@ -216,7 +214,6 @@
 					data:{month:month,year:year},
 					success:function(data){
 						NProgress.done();
-						$('.loader').removeClass('active');
 						filterBudget(data);
 					},
 					error:function(jqXHR, txtStatus, errThrown){
@@ -371,43 +368,46 @@
 			
 			var search_ajax_call=function()
 		 	{
-				var date = $('.date-picker').val();
-				if(!validateDate(date))
+				var date_from = $('#search-from').val();
+				var date_to = $('#search-to').val();
+				if(!validateDate(date_from) || !validateDate(date_to))
 				{
 					showAjaxFailureMessageHome("Invalid Input");
 					return;
 				}
-				date = dateToEpoch(date);
+				date_from = dateToEpoch(date_from);
+				date_to = dateToEpoch(date_to);
 				NProgress.start();
 				$.ajax({
 					type:"GET",
 					url:"/BudgetChummy/api/v1/search",
-					data:{date:date},
+					data:{date_from:date_from, date_to:date_to},
 					success:function(data){
 						NProgress.done();
-						$('.loader').removeClass('active');
 						if(data!=null)
 						{
 							var obj;
 							$.each(data, function(key, value) {
 								if(key=="income_data")
 								{
-									for(var i=0;i<value.length;i++)
-									{
-										obj = jQuery.parseJSON(value[i]);
-										globalObject.income_search_data.push(obj);
-									}
+									findIncomes(value, "search", date_from, date_to);
+									// for(var i=0;i<value.length;i++)
+									// {
+									// 	obj = jQuery.parseJSON(value[i]);
+									// 	globalObject.income_search_data.push(obj);
+									// }
 								}
 								else
 								{
-									for(var i=0;i<value.length;i++)
-									{
-										obj = jQuery.parseJSON(value[i]);
-										globalObject.expense_search_data.push(obj);
-									}									
+									findExpenses(value, "search", date_from, date_to);
+									// for(var i=0;i<value.length;i++)
+									// {
+									// 	obj = jQuery.parseJSON(value[i]);
+									// 	globalObject.expense_search_data.push(obj);
+									// }									
 								}
 							});
-							if(globalObject.income_search_data.length == 0)
+							if(globalObject.incomes_in_month.length == 0)
 							{
 								$('#income_search_data').css('display','none');
 								$('#empty-search-income-data').css('display','block');
@@ -417,13 +417,15 @@
 								$('#income_search_data').css('display','block');
 								$('#empty-search-income-data').css('display','none');
 								var income_search_data_string = "";
-								for(var i=0;i<globalObject.income_search_data.length;i++)
+								for(var i=0;i<globalObject.incomes_in_month.length;i++)
 								{
-									income_search_data_string += '<div class="income-bag search-bag"><div class="search-tag"><div class="tag-label">Tag</div><div class="tag-value">' + globalObject.income_search_data[i].tag_name + '</div></div><div class="search-amount"><div class="amount-label">Amount</div><div class="amount-value">' + globalObject.income_search_data[i].amount + '</div></div></div>';			
+									let dates = getDateFromEpoch(globalObject.incomes_in_month[i].date);
+									let date = formCustomDateFormat(dates);
+									income_search_data_string += '<div class="income-bag search-bag"><div class="search-tag"><div class="tag-label">Tag</div><div class="tag-value">' + globalObject.incomes_in_month[i].tag_name + '</div></div><div class="search-amount"><div class="amount-label">Amount</div><div class="amount-value">' + globalObject.incomes_in_month[i].amount + '</div></div><div class="search-date"><div class="date-label">Date</div><div class="date-value">' + date + '</div></div></div>';			
 								}
 							}
 							$('#income_search_data').html(income_search_data_string);
-							if(globalObject.expense_search_data.length == 0)
+							if(globalObject.expenses_in_month.length == 0)
 							{
 								$('#expense_search_data').css('display','none');
 								$('#empty-search-expense-data').css('display','block');
@@ -433,9 +435,11 @@
 								$('#expense_search_data').css('display','block');
 								$('#empty-search-expense-data').css('display','none');
 								var expense_search_data_string = "";
-								for(var i=0;i<globalObject.expense_search_data.length;i++)
+								for(var i=0;i<globalObject.expenses_in_month.length;i++)
 								{
-									expense_search_data_string += '<div class="expense-bag search-bag"><div class="search-tag"><div class="tag-label">Tag</div><div class="tag-value">' + globalObject.expense_search_data[i].tag_name + '</div></div><div class="search-amount"><div class="amount-label">Amount</div><div class="amount-value">' + globalObject.expense_search_data[i].amount + '</div></div></div>';			
+									let dates = getDateFromEpoch(globalObject.expenses_in_month[i].date);
+									let date = formCustomDateFormat(dates);
+									expense_search_data_string += '<div class="expense-bag search-bag"><div class="search-tag"><div class="tag-label">Tag</div><div class="tag-value">' + globalObject.expenses_in_month[i].tag_name + '</div></div><div class="search-amount"><div class="amount-label">Amount</div><div class="amount-value">' + globalObject.expenses_in_month[i].amount + '</div></div><div class="search-date"><div class="date-label">Date</div><div class="date-value">' + date + '</div></div></div>';			
 								}
 							}
 							$('#expense_search_data').html(expense_search_data_string);
@@ -464,7 +468,6 @@
 					url:"/BudgetChummy/api/v1/getUsers",
 					success:function(data){
 						NProgress.done();
-						$('.loader').removeClass('active');
 						if(data != null)
 						{
 							var obj;
