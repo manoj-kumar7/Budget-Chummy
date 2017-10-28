@@ -6,8 +6,16 @@
 <title>BudgetChummy :)</title>
 <link rel="stylesheet" href="styles/style.css" type="text/css">
 <script type="text/javascript" src="app/jquery-3.1.1.js"></script>
+<script src="https://apis.google.com/js/platform.js?onload=onGoogleLoad" async defer></script>
+<meta name="google-signin-client_id" content="1030027078466-lmvc5lqlkq1llqasuomhj2cnh6fv4at9.apps.googleusercontent.com">
 
 <script type="text/javascript">
+var onGoogleLoad = function(){
+    gapi.load('auth2', function() {
+    	gapi.auth2.init();
+    });
+}
+	
 $(document).ready(function(){
 
 	if(<%= session.getAttribute("account_id") != null %> && <%=request.getParameter("account_id")%> != null && <%=request.getParameter("invitation_id")%> != null)

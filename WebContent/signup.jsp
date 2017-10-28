@@ -7,6 +7,8 @@
 <link rel="stylesheet" href="styles/style.css" type="text/css">
 <script type="text/javascript" src="app/jquery-3.1.1.js"></script>
 <script type="text/javascript" src="app/nprogress.js"></script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<meta name="google-signin-client_id" content="1030027078466-lmvc5lqlkq1llqasuomhj2cnh6fv4at9.apps.googleusercontent.com">
 <link rel="stylesheet" href="styles/nprogress.css" type="text/css">
 <script type="text/javascript">
 $(document).ready(function(){
@@ -104,8 +106,16 @@ $(document).ready(function(){
 	$('#signup').on('click', function(){
 		signup();
 	});
-});
 
+
+});
+var onSignIn = function(googleUser) {
+  var profile = googleUser.getBasicProfile();
+  var user_name = profile.getName();
+  var email = profile.getEmail();
+  var id_token = googleUser.getAuthResponse().id_token;
+  google_signup(id_token);
+}
 </script>
 </head>
 <body>
@@ -113,6 +123,10 @@ $(document).ready(function(){
 if(session.getAttribute("account_id") != null)
 {
 	response.sendRedirect("home");
+}
+else if(session.getAttribute("user_id") != null)
+{
+	response.sendRedirect("ChooseAccount");
 }
 %>
 	<div class="signup-page">
@@ -134,6 +148,8 @@ if(session.getAttribute("account_id") != null)
 					<input type="hidden" id="account_id" value="<%=request.getParameter("account_id") %>" name="account_id">
 					<input type="hidden" id="invitation_id" value="<%=request.getParameter("invitation_id") %>" name="invitation_id">
 					<button id="signup" class="signup bc-btn bc-firstpage-btn" value="Signup"><span>Signup</span></button>
+					<div class="or-text">or</div>
+					<button class="g-signin2" data-onsuccess="onSignIn"></button>
 				</div>
 			
 		</div>

@@ -34,7 +34,41 @@
 					}
 				});	
 			}
-			
+			var google_login = function(id_token){
+				var account_id = $('#account_id').val();
+				var invitation_id = $('#invitation_id').val();
+				$.ajax({
+					type:"POST",
+					url:"/BudgetChummy/api/v1/login/google",
+					data:{id_token:id_token,account_id:account_id,invitation_id:invitation_id},
+					async: false,
+					success:function(data){
+						//showAjaxSuccessMessage("Signed up successfully");
+						if(account_id=="null" || invitation_id=="null")
+						{
+							location.href = "ChooseAccount";
+						}
+						else
+						{
+							location.href = "AccountAuthentication?account_id="+account_id+"&invitation_id="+invitation_id;
+						}
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						if(jqXHR.status == 401)
+						{
+							showAjaxFailureMessage("Invalid email and/or password");
+						}
+						else if(jqXHR.status == 403)
+						{
+							location.href = "error";
+						}
+						else if(jqXHR.status == 9001)
+						{
+							showAjaxFailureMessage("Your google account needs to be verified");
+						}
+					}
+				});	
+			}			
 			var signup_ajax_call=function(){
 				NProgress.start();
 				var firstname = $('#firstname').val();
@@ -72,7 +106,42 @@
 					}
 				});	
 			}
-			
+			var google_signup = function(id_token){
+				var account_id = $('#account_id').val();
+				var invitation_id = $('#invitation_id').val();
+				var created_date_time = getAccountTimeZoneEpoch();
+				$.ajax({
+					type:"POST",
+					url:"/BudgetChummy/api/v1/signUp/google",
+					data:{id_token:id_token,account_id:account_id,invitation_id:invitation_id, created_date_time:created_date_time},
+					async: false,
+					success:function(data){
+						//showAjaxSuccessMessage("Signed up successfully");
+						if(account_id=="null" || invitation_id=="null")
+						{
+							location.href = "CreateAccount";
+						}
+						else
+						{
+							location.href = "AccountAuthentication?account_id="+account_id+"&invitation_id="+invitation_id;
+						}
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						if(jqXHR.status == 400)
+						{
+							showAjaxFailureMessage("Invalid credentials");
+						}
+						else if(jqXHR.status == 401)
+						{
+							showAjaxFailureMessage("This email address already has a BC account");
+						}
+						else if(jqXHR.status == 9001)
+						{
+							showAjaxFailureMessage("Your google account needs to be verified");
+						}
+					}
+				});	
+			}
 			var activate_account_ajax_call = function(code, email){
 				$.ajax({
 					type:"POST",
@@ -771,6 +840,7 @@
 					async: false,
 					success:function()
 					{
+						google_logout();
 						if(!join_account)
 						{
 							location.href = "BC";
@@ -783,6 +853,12 @@
 				});	
 			}
 			
+			var google_logout = function(){
+			    var auth2 = gapi.auth2.getAuthInstance();
+			    auth2.signOut().then(function () {
+			      console.log('User signed out.');
+			    });
+			}
 			var showAjaxSuccessMessage=function(data){
 				$('#ajax-success-box .content').text(data);
 				$('#ajax-success-box').show();

@@ -37,10 +37,9 @@ var addExpensesToArray = function(obj, start_date, end_date, addOnlyOnce)
 
 var findStartOfWeeklyExpense = function(start_date, epochOfFirstDayOfMonth){
 	var temp = new Date(start_date);
-	temp.setTime(addDaysToDate(d_start, 7));
 	while(temp < epochOfFirstDayOfMonth)
 	{
-		temp.setTime(addDaysToDate(d_start, 7));
+		temp.setTime(addDaysToDate(temp, 7));
 	}
 	return temp;
 }

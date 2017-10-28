@@ -32,6 +32,21 @@
 		    <artifactId>jbcrypt</artifactId>
 		    <version>0.4</version>
 		</dependency>
+		<dependency>
+		  <groupId>com.google.api-client</groupId>
+		  <artifactId>google-api-client</artifactId>
+		  <version>1.23.0</version>
+		</dependency>
+		<dependency>
+		  <groupId>com.google.api-client</groupId>
+		  <artifactId>google-api-client-servlet</artifactId>
+		  <version>1.23.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.google.api-client</groupId>
+		    <artifactId>google-api-client-gson</artifactId>
+		    <version>1.23.0</version>
+		</dependency>
     </dependencies>
   <build>
     <sourceDirectory>src</sourceDirectory>

@@ -36,6 +36,8 @@
 	<link rel="stylesheet" href="styles/font-awesome.css" type="text/css">
 	<link rel="stylesheet" href="styles/jquery-ui.css" type="text/css">
 	<link rel="stylesheet" href="styles/nprogress.css" type="text/css">
+	<script src="https://apis.google.com/js/platform.js?onload=onGoogleLoad" async defer></script>
+	<meta name="google-signin-client_id" content="1030027078466-lmvc5lqlkq1llqasuomhj2cnh6fv4at9.apps.googleusercontent.com">
 	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDtFLcyhDfgarOIcwf-4qiScchMGJS25jo"></script>
 	<script type="text/javascript">
 	function globalFunction(){
@@ -57,6 +59,11 @@
 	}
 	var globalObject = new globalFunction();
 	
+	var onGoogleLoad = function(){
+        gapi.load('auth2', function() {
+        	gapi.auth2.init();
+        });
+	}
 	$(document).ready(function(){
 		getAccounts_ajax_call("home");
 /* 		open_page(event,'income');
