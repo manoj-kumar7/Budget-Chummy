@@ -208,6 +208,10 @@
 		  $(document).on('click','#offline-radio',function(){
 			  $('#set-offline-code').css("display","block");
 		  });
+
+		  $(document).on('click','.add-account-icon',function(){
+			  $('#addAccountModal').modal('show');
+		  });
 		  
 		 $(document).on('click','#budget-type-dropdown',function(){
 			 var value = $('#budget-type-dropdown').val();
@@ -358,6 +362,10 @@
 		    });
 		    $('#add-user-send').on('click', function(){
 		    	add_user_ajax_call();	
+		    });
+		    $('#add-account').on('click', function(){
+		    	var account_name = $('#addaccountname').val();
+		    	create_account_ajax_call(account_name);	
 		    });
 		    $('#users-invitations').on('click', function(){
 		    	pending_invitations_ajax_call();
@@ -706,7 +714,7 @@
 <div class="right">
 	<div class="right-content">
 		<div id="accounts-right-slider" class="right-slider">
-			<div id="accounts-heading"><span>ACCOUNTS</span></div>
+			<div id="accounts-heading"><span class="heading">ACCOUNTS</span><span class="icon-plus-sign add-account-icon"></span></div>
 			<div id="home-accounts-list"></div>
 		</div>
 		
@@ -718,6 +726,25 @@
 	<button id="logout" class="logout" value="Logout">Logout</button>
 </div>
  
+  <div class="modal add-account-modal" id="addAccountModal" role="dialog" style="display:none;">
+    <div class="modal-dialog">
+
+      <div class="modal-content">
+        <div class="modal-header">
+        	<img src="images/close-icon.png" class="icon close-icon" alt="Close" data-dismiss="modal">
+			<h4 class="modal-title">Add Account</h4>
+        </div>
+        <div class="modal-body">
+        	<div class="account-name-label">Account name</div>
+			<input type="text" name="account_name" id="addaccountname" class="textbox formvalidation name">
+        </div>
+        <div class="modal-footer">
+        	<button id="add-account" class="add-account btn" value="Add">Add</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
 
   <div class="modal show-location-modal" id="showLocationModal" role="dialog" style="display:none;">
     <div class="modal-dialog">

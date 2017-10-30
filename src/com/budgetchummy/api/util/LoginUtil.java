@@ -57,7 +57,14 @@ public class LoginUtil {
 				// {
 				// 	valid = true;
 				// }
-				valid = PasswordUtil.verifyPassword(pword, password);
+				if(password == null || password == "")
+				{
+					valid = false;
+				}
+				else
+				{
+					valid = PasswordUtil.verifyPassword(pword, password);
+				}
 			}	
 			rs.close();
 			st.close();

@@ -1,5 +1,6 @@
 var emailErrorText = "Invalid email address";
-var passwordErrorText = "A password can contain maximum of 16 characters with lowercase, uppercase, numbers and special characters (!@#$%^-_')";
+var passwordSignUpErrorText = "A password can contain maximum of 16 characters with lowercase, uppercase, numbers and special characters (!@#$%^-_')";
+var passwordLoginErrorText = "Password cannot be empty";
 var nameErrorText = "A name can contain maximum of 16 characters with lowercase, uppercase, numbers and special characters (!@#$%^-_' )";
 var cookiesDisabledMessage = "Browser cookies are disabled. Enable your cookies and try again.";
 

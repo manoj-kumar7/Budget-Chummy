@@ -157,8 +157,7 @@
 				});	
 			}
 
-			var create_account_ajax_call=function(){
-				var accountname = $('#accountname').val();
+			var create_account_ajax_call=function(accountname){
 				var timezone = getAccountTimeZone();
 				var created_date_time = getAccountTimeZoneEpoch();
 				$.ajax({

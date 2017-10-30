@@ -434,6 +434,16 @@ html, body {
     font-size: 20px;
     padding-left: 15px;
 }
+#accounts-heading .heading{
+  padding-right: 15px;
+}
+#accounts-heading .add-account-icon{
+  color: #7b7b7b;
+  cursor: pointer;
+}
+#accounts-heading .add-account-icon:hover{
+  color: #368cb2;
+}
 .budget-header{
 	font-size: 14px;
 	margin-top: 5px;
@@ -1038,6 +1048,10 @@ div.tab button.active .tab-title{
   font-size: 30px;
 }
 
+#addAccountModal .account-name-label{
+  float: left;
+  padding: 10px 20px 10px 10px;
+}
 #addUserModal .add-user-email-text{
   padding-top: 5px;
   padding-bottom: 10px;

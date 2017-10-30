@@ -26,11 +26,12 @@ public class logoutServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		HttpSession session = request.getSession(false);
-
-		session.removeAttribute("user_id");
-		session.removeAttribute("account_id");
-		session.invalidate();
-
+		if(session != null)
+		{
+			session.removeAttribute("user_id");
+			session.removeAttribute("account_id");
+			session.invalidate();			
+		}
 //		response.sendRedirect("BC");
 	}
 

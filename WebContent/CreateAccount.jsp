@@ -62,7 +62,8 @@ $(document).ready(function(){
 	});
 
 	$('#create-account').on('click',function(){
-		createAccount();
+		var account_name = $('#accountname').val();
+		create_account_ajax_call(account_name);
 	});
 
 });

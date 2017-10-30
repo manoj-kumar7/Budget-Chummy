@@ -33,7 +33,7 @@ $(document).ready(function(){
 		}
 		else if($(e.target).hasClass('pword'))
 		{
-			if (validatePassword(text) || text == "")
+			if (text != "")
 			{
 				$(e.target).removeClass('validation-err-box');
 				$('#hintbox').hide();
@@ -41,7 +41,7 @@ $(document).ready(function(){
 			else
 			{
 				$(e.target).addClass('validation-err-box');
-				$('#hintbox .content').text(passwordErrorText);
+				$('#hintbox .content').text(passwordLoginErrorText);
 				$('#hintbox').css('top',$('#pword').offset().top).css('left',$('#pword').offset().left + $('#pword').width() + 20);
 				$('#hintbox').show();
 			}		
@@ -63,7 +63,7 @@ $(document).ready(function(){
 					}
 					else if($(validation_fields[i]).hasClass('pword'))
 					{
-						$('#hintbox .content').text(passwordErrorText);
+						$('#hintbox .content').text(passwordLoginErrorText);
 						$('#hintbox').css('top',$('#pword').offset().top).css('left',$('#pword').offset().left + $('#pword').width() + 20);
 					}
 					$('#hintbox').show();
