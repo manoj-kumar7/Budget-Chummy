@@ -2,6 +2,7 @@ var emailErrorText = "Invalid email address";
 var passwordSignUpErrorText = "A password can contain maximum of 16 characters with lowercase, uppercase, numbers and special characters (!@#$%^-_')";
 var passwordLoginErrorText = "Password cannot be empty";
 var nameErrorText = "A name can contain maximum of 16 characters with lowercase, uppercase, numbers and special characters (!@#$%^-_' )";
+var accountNameErrorText = "An account name can contain maximum of 30 characters with lowercase, uppercase, numbers and special characters (!@#$%^-_' )";
 var cookiesDisabledMessage = "Browser cookies are disabled. Enable your cookies and try again.";
 
 var amountRegex = new RegExp("^\\d+(\\.\\d+)?$");
@@ -25,6 +26,10 @@ function validatePassword(pword){
 
 function validateName(name){
 	var re = /^[a-zA-Z0-9!@#$%^-_' ]{1,16}$/;
+	return re.test(name);
+}
+function validateAccountName(name){
+	var re = /^[a-zA-Z0-9!@#$%^-_' ]{1,30}$/;
 	return re.test(name);
 }
 

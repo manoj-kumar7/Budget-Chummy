@@ -27,6 +27,8 @@ public interface APIConstants {
 //		public static final String POSTGRESQL_URL = "jdbc:postgresql://localhost:5432/budgetchummy";
 //		public static final String POSTGRESQL_USERNAME = "manojbc";
 //		public static final String POSTGRESQL_PASSWORD = "manojbc";
+//		
+
 //
 //		public static final String rootURL = "http://localhost:8080/BudgetChummy/";
 }

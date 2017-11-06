@@ -365,7 +365,14 @@
 		    });
 		    $('#add-account').on('click', function(){
 		    	var account_name = $('#addaccountname').val();
-		    	create_account_ajax_call(account_name);	
+		    	if(account_name != "" && validateAccountName(account_name))
+	    		{
+		    		create_account_ajax_call(account_name);	
+	    		}
+		    	else
+	    		{
+		    		showAjaxFailureMessageHome("Invalid Input");
+	    		}
 		    });
 		    $('#users-invitations').on('click', function(){
 		    	pending_invitations_ajax_call();

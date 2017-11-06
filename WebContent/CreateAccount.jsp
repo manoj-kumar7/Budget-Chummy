@@ -14,7 +14,7 @@ $(document).ready(function(){
 		var text = $(this).val();
 		if($(e.target).hasClass('name'))
 		{
-			if (validateName(text) || text == "")
+			if (validateAccountName(text) || text == "")
 			{
 				$(e.target).removeClass('validation-err-box');
 				$('#hintbox').hide();
@@ -22,7 +22,7 @@ $(document).ready(function(){
 			else
 			{
 				$(e.target).addClass('validation-err-box');
-				$('#hintbox .content').text(nameErrorText);
+				$('#hintbox .content').text(accountNameErrorText);
 				$('#hintbox').css('top',$('#accountname').offset().top).css('left',$('#accountname').offset().left + $('#accountname').width() + 20);
 				$('#hintbox').show();
 			}
@@ -39,7 +39,7 @@ $(document).ready(function(){
 				{
 					if($(validation_fields[i]).hasClass('name'))
 					{
-						$('#hintbox .content').text(nameErrorText);
+						$('#hintbox .content').text(accountNameErrorText);
 						$('#hintbox').css('top',$('#accountname').offset().top).css('left',$('#accountname').offset().left + $('#accountname').width() + 20);
 					}
 					$('#hintbox').show();
@@ -63,8 +63,7 @@ $(document).ready(function(){
 	});
 
 	$('#create-account').on('click',function(){
-		var account_name = $('#accountname').val();
-		create_account_ajax_call(account_name);
+		createAccount();
 	});
 
 });

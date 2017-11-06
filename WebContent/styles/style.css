@@ -183,7 +183,7 @@ html, body {
   top: 35%;
   bottom: 0;
   text-align: center;
-  width: 20%;
+  width: 25%;
 }
 
 .firstpage-textbox-space .textbox_space {
@@ -277,6 +277,7 @@ html, body {
     width: 215px;
     height: 250px;
     margin-right: 40px;
+    margin-bottom: 40px;
     float: left;
     padding: 3px 3px;
     cursor: pointer;
