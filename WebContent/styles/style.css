@@ -20,8 +20,8 @@ html, body {
 }
 .bc-lead-container{
 	position: absolute;
-	top: 20%;
-	left: 4%;
+	top: 200px;
+	left: 100px;
 }
 
 .bc-lead-tagline{
@@ -56,7 +56,7 @@ html, body {
 	float: right;
     margin-right: 15px;
     margin-top: 5px;
-    font-size: 14px;
+    font-size: 16px;
     font-family: Graphik LC Web,-apple-system,system-ui,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,sans-serif;
 }
 .firstpage-top-btn{
@@ -67,8 +67,8 @@ html, body {
 
 .get-started-btn-div{
     position: absolute;
-    top: 55%;
-    left: 4%;
+    top: 400px;
+    left: 87px;
 }
 
 .get-started-btn-div .get-started-btn{
@@ -119,7 +119,7 @@ html, body {
 	top: 25%;
 	bottom: 0;
 	text-align: center;
-	width: 20%;
+	width: 25%;
 }
 
 #signup-form-div{
@@ -130,7 +130,7 @@ html, body {
   top: 15%;
   bottom: 0;
   text-align: center;
-  width: 20%;
+  width: 25%;
 }
 #login, #signup{
 	width: 120px !important;
@@ -173,7 +173,7 @@ html, body {
   top: 35%;
   bottom: 0;
   text-align: center;
-  width: 20%;
+  width: 25%;
 }
 #join-acc-authentication{
   position: absolute;
