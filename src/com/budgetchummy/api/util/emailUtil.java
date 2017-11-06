@@ -9,25 +9,31 @@ import com.budgetchummy.api.util.APIConstants;
 
 public class emailUtil {
 
-	private static String emailId = "manoj.budgetchummy@yahoo.com";
-	private static String password = "Manoj@bc1";
-
+	private static String emailId = APIConstants.EMAIL;
+	private static String password = APIConstants.EMAIL_PASSWORD;
+	private static String host = "smtpout.asia.secureserver.net";
+	private static int port = 465;
+			
 	public static void sendMail(String to, String subject, String messageBody)
 	{
 		Properties properties = System.getProperties();
-		properties.setProperty("mail.smtp.host", "smtp.mail.yahoo.com");
+//		properties.setProperty("mail.smtp.host", "smtp.mail.yahoo.com");
+		properties.setProperty("mail.transport.protocol", "smtp");
+		properties.setProperty("mail.host", host);
 		properties.put("mail.smtp.auth", "true");
+		properties.setProperty("mail.user", emailId);
+		properties.setProperty("mail.password", password);
 		if(APIConstants.isProduction)
 		{
-			properties.put("mail.smtp.starttls.enable", "true");
-			properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-			properties.put("mail.smtp.socketFactory.port", "587");
-			properties.put("mail.smtp.port", "587");
+//			properties.put("mail.smtp.starttls.enable", "true");
+//			properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+//			properties.put("mail.smtp.socketFactory.port", port);
+//			properties.put("mail.smtp.port", port);
 		}
 		else
 		{
 			properties.put("mail.smtp.starttls.enable", "true");
-			properties.put("mail.smtp.port", "587");
+//			properties.put("mail.smtp.port", port);
 		}
 
 		Session session = Session.getInstance(properties,new javax.mail.Authenticator()
@@ -37,15 +43,19 @@ public class emailUtil {
 	 			return new PasswordAuthentication(emailId, password);
 	  	  	}
 	   	});	
-		//session.setDebug(true);
 
 	   	try{
+//	   		Session session = Session.getDefaultInstance(properties, null);
+//	   		session.setDebug(true);
+	   		Transport transport = session.getTransport("smtp");
  		 	MimeMessage message = new MimeMessage(session);
           	message.setFrom(new InternetAddress(emailId));
           	message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
           	message.setSubject(subject);
-          	message.setContent(messageBody, "text/html");	        	  
-          	Transport.send(message);
+          	message.setContent(messageBody, "text/html");	   
+          	transport.connect(host, emailId, password);
+          	transport.send(message);
+          	transport.close();
 	          
         }catch (MessagingException mex) {
           	mex.printStackTrace();

@@ -49,7 +49,8 @@ $(document).ready(function(){
 		}
 		else
 		{
-			create_account_ajax_call();
+			var account_name = $('#accountname').val();
+			create_account_ajax_call(account_name);
 			$('#create-account').prop('disabled',true);
 			enterKeyPressed = true;
 		}
