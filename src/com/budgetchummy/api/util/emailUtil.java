@@ -23,18 +23,6 @@ public class emailUtil {
 		properties.put("mail.smtp.auth", "true");
 		properties.setProperty("mail.user", emailId);
 		properties.setProperty("mail.password", password);
-		if(APIConstants.isProduction)
-		{
-//			properties.put("mail.smtp.starttls.enable", "true");
-//			properties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-//			properties.put("mail.smtp.socketFactory.port", port);
-//			properties.put("mail.smtp.port", port);
-		}
-		else
-		{
-			properties.put("mail.smtp.starttls.enable", "true");
-//			properties.put("mail.smtp.port", port);
-		}
 
 		Session session = Session.getInstance(properties,new javax.mail.Authenticator()
 	    {
@@ -45,7 +33,6 @@ public class emailUtil {
 	   	});	
 
 	   	try{
-//	   		Session session = Session.getDefaultInstance(properties, null);
 //	   		session.setDebug(true);
 	   		Transport transport = session.getTransport("smtp");
  		 	MimeMessage message = new MimeMessage(session);
