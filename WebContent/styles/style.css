@@ -308,6 +308,8 @@ html, body {
 }
 #accounts-list .accounts span{
     font-size: 20px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 #home-accounts-list .home-accounts{
@@ -709,9 +711,12 @@ html, body {
 }
 
 .location-icon{
-	width:25px;
-	height:25px;
-	cursor: pointer;
+  font-size: 15px;
+  color: #808080;
+  padding-left: 5px;
+}
+.location-icon:hover{
+  color: #000;
 }
 .close-icon{
 	padding-left: 5px;	
@@ -738,6 +743,22 @@ html, body {
 }
 .icon{
 	margin: 3px 3px;
+}
+.icon-clickable{
+	cursor: pointer;
+}
+.icon-edit.income-edit, .icon-edit.expense-edit{
+  font-size: 15px;
+  color: #808080;
+}
+.icon-edit.budget-edit{
+  font-size: 20px;
+  color: #808080;
+  float: right;
+  line-height: 40px;
+}
+.icon-edit:hover{
+  color: #000;
 }
 
 .dropdown{
@@ -893,15 +914,7 @@ div.tab button.active .tab-title{
 	height:300px;
 	width:100%;
 }
-.income-show-more{
-    text-align:center;
-    font-weight: bold;
-}
-.income-show-more span{
-    background-color:#d3d3d3;
-    padding: 3px;
-    cursor: pointer;
-}
+
 .income-additional-info-div{
 	display:none;
 }
@@ -910,14 +923,41 @@ div.tab button.active .tab-title{
 	height:300px;
 	width:100%;
 }
-.expense-show-more{
+.generic-show-more{
     text-align:center;
-    font-weight: bold;
-}
-.expense-show-more span{
-    background-color:#d3d3d3;
-    padding: 3px;
+    font-weight: 500;
+    width: 100%;
+    background-color:#9a9a9a;
+    padding: 6px 0px;
     cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: #fff;
+}
+.transaction-delete{
+  display: none;
+  background-color: #f4511e;
+  color: #fff;
+  padding: 6px 0px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.transaction-save{
+  background-color: #43bf58;
+  color: #fff;
+  padding: 6px 0px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 10px;
+  font-weight: 500;
 }
 .expense-additional-info-div{
 	display:none;
@@ -984,6 +1024,12 @@ div.tab button.active .tab-title{
 }
 .date-col,.tag-col,.description-col,.addedby-col{
 	width: 15%;
+}
+.location-col{
+  width: 24%;
+}
+.edit-col{
+  width: 5%;
 }
 
 

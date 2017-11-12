@@ -420,11 +420,217 @@
 						NProgress.done();
 						$('.generic-save').removeAttr("disabled")
 						$('#generic-modal-form').find('.close-icon').click();
-						// get_budget_ajax_call(month, year);
+						get_budget_ajax_call(month, year);
 					},
 					error:function(jqXHR, txtStatus, errThrown){
 						NProgress.done();
 						$('.generic-save').removeAttr("disabled")
+						if(jqXHR.status == 401)
+						{
+							location.href = "login";
+						}
+					}
+
+				});
+		 	}
+		 	var edit_income_ajax_call=function(month,year)
+		 	{
+		 		var tid = $('#edit-tid').val();
+				var amount = $('.generic-amount').val();
+				var date = $('.generic-datepicker').val();
+				var tag_id = $('.saved-tags-dropdown').val();
+				var add_info = $('.generic-additional-info').val();
+				var location = $('.generic-location').val();
+				var lat = $('.generic-location-lat').val();
+				var lon = $('.generic-location-lon').val();
+				var description = $('.generic-description').val();
+				var repeat = $('.generic-repeat-dropdown').val();
+				var reminder = $('.generic-reminder-dropdown').val();
+				var ok = validateIncomeExpenseData(amount, date, tag_id, add_info, location, lat, lon, description, repeat, reminder);
+				if(!ok)
+				{
+					showAjaxFailureMessageHome("Invalid Input");
+					return;
+				}
+				amount = parseFloat(amount).toFixed(2);
+				date = dateToEpoch(date);
+				$('.generic-save').attr("disabled", "disabled");
+				NProgress.start();
+				$.ajax({
+					type:"POST",
+					url:"/BudgetChummy/api/v1/income/edit",
+					data:{transaction_id: tid, amount:amount, date:date, tag_id:tag_id, add_info:add_info, location: location, location_lat:lat, location_lon:lon, description:description, repeat:repeat, reminder:reminder},
+					success:function(data){
+						NProgress.done();
+						$('.generic-save').removeAttr("disabled")
+						$('#generic-modal-form').find('.close-icon').click();
+						get_income_ajax_call(globalObject.month, globalObject.year);
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
+						$('.generic-save').removeAttr("disabled")
+						if(jqXHR.status == 401)
+						{
+							location.href = "login";
+						}
+					}
+
+				});
+		 	}
+		 	var edit_expense_ajax_call=function(month,year)
+		 	{
+		 		var tid = $('#edit-tid').val();
+				var amount = $('.generic-amount').val();
+				var date = $('.generic-datepicker').val();
+				var tag_id = $('.saved-tags-dropdown').val();
+				var add_info = $('.generic-additional-info').val();
+				var location = $('.generic-location').val();
+				var lat = $('.generic-location-lat').val();
+				var lon = $('.generic-location-lon').val();
+				var description = $('.generic-description').val();
+				var repeat = $('.generic-repeat-dropdown').val();
+				var reminder = $('.generic-reminder-dropdown').val();
+				var ok = validateIncomeExpenseData(amount, date, tag_id, add_info, location, lat, lon, description, repeat, reminder);
+				if(!ok)
+				{
+					showAjaxFailureMessageHome("Invalid Input");
+					return;
+				}
+				amount = parseFloat(amount).toFixed(2);
+				date = dateToEpoch(date);
+				$('.generic-save').attr("disabled", "disabled");
+				NProgress.start();
+				$.ajax({
+					type:"POST",
+					url:"/BudgetChummy/api/v1/expense/edit",
+					data:{transaction_id: tid, amount:amount, date:date, tag_id:tag_id, add_info:add_info, location: location, location_lat:lat, location_lon:lon, description:description, repeat:repeat, reminder:reminder},
+					success:function(data){
+						NProgress.done();
+						$('.generic-save').removeAttr("disabled")
+						$('#generic-modal-form').find('.close-icon').click();
+						get_expense_ajax_call(globalObject.month, globalObject.year, "expense");
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
+						$('.generic-save').removeAttr("disabled")
+						if(jqXHR.status == 401)
+						{
+							location.href = "login";
+						}
+					}
+
+				});
+		 	}
+		 	var edit_budget_ajax_call=function(month,year)
+		 	{
+		 		var bid = $('#edit-bid').val();
+				var budget_type = $('#budget-type-dropdown').val();
+				var tag_id = $('.saved-tags-dropdown').val() || -1;
+				var budget_repeat = $('#budget-repeat-dropdown').val();
+				var start_date = $('#budget-start-datepicker').val() || -1;
+				var end_date = $('#budget-end-datepicker').val() || -1;
+				var amount = $('#budget-amount').val();
+				var description = $('#budget-description').val();
+				var ok = validateBudgetData(budget_type, tag_id, budget_repeat, start_date, end_date, amount, description);
+				if(!ok)
+				{
+					showAjaxFailureMessageHome("Invalid Input");
+					return;
+				}
+				amount = parseFloat(amount).toFixed(2);
+				start_date = dateToEpoch(start_date);
+				end_date = dateToEpoch(end_date);
+				$('.generic-save').attr("disabled", "disabled");
+				NProgress.start();
+				$.ajax({
+					type:"POST",
+					url:"/BudgetChummy/api/v1/budget/edit",
+					data:{budget_id:bid, budget_type:budget_type, tag_id:tag_id, budget_repeat:budget_repeat, budget_start_date:start_date, budget_end_date:end_date, budget_amount:amount, budget_description:description},
+					success:function(data){
+						NProgress.done();
+						$('.generic-save').removeAttr("disabled")
+						$('#generic-modal-form').find('.close-icon').click();
+						get_budget_ajax_call(month, year);
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
+						$('.generic-save').removeAttr("disabled")
+						if(jqXHR.status == 401)
+						{
+							location.href = "login";
+						}
+					}
+
+				});
+		 	}
+
+		 	var delete_income_ajax_call = function(){
+		 		var tid = $('#edit-tid').val();
+				$('.generic-delete').attr("disabled", "disabled");
+				NProgress.start();
+				$.ajax({
+					type:"POST",
+					url:"/BudgetChummy/api/v1/income/delete",
+					data:{transaction_id: tid},
+					success:function(data){
+						NProgress.done();
+						$('.generic-delete').removeAttr("disabled");
+						$('#generic-modal-form').find('.close-icon').click();
+						get_income_ajax_call(globalObject.month, globalObject.year, "expense");
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
+						$('.generic-delete').removeAttr("disabled");
+						if(jqXHR.status == 401)
+						{
+							location.href = "login";
+						}
+					}
+
+				});
+		 	}
+		 	var delete_expense_ajax_call = function(){
+		 		var tid = $('#edit-tid').val();
+				$('.generic-delete').attr("disabled", "disabled");
+				NProgress.start();
+				$.ajax({
+					type:"POST",
+					url:"/BudgetChummy/api/v1/expense/delete",
+					data:{transaction_id: tid},
+					success:function(data){
+						NProgress.done();
+						$('.generic-delete').removeAttr("disabled");
+						$('#generic-modal-form').find('.close-icon').click();
+						get_expense_ajax_call(globalObject.month, globalObject.year, "expense");
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
+						$('.generic-delete').removeAttr("disabled");
+						if(jqXHR.status == 401)
+						{
+							location.href = "login";
+						}
+					}
+
+				});
+		 	}
+		 	var delete_budget_ajax_call = function(){
+		 		var bid = $('#edit-bid').val();
+				$('.generic-delete').attr("disabled", "disabled");
+				NProgress.start();
+				$.ajax({
+					type:"POST",
+					url:"/BudgetChummy/api/v1/budget/delete",
+					data:{budget_id: bid},
+					success:function(data){
+						NProgress.done();
+						$('.generic-delete').removeAttr("disabled");
+						$('#generic-modal-form').find('.close-icon').click();
+						// get_budget_ajax_call(globalObject.month, globalObject.year);
+					},
+					error:function(jqXHR, txtStatus, errThrown){
+						NProgress.done();
+						$('.generic-delete').removeAttr("disabled");
 						if(jqXHR.status == 401)
 						{
 							location.href = "login";
@@ -768,14 +974,30 @@
 					type:"GET",
 					url:"/BudgetChummy/api/v1/tags",
 					data:{tag_type:tag_type},
+					async: false,
 					success:function(data){
 						if(data != null)
 						{
 							$('#saved-tags-dropdown').html("");
+							if(tag_type == "income")
+							{
+								globalObject.income_tags_list = [];
+							}
+							else if(tag_type == "expense")
+							{
+								globalObject.expense_tags_list = [];
+							}
 							for(var i=0;i<data.length;i++)
 							{
 								var obj = jQuery.parseJSON(data[i]);
-								globalObject.tags_list.push(obj.tag_name);
+								if(tag_type == "income")
+								{
+									globalObject.income_tags_list.push({'tag_id': obj.tag_id, 'tag_name': obj.tag_name});
+								}
+								else if(tag_type == "expense")
+								{
+									globalObject.expense_tags_list.push({'tag_id': obj.tag_id, 'tag_name': obj.tag_name});
+								}
 								$("#saved-tags-dropdown").append("<option value='"+obj.tag_id+"'>"+obj.tag_name+"</option>");
 							}
 						}

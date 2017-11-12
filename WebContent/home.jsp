@@ -55,7 +55,8 @@
 		this.month = this.d.getMonth() + 1;
 		this.year = this.d.getFullYear();
 		this.current_page = "income";
-		this.tags_list = [];	
+		this.income_tags_list = [];	
+		this.expense_tags_list = [];	
 	}
 	var globalObject = new globalFunction();
 	
@@ -134,15 +135,15 @@
 			  $('.generic-modal').modal('show');
 			  if(globalObject.current_page == "income")
 			  {
-				  open_income_modal();
+				  open_income_modal(false);
 			  }
 			  else if(globalObject.current_page == "expense")
 			  {
-				  open_expense_modal();
+				  open_expense_modal(false);
 			  }
 			  else if(globalObject.current_page == "budget")
 			  {
-				  open_budget_modal();
+				  open_budget_modal(false);
 			  }
 		  });
 		  $(document).on('click','.home-accounts',function(){
@@ -167,15 +168,15 @@
 			  var selected = $('#generic-type-dropdown').val();
 			  if(selected == "income")
 			  {
-				  open_income_modal();
+				  open_income_modal(false);
 			  }
 			  else if(selected == "expense")
 			  {
-				  open_expense_modal();
+				  open_expense_modal(false);
 			  }
 			  else
 			  {
-				  open_budget_modal();
+				  open_budget_modal(false);
 			  }
 		  });
 		  
@@ -212,6 +213,25 @@
 		  $(document).on('click','.add-account-icon',function(){
 			  $('#addAccountModal').modal('show');
 		  });
+
+		  $(document).on('click','.income-edit',function(){
+		  		var tid = $(this).closest('tr').attr('data-tid');
+		  		$('.generic-modal').modal('show');
+			  	open_income_modal(true);
+			  	populateIncomeModalToEdit(tid);
+		  });
+		  $(document).on('click','.expense-edit',function(){
+		  		var tid = $(this).closest('tr').attr('data-tid');
+		  		$('.generic-modal').modal('show');
+			  	open_expense_modal(true);
+			  	populateExpenseModalToEdit(tid);
+		  });
+		  $(document).on('click','.budget-edit',function(){
+		  		var bid = $(this).closest('#budget-page-header').attr('data-bid');
+		  		$('.generic-modal').modal('show');
+			  	open_budget_modal(true);
+			  	populateBudgetModalToEdit(bid);
+		  });
 		  
 		 $(document).on('click','#budget-type-dropdown',function(){
 			 var value = $('#budget-type-dropdown').val();
@@ -245,6 +265,7 @@
 			  $('#saved-tags-dropdown').css("display","none");
 		  });
 		  $(document).on('focusout','#saved-tags-input',function(){
+		  		saveTag();
 			  $('#saved-tags-dropdown').css("display","inline-block");
 			  $('#saved-tags-input').css("display","none");
 			  $('#save-tag-hint').css("display","none");
@@ -263,25 +284,7 @@
 		  $(document).keypress(function(e) {
 			    if(e.which == 13) {
 			    	e.preventDefault();
-			    	var text = $('#saved-tags-input').val();
-			        if($('#saved-tags-input').length > 0 && text != "" && !is_in_tags_list(text))
-			        {
-			        	if($('#generic-modal-form').find('#addIncomeModal').length)
-		        		{
-			        		save_tag_ajax_call("income");
-				        	get_tags_ajax_call("income");
-		        		}
-			        	else if($('#generic-modal-form').find('#addExpenseModal').length)
-			        	{
-			        		save_tag_ajax_call("expense");
-				        	get_tags_ajax_call("expense");
-			        	}
-			        	else
-			        	{
-			        		save_tag_ajax_call("expense");
-				        	get_tags_ajax_call("expense");
-			        	}
-			        }
+			    	saveTag();
 				    $('.saved-tags-div').css("display","block");
 			        $('#saved-tags-input').css("display","none");
 			    }
@@ -387,6 +390,15 @@
 		    	var delete_user_id = $('#confirmDeleteUserModal').attr('for-user');
 		    	delete_user_ajax_call(delete_user_id);
 		    });
+		    $('#generic-modal-form').on('click', '#income-delete', function(){
+		    	delete_income_ajax_call();
+		    });
+		    $('#generic-modal-form').on('click', '#expense-delete', function(){
+		    	delete_expense_ajax_call();
+		    });
+		    $('#generic-modal-form').on('click', '#budget-delete', function(){
+		    	delete_budget_ajax_call();
+		    });
 		    $('#logout').click(function(){
 		    	logout_ajax_call(false);
 		    });
@@ -395,51 +407,137 @@
 				dateFormat : "yy/mm/dd"
 			});
 
-			$(document).on('click','.income-show-more span',function(e){
+			var incomeSlideUpInModal = function(){
+				$('.income-additional-info-div').slideUp().removeClass('active');
+				$('.income-show-more span').text('Store More');
+			    document.getElementById("income-additional-info").value = true;
+			}
+			var incomeSlideDownInModal = function(){
+				$('.income-additional-info-div').slideDown().addClass('active');
+				$('.income-show-more span').text('Store Less');
+			    document.getElementById("income-additional-info").value = false;
+			    myMap('income-location');
+			    resizeMap();
+			}
+			var expenseSlideUpInModal = function(){
+				$('.expense-additional-info-div').slideUp().removeClass('active');
+				$('.expense-show-more span').text('Store More');
+			    document.getElementById("expense-additional-info").value = false;
+			}
+			var expenseSlideDownInModal = function(){
+				$('.expense-additional-info-div').slideDown().addClass('active');
+				$('.expense-show-more span').text('Store Less');
+			    document.getElementById("expense-additional-info").value = true;
+			    myMap('expense-location');
+			    resizeMap();
+			}
+			$(document).on('click','.income-show-more',function(e){
 				  $('.income-show-more span').css("pointer-events","none");
-				  $('.income-additional-info-div').slideToggle().toggleClass('active');
-				  if ($('.income-additional-info-div').hasClass('active')) {
-				    $('.income-show-more span').text('Store necessary information');
-				    document.getElementById("income-additional-info").value = true;
-				    myMap('income-location');
-				    resizeMap();
-				  } else {
-				    $('.income-show-more span').text('Store additional information');
-				    document.getElementById("income-additional-info").value = false;
+				  if ($('.income-additional-info-div').hasClass('active')) 
+				  {
+				  	incomeSlideUpInModal();
+				  } 
+				  else 
+				  {
+				  	incomeSlideDownInModal();
 				  }
 				    setTimeout(function(){
 				    	$('.income-show-more span').css("pointer-events","auto");
 				    },300);
 			});
-			$(document).on('click','.expense-show-more span',function(e){
+			$(document).on('click','.expense-show-more',function(e){
 				  $('.expense-show-more span').css("pointer-events","none");
-				  $('.expense-additional-info-div').slideToggle().toggleClass('active');
-				  if ($('.expense-additional-info-div').hasClass('active')) {
-				    $('.expense-show-more span').text('Store necessary information');
-				    document.getElementById("expense-additional-info").value = true;
-					myMap('expense-location');
-				    resizeMap();
-				  } else {
-				    $('.expense-show-more span').text('Store additional information');
-				    document.getElementById("expense-additional-info").value = false;
+				  if ($('.expense-additional-info-div').hasClass('active')) 
+				  {
+				    expenseSlideUpInModal();
+				  } 
+				  else 
+				  {
+				    expenseSlideDownInModal();
 				  }
 				    setTimeout(function(){
 				    	$('.expense-show-more span').css("pointer-events","auto");
 				    },300);
 			});
 			
-			var is_in_tags_list = function(text){
-				text = text.trim();
-				for(var i=0; i<globalObject.tags_list.length ;i++)
+			var findTagIdWithTagName = function(tag_name, type){
+				var tag_id = -1;
+				if(type == "income")
 				{
-					if(globalObject.tags_list[i].toLowerCase() == text.toLowerCase())
+					var tags = globalObject.income_tags_list;
+				}
+				else if(type == "expense" || type == "budget")
+				{
+					var tags = globalObject.expense_tags_list;
+				}
+				for(var j=0; j<tags.length; j++)
+				{
+					if(tags[j].tag_name == tag_name)
+					{
+						tag_id = tags[j].tag_id;
+						break;
+					}
+				}
+				return tag_id;
+			}
+			var is_in_tags_list = function(text, modal){
+				text = text.trim();
+				if(modal == "income")
+				{
+					var tags_list = globalObject.income_tags_list;
+				}
+				else if(modal == "expense" || modal == "budget")
+				{
+					var tags_list = globalObject.expense_tags_list;
+				}
+				for(var i=0; i<tags_list.length ;i++)
+				{
+					if(tags_list[i].tag_name.toLowerCase() == text.toLowerCase())
 					{
 						return true;
 					}
 				}
 				return false;
 			}
-			var open_income_modal = function(){
+			var saveTag = function(){
+				var text = $('#saved-tags-input').val().trim();
+		    	if($('#generic-modal-form').find('#addIncomeModal').length)
+		    	{
+		    		var modal = "income";
+		    	}
+		    	else if($('#generic-modal-form').find('#addExpenseModal').length)
+		    	{
+		    		var modal = "expense";
+		    	}
+		    	else
+		    	{
+		    		var modal = "budget";
+		    	}
+		        if($('#saved-tags-input').length > 0 && text != "" && !is_in_tags_list(text, modal))
+		        {
+		        	if(modal == "income")
+	        		{
+		        		save_tag_ajax_call("income");
+			        	get_tags_ajax_call("income");
+	        		}
+		        	else if(modal == "expense" || modal == "budget")
+		        	{
+		        		save_tag_ajax_call("expense");
+			        	get_tags_ajax_call("expense");
+		        	}
+		        }
+		        var tag_id;
+		        if(modal == "income")
+		        {
+		        	tag_id = findTagIdWithTagName(text, "income");
+		        }
+		        else if(modal == "expense" || modal == "budget")
+		        {
+		        	tag_id = findTagIdWithTagName(text, "expense");
+		        }
+		        $("#saved-tags-dropdown").val(tag_id);  
+			}
+			var open_income_modal = function(isEdit){
 				  $(".budget-modal").css("display","none");
 				  $(".income-expense-modal").css("display","block");
 				  $(".income-expense-tags").html($(".saved-tags-div"));
@@ -448,7 +546,18 @@
 				  $('.generic-modal').addClass("add-income-modal");
 				  $('.generic-modal').attr("id","addIncomeModal");
 				  get_tags_ajax_call("income");
-				  $('#generic-type-dropdown').val("income");
+				  if(isEdit)
+				  {
+			  		$('#generic-type-dropdown').css('display', 'none');
+			  		$('#generic-type-heading').css('display', 'block');
+			  		$('#generic-type-heading').html("EDIT INCOME");
+				  }
+				  else
+				  {
+				  	$('#generic-type-dropdown').css('display', 'block');
+			  		$('#generic-type-heading').css('display', 'none');
+				  	$('#generic-type-dropdown').val("income");
+				  }
 				  $('.generic-amount').attr("name","income-amount");
 				  $('.generic-amount').attr("id","income-amount");
 				  $('.generic-datepicker').attr("name","income-date");
@@ -473,11 +582,20 @@
 				  $('.generic-repeat-dropdown').attr("id","income-repeat");
 				  $('.generic-reminder-dropdown').attr("name","income-reminder");
 				  $('.generic-reminder-dropdown').attr("id","income-reminder");
-				  $('.generic-save').attr("id","income-save");
-				  //$('#generic-modal-form').attr("action","income");
-				  //$('#generic-modal-form').attr("method","POST");
+				  if(isEdit)
+				  {
+				  	$('.generic-save').attr("id","income-edit");
+				  	$('.generic-delete').attr("id","income-delete");
+				  	$('.generic-delete').show();
+				  	incomeSlideDownInModal();
+				  }
+				  else
+				  {
+				  	$('.generic-save').attr("id","income-save");
+				  	$('.generic-delete').hide();
+				  }
 			};
-			var open_expense_modal = function(){
+			var open_expense_modal = function(isEdit){
 				  $(".budget-modal").css("display","none");
 				  $(".income-expense-modal").css("display","block");
 				  $(".income-expense-tags").html($(".saved-tags-div"));
@@ -486,7 +604,18 @@
 				  $('.generic-modal').addClass("add-expense-modal");
 				  $('.generic-modal').attr("id","addExpenseModal");
 				  get_tags_ajax_call("expense");
-				  $('#generic-type-dropdown').val("expense");
+				  if(isEdit)
+				  {
+			  		$('#generic-type-dropdown').css('display', 'none');
+			  		$('#generic-type-heading').css('display', 'block');
+			  		$('#generic-type-heading').html("EDIT EXPENSE");
+				  }
+				  else
+				  {
+				  	$('#generic-type-dropdown').css('display', 'block');
+			  		$('#generic-type-heading').css('display', 'none');
+				  	$('#generic-type-dropdown').val("expense");
+				  }
 				  $('.generic-amount').attr("name","expense-amount");
 				  $('.generic-amount').attr("id","expense-amount");
 				  $('.generic-datepicker').attr("name","expense-date");
@@ -511,20 +640,177 @@
 				  $('.generic-repeat-dropdown').attr("id","expense-repeat-dropdown");
 				  $('.generic-reminder-dropdown').attr("name","expense-reminder");
 				  $('.generic-reminder-dropdown').attr("id","expense-reminder-dropdown");
-				  $('.generic-save').attr("id","expense-save");
-				  //$('#generic-modal-form').attr("action","expense");
-				  //$('#generic-modal-form').attr("method","POST");
+				  if(isEdit)
+				  {
+				  	$('.generic-save').attr("id","expense-edit");
+				  	$('.generic-delete').attr("id","expense-delete");
+				  	$('.generic-delete').show();
+				  	expenseSlideDownInModal();
+				  }
+				  else
+				  {
+				  	$('.generic-save').attr("id","expense-save");
+				  	$('.generic-delete').hide();
+				  }
 			}
-			var open_budget_modal = function(){
+			var open_budget_modal = function(isEdit){
 				  $(".budget-modal").css("display","block");
 				  get_tags_ajax_call("expense");
-				  $('#generic-type-dropdown').val("budget");
+				  if(isEdit)
+				  {
+			  		$('#generic-type-dropdown').css('display', 'none');
+			  		$('#generic-type-heading').css('display', 'block');
+			  		$('#generic-type-heading').html("EDIT BUDGET");
+				  }
+				  else
+				  {
+				  	$('#generic-type-dropdown').css('display', 'block');
+			  		$('#generic-type-heading').css('display', 'none');
+				  	$('#generic-type-dropdown').val("budget");
+				  }
 				  $(".income-expense-modal").css("display","none");
-				  $('.generic-save').attr("id","budget-save");
+				  if(isEdit)
+				  {
+				  	$('.generic-save').attr("id","budget-edit");
+				  	$('.generic-delete').attr("id","budget-delete");
+				  	$('.generic-delete').show();
+				  }
+				  else
+				  {
+				  	$('.generic-save').attr("id","budget-save");
+				  	$('.generic-delete').hide();
+				  }
 				  //$('#generic-modal-form').attr("action","budget");
 				  //$('#generic-modal-form').attr("method","POST");
 			}
-			
+			var populateIncomeModalToEdit = function(tid){
+				var incomes = globalObject.incomes_in_month;
+				var income_tags = globalObject.income_tags_list;
+				for(var i=0; i<incomes.length; i++)
+				{
+					if(incomes[i].transaction_id == tid)
+					{
+						var amount = incomes[i].amount;
+						$('#income-amount').val(amount);
+						var date_arr = getDateFromEpoch(incomes[i].date);
+						var date = date_arr[0] + "/" + date_arr[1] + "/" + date_arr[2];
+						$('#income-datepicker').val(date);
+						var tag_id = findTagIdWithTagName(incomes[i].tag_name, "income");
+						$('#saved-tags-dropdown').val(tag_id);
+						var location = incomes[i].location;
+						if(location != null && location != "")
+						{
+							$('#income-location').val(location);
+						}
+						var lat = incomes[i].latitude;
+						var lon = incomes[i].longitude;
+						if(lat && lon && lat != 0 && lon != 0)
+						{
+							showLocationInMap(lat,lon);
+						}
+						var description = incomes[i].description;
+						if(description != null && description != "")
+						{
+							$('#income-description').val(description);
+						}
+						var repeat = incomes[i].repeat_period;
+						if(repeat && repeat != -1)
+						{
+							$('#income-repeat').val(repeat);
+						}
+						var reminder = incomes[i].reminder_period;
+						if(reminder && reminder != -1)
+						{
+							$('#income-reminder').val(reminder);
+						}
+						break;
+					}
+				}
+				$('#edit-tid').val(tid);
+			}
+			var populateExpenseModalToEdit = function(tid){
+				var expenses = globalObject.expenses_in_month;
+				var expense_tags = globalObject.expense_tags_list;
+				for(var i=0; i<expenses.length; i++)
+				{
+					if(expenses[i].transaction_id == tid)
+					{
+						var amount = expenses[i].amount;
+						$('#expense-amount').val(amount);
+						var date_arr = getDateFromEpoch(expenses[i].date);
+						var date = date_arr[0] + "/" + date_arr[1] + "/" + date_arr[2];
+						$('#expense-datepicker').val(date);
+						var tag_id = findTagIdWithTagName(expenses[i].tag_name, "expense");
+						$('#saved-tags-dropdown').val(tag_id);
+						var location = expenses[i].location;
+						if(location != null && location != "")
+						{
+							$('#expense-location').val(location);
+						}
+						var lat = expenses[i].latitude;
+						var lon = expenses[i].longitude;
+						if(lat && lon && lat != 0 && lon != 0)
+						{
+							showLocationInMap(lat,lon);
+						}
+						var description = expenses[i].description;
+						if(description != null && description != "")
+						{
+							$('#expense-description').val(description);
+						}
+						var repeat = expenses[i].repeat_period;
+						if(repeat && repeat != -1)
+						{
+							$('#expense-repeat').val(repeat);
+						}
+						var reminder = expenses[i].reminder_period;
+						if(reminder && reminder != -1)
+						{
+							$('#expense-reminder').val(reminder);
+						}
+						break;
+					}
+				}
+				$('#edit-tid').val(tid);
+			}
+			var populateBudgetModalToEdit = function(bid){
+				var budgets = globalObject.budgets_in_month;
+				var expense_tags = globalObject.expense_tags_list;
+				for(var i=0; i<budgets.length; i++)
+				{
+					if(budgets[i].budget_id == bid)
+					{
+						var budget_type = budgets[i].budget_type;
+						$('#budget-type-dropdown').val(budget_type);
+						if(budget_type == 1)
+						{
+							$(".budget-tags").html($(".saved-tags-div"));
+					 		$(".budget-tags .saved-tags-div").css("display","block");
+						 	$(".income-expense-tags .saved-tags-div").css("display","none");
+						 	var tag_id = findTagIdWithTagName(budgets[i].tag_name, "expense");
+							$('#saved-tags-dropdown').val(tag_id);
+						}
+						var repeat = budgets[i].repeat_period;
+						$('#budget-repeat-dropdown').val(repeat);
+						var date_arr = getDateFromEpoch(budgets[i].start_date);
+						var date = date_arr[0] + "/" + date_arr[1] + "/" + date_arr[2];
+						$('#budget-start-datepicker').val(date);
+						if(repeat == 0)
+						{
+							$(".one-time-budget-div .budget-end-datepicker").css("display","block");
+							date_arr = getDateFromEpoch(budgets[i].end_date);
+							date = date_arr[0] + "/" + date_arr[1] + "/" + date_arr[2];
+							$('#budget-end-datepicker').val(date);
+						}
+						var amount = budgets[i].amount;
+						$('#budget-amount').val(amount);
+						var description = budgets[i].description;
+						$('#budget-description').val(description);
+						break;
+					}
+				}
+				$('#edit-bid').val(bid);
+			}
 	});
 
 
@@ -582,13 +868,26 @@
 		{
 			save_income_ajax_call(globalObject.month, globalObject.year);
 		}
+		else if($('.generic-save').attr('id') == "income-edit")
+		{
+			edit_income_ajax_call(globalObject.month, globalObject.year);
+		}
 		else if($('.generic-save').attr('id') == "expense-save")
 		{
 			save_expense_ajax_call(globalObject.month, globalObject.year);
 		}
+		else if($('.generic-save').attr('id') == "expense-edit")
+		{
+			edit_expense_ajax_call(globalObject.month, globalObject.year);
+		}
 		else if($('.generic-save').attr('id') == "budget-save")
 		{
-			save_budget_ajax_call();
+			save_budget_ajax_call(globalObject.month, globalObject.year);
+			get_budget_ajax_call(globalObject.month, globalObject.year);
+		}
+		else if($('.generic-save').attr('id') == "budget-edit")
+		{
+			edit_budget_ajax_call(globalObject.month, globalObject.year);
 			get_budget_ajax_call(globalObject.month, globalObject.year);
 		}
 	}
@@ -647,6 +946,7 @@
 				<div id="budget-page-tag" class="budget-page-header-content"></div>
 				<div id="budget-page-repeat" class="budget-page-header-content"></div>
 				<div id="budget-page-amount" class="budget-page-header-content"></div>
+				<i class="icon-edit budget-edit icon-clickable"></i>
 			</div>
 			<div id="budget-page-stat" class="budget-page-stat" style="display:none;">
 				<div id="budget-page-spent" class="budget-page-stat-content"></div>
@@ -863,6 +1163,7 @@
 			 	  <option value="expense">ADD EXPENSE</option>
 				  <option value="budget">ADD BUDGET</option>
 				</select>
+				<div id="generic-type-heading" style="display: none;"></div>
 			</h4>
         </div>
         <div class="modal-body">
@@ -874,8 +1175,7 @@
 		        	<label>Date</label><input type="text" id="generic-datepicker" class="generic-datepicker textbox">
 		        </div>
 				<div class="income-expense-tags"></div>
-		        <div class="generic-show-more"><span>Store additional information</span></div>
-		      
+		        
 		        <div class="generic-additional-info-div">
 		        	<input type="hidden" class="generic-additional-info" id="generic-additional-info">
 		        	<div class="textbox_space">
@@ -906,6 +1206,8 @@
 						</select>
 					</div>
 		        </div>
+		        <div class="generic-show-more"><span>Store More</span></div>
+		        <input type="hidden" class="edit-tid" id="edit-tid">
 	        </div>
 	        
 			<div class="saved-tags-div" style="display:none;">
@@ -951,11 +1253,13 @@
 				<div class="textbox_space">
 					<label>Description</label><input type="text" placeholder="optional" id="budget-description" name="budget-description" class="textbox">
 				</div>
+				<input type="hidden" class="edit-bid" id="edit-bid">
 	        </div>
 	        <input type="hidden" class="page_name" name="page_name"/>
+	        <button id="generic-delete" class="generic-delete transaction-delete" value="Delete">Delete</button>
         </div>
         <div class="modal-footer">
-          <button class="generic-save" id="generic-save" class="btn" value="Save" onclick="setCurrentPage();">Save</button>
+          <button class="generic-save transaction-save" id="generic-save" class="btn" value="Save" onclick="setCurrentPage();">Save</button>
         </div>
       </div>
       

@@ -384,11 +384,12 @@ var calculateYearlyIncomes = function(obj, today_date, today_month, today_year, 
 
 var printIncomes = function(){
 	$('.income-table tbody').html("");
-	$('.income-table tbody').append("<tr><th class='amount-col'>Amount</th><th class='date-col'>Date</th><th class='tag-col'>Tag</th><th class='description-col'>Description</th><th class='addedby-col'>Added by</th><th class='location-col'>Location</th></tr>");
+	$('.income-table tbody').append("<tr><th class='amount-col'>Amount</th><th class='date-col'>Date</th><th class='tag-col'>Tag</th><th class='description-col'>Description</th><th class='addedby-col'>Added by</th><th class='location-col'>Location</th><th class='edit-col'></th></tr>");
 	var data = globalObject.incomes_in_month;
 	for(var i=0;i<data.length;i++)
 	{
 		var obj = data[i];
+		let transaction_id = obj.transaction_id;
 		let amount = obj.amount || "-";
 		let dates = getDateFromEpoch(obj.date);
 		let date = formCustomDateFormat(dates);
@@ -408,14 +409,14 @@ var printIncomes = function(){
 			lon = "-";
 		}
 		globalObject.income_data.push({y:amount,indexLabel:amount+"(#percent%)",legendText:""+amount,description:description,date:date,tag:tag});
-		let append_string = "<tr><td><i class='icon-inr'></i>"+amount+"</td><td>"+date+"</td><td>"+tag+"</td><td>"+description+"</td><td>"+user_name+"</td><td>"+location;
+		let append_string = "<tr data-tid='"+transaction_id+"'><td><i class='icon-inr'></i>"+amount+"</td><td>"+date+"</td><td>"+tag+"</td><td>"+description+"</td><td>"+user_name+"</td><td>"+location;
 		if(lat != "-" && lon != "-")
 		{
-			append_string += "<img src='images/show_location_icon.png' class='image location-icon' alt='Show in map' data-lat="+lat+" data-lon="+lon+"></td></tr>";
+			append_string += "<i class='icon-location-arrow location-icon icon-clickable' data-lat="+lat+" data-lon="+lon+"></td><td><i class='icon-edit income-edit icon-clickable'></i></td></tr>";
 		}
 		else
 		{
-			append_string += "</td></tr>";
+			append_string += "</td><td><i class='icon-edit income-edit icon-clickable'></i></td></tr>";
 		}
 		$('.income-table tbody').append(append_string);
 	}
@@ -435,7 +436,7 @@ var printIncomes = function(){
 		$('#empty-income-data').html("<img src='images/no_results.png'><div class='empty-data-text'>No income for this month</div>");
 	}
 	globalObject.income_data = [];
-	globalObject.incomes_in_month = [];
+	// globalObject.incomes_in_month = [];
 }
 
 var findIncomes = function(data, page, date_from, date_to)

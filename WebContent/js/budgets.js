@@ -150,7 +150,7 @@ var analyseBudget = function(){
 			budget_bar_spent_width = budget_bar_spent + '%';
 			budget_bar_left_width = (100 - budget_bar_spent) + '%';
 		}
-		$('#home-budgets-list').append('<div id="budget'+count+'" class="budget-container">' +
+		$('#home-budgets-list').append('<div id="budget'+count+'" class="budget-container" data-bid="'+ obj.budget_id +'">' +
 											'<div class="budget-header">' +
 												'<span class="budget-tag text">'+tag_name+'</span>' +
 												'<span class="seperator-hyphen text">-</span>' +
@@ -192,6 +192,8 @@ var getBudgetDataForStat = function(budget_number){
 	$('#budget-timespan').css("display","block");
 	$('#budget-chart-space').css("display","block");
 	$('#empty-budget-data').css("display","none");
+
+	$('#budget-page-header').attr('data-bid', obj.budget_id);
 	if(obj.tag_name == null || obj.tag_name == "")
 	{
 		$("#budget-page-tag").text("All Expenses");
