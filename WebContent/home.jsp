@@ -410,12 +410,12 @@
 			var incomeSlideUpInModal = function(){
 				$('.income-additional-info-div').slideUp().removeClass('active');
 				$('.income-show-more span').text('Store More');
-			    document.getElementById("income-additional-info").value = true;
+			    document.getElementById("income-additional-info").value = false;
 			}
 			var incomeSlideDownInModal = function(){
 				$('.income-additional-info-div').slideDown().addClass('active');
 				$('.income-show-more span').text('Store Less');
-			    document.getElementById("income-additional-info").value = false;
+			    document.getElementById("income-additional-info").value = true;
 			    myMap('income-location');
 			    resizeMap();
 			}
