@@ -9,6 +9,7 @@ html, body {
 	margin:0;
 	padding:0;
 	height:100%;
+  background: #F2F1EF;
 	/* overflow: hidden; */
 }
 
@@ -191,7 +192,7 @@ html, body {
 }
 .modal .textbox_space {
 	width: 468px;
-	margin: 10px 10px;
+	margin: 10px 10px 20px 10px;
 }
 .firstpage-textbox-space .textbox_space .textbox { 
     height: 45px; 
@@ -208,7 +209,8 @@ html, body {
     border-radius: 3px;
     border: 1px solid #CCC;
     background-image: none;
-    width: 270px;
+    width: 330px;
+    margin-left: 20px;
 } 
 .modal label{
 	width: 100px;
@@ -409,13 +411,13 @@ html, body {
 	width: 100% !important;
 	height: 100% !important;
 	float:left;
-	background: #eaeaea;
+	background: #DADFE1;
 }
 #budgets-right-slider{
 	width: 100% !important;
 	height: 100% !important;
 	float:left;
-	background: #eaeaea;
+	background: #DADFE1;
 }
 #home-budgets-list .empty-data-text{
   text-align: center;
@@ -607,9 +609,9 @@ html, body {
   float: right;
 }
 .search-results-header{
-  background-color: #ececec;
+  background-color: #d8d8d8;
   text-align: center;
-  color: #808080;
+  color: #353535;
 }
 .empty-search-data{
   font-style: italic;
@@ -730,12 +732,11 @@ html, body {
 }
 
 .add-icon{
-	width: 20px;
-	height: 20px;
+	width: 25px;
+  margin-left: 5px;
 }
 .search-icon{
 	width: 25px;
-	height: 25px;
 	margin: 3px 3px;
 }
 .icon:hover{
@@ -762,11 +763,12 @@ html, body {
 }
 
 .dropdown{
-    width: 270px;
+    width: 330px;
     height: 42px;
     border: 1px solid #e5e5e5 !important;
     cursor: pointer;
     background-color: #fff;
+    margin-left: 20px;
 }
 .dropdown option {
 	background-color: #efefef;
@@ -815,10 +817,10 @@ html, body {
 
 /* Style the tab */
 div.tab {
-    float: left;
-    background-color: #1a1a1a;
+  float: left;
+  background-color: #2f3e4c;
 	width: 100%;
-    height: 100%;
+  height: 100%;
 }
 
 /* Style the buttons inside the tab */
@@ -837,7 +839,7 @@ div.tab button {
 
 /* Change background color of buttons on hover */
 div.tab button:hover {
-    background-color: #aeadad;
+    background-color: #717171;
 }
 
 /* Create an active/current "tab button" class */
@@ -854,7 +856,7 @@ div.tab button.active .tab-title{
 }
 
 .tab-title{
-	color: #737373;
+	color: #e0e0e0;
 }
 
 
@@ -878,12 +880,19 @@ div.tab button.active .tab-title{
 }
 
 .empty-data img{
-	width: 50%;
-	height: 50%;
+	position: absolute;
+  top: 38%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 15%;
 }
 
 .empty-data-text{
 	font-style: italic;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .table-space{
@@ -903,8 +912,8 @@ div.tab button.active .tab-title{
 	top: 20px;
 }
 .table th{
-	color: #808080;
-  background-color: #ececec;
+	color: #353535;
+  background-color: #d8d8d8;
 }
 
 .users-account-details div{
@@ -912,7 +921,9 @@ div.tab button.active .tab-title{
 }
 #income-location-map{
 	height:300px;
-	width:100%;
+  width: 90%;
+  margin-left: 20px;
+  margin-bottom: 20px;
 }
 
 .income-additional-info-div{
@@ -921,14 +932,15 @@ div.tab button.active .tab-title{
 
 #expense-location-map{
 	height:300px;
-	width:100%;
+  width: 90%;
+  margin-left: 20px;
+  margin-bottom: 20px;
 }
 .generic-show-more{
     text-align:center;
-    font-weight: 500;
     width: 100%;
     background-color:#9a9a9a;
-    padding: 6px 0px;
+    padding: 8px 0px;
     cursor: pointer;
     font-size: 16px;
     margin-top: 20px;
@@ -937,27 +949,35 @@ div.tab button.active .tab-title{
 }
 .transaction-delete{
   display: none;
-  background-color: #f4511e;
-  color: #fff;
-  padding: 6px 0px;
+  background-color: #fff;
+  color: #f4511e;
+  padding: 8px 0px;
   font-size: 16px;
-  border: none;
+  border: 1px solid #f4511e;
   cursor: pointer;
   width: 100%;
   margin-top: 10px;
   margin-bottom: 10px;
   font-weight: 500;
 }
-.transaction-save{
-  background-color: #43bf58;
+.transaction-delete:hover{
+  background-color: #f4511e;
   color: #fff;
-  padding: 6px 0px;
+}
+.transaction-save{
+  background-color: #fff;
+  color: #43bf58;
+  padding: 8px 0px;
   font-size: 16px;
-  border: none;
+  border: 1px solid #43bf58;
   cursor: pointer;
   width: 100%;
   margin-bottom: 10px;
   font-weight: 500;
+}
+.transaction-save:hover{
+  background-color: #43bf58;
+  color: #fff;
 }
 .expense-additional-info-div{
 	display:none;
@@ -1174,4 +1194,21 @@ div.tab button.active .tab-title{
   font-family: "Trebuchet MS";
   letter-spacing: 1px;
   text-decoration: none;
+}
+
+/* Modal icons styles */
+.modal-icons{
+  width: 50px;
+  float: left;
+  text-align: center;
+  padding-top: 6px;
+}
+.modal-icons img{
+  width: 30px;
+}
+.tab-icons{
+  width: 30px;
+  float: left;
+  margin: 5px 25px 5px 5px;
+  padding: 0px;
 }

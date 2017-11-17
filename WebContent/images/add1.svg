@@ -1,0 +1,7 @@
+<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg height="512px" style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512" width="512px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><style type="text/css">
+<![CDATA[
+	.st0{display:inline;}
+	.st1{fill:none;stroke:#000000;stroke-width:16;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st2{display:none;}
+]]>
+</style><g class="st2" id="cross"><g class="st0"><line class="st1" x1="257" x2="257" y1="53" y2="461"/><line class="st1" x1="461" x2="53" y1="257" y2="257"/></g></g><g id="cross_copy"><path d="M461,249H265V53c0-4.418-3.582-8-8-8c-4.418,0-8,3.582-8,8v196H53c-4.418,0-8,3.582-8,8c0,4.418,3.582,8,8,8h196v196   c0,4.418,3.582,8,8,8c4.418,0,8-3.582,8-8V265h196c4.418,0,8-3.582,8-8C469,252.582,465.418,249,461,249z"/></g></svg>

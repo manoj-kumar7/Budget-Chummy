@@ -960,7 +960,7 @@
 			<div id="budget-chart-space" class="budget-chart-space chart-space" style="display:none;">
 		   	</div>
 		   	<div id="empty-budget-data" class="empty-data" style="display:none;">
-		   		<img src='images/no_results.png'>
+		   		<img src='images/sad-face.svg'>
 		   		<div class='empty-data-text'>No budgets for this month</div>
 		   	</div>
 		</div>
@@ -1169,28 +1169,28 @@
         <div class="modal-body">
         	<div class="income-expense-modal" style="display:none;">
 		        <div class="textbox_space">
-		        	<label>Amount</label><input type="text" id="generic-amount" class="generic-amount textbox">
+		        	<div class="modal-icons"><img src="images/amount2.svg"></div><input type="text" placeholder="Amount" id="generic-amount" class="generic-amount textbox">
 		        </div>
 		        <div class="textbox_space">
-		        	<label>Date</label><input type="text" id="generic-datepicker" class="generic-datepicker textbox">
+		        	<div class="modal-icons"><img src="images/date1.svg"></div><input type="text" placeholder="Date" id="generic-datepicker" class="generic-datepicker textbox">
 		        </div>
 				<div class="income-expense-tags"></div>
 		        
 		        <div class="generic-additional-info-div">
 		        	<input type="hidden" class="generic-additional-info" id="generic-additional-info">
 		        	<div class="textbox_space">
-		            	<label>Location</label><input type="text" class="generic-location" id="generic-location" class="textbox">
-		        		<img src="images/search-icon.png" class="generic-map-search icon search-icon" id="generic-map-search" alt="Search">
+		            	<div class="modal-icons"><img src="images/location2.svg"></div><input type="text" placeholder="Location" class="generic-location" id="generic-location" class="textbox">
+		        		<img src="images/search1.svg" class="generic-map-search icon search-icon" id="generic-map-search" alt="Search">
 		        	</div>
 		        	<input type="hidden" class="generic-location-lat" id="generic-location-lat">
 		        	<input type="hidden" class="generic-location-lon" id="generic-location-lon">
 		        	
 		            <div class="generic-location-map" id="generic-location-map"></div>
 	     	        <div class="textbox_space">
-	     	        	<label>Description</label><input type="text" class="generic-description" id="generic-description" class="textbox">
+	     	        	<div class="modal-icons"><img src="images/description1.svg"></div><input type="text" placeholder="Description" class="generic-description" id="generic-description" class="textbox">
 	     	        </div>
 		        	<div class="textbox_space">
-			        	<label>Repeat</label><select class="generic-repeat-dropdown dropdown" id="generic-repeat-dropdown">
+			        	<div class="modal-icons"><img src="images/repeat1.svg"></div><select class="generic-repeat-dropdown dropdown" id="generic-repeat-dropdown">
 			        	    <option value="0">Never</option>
 						    <option value="1">Daily</option>
 					 	    <option value="2">Weekly</option>
@@ -1199,7 +1199,7 @@
 						</select>
 					</div>
 					<div class="textbox_space">
-						<label>Reminder</label><select class="generic-reminder-dropdown dropdown" id="generic-reminder-dropdown">
+						<div class="modal-icons"><img src="images/reminder3.svg"></div><select class="generic-reminder-dropdown dropdown" id="generic-reminder-dropdown">
 							<option value="0">Never</option>
 			        	    <option value="1">One day before</option>
 						    <option value="2">On the day</option>
@@ -1212,10 +1212,10 @@
 	        
 			<div class="saved-tags-div" style="display:none;">
 				<div class="textbox_space">
-					<label>Tag</label>
+					<div class="modal-icons"><img src="images/tag1.svg"></div>
 					<select id="saved-tags-dropdown"  class="dropdown saved-tags-dropdown" name="tag_id"></select>
 					<input type="text" id="saved-tags-input" style="display:none;">
-					<img src="images/add-tag-icon.ico" class="icon add-icon" alt="Add tag">
+					<img src="images/add1.svg" class="icon add-icon" alt="Add tag">
 					<div id="save-tag-hint" class="hint-text" style="display:none;">Press Enter to save</div>
 				</div>
 
@@ -1224,14 +1224,14 @@
 				
 	        <div class="budget-modal" style="display:none;">
 	       		<div class="textbox_space">
-		       		<label>Type</label><select id="budget-type-dropdown" class="dropdown" name="budget-type">
+		       		<div class="modal-icons"><img src="images/budgettype2.svg"></div><select id="budget-type-dropdown" class="dropdown" name="budget-type">
 			        	    <option value="0">All expenses</option>
 						    <option value="1">Tag</option>
 					</select>
 				</div>
 				<div class="budget-tags"></div>
 				<div class="textbox_space">
-					<label>Repeat</label><select id="budget-repeat-dropdown" class="dropdown" name="budget-repeat">
+					<div class="modal-icons"><img src="images/repeat1.svg"></div><select id="budget-repeat-dropdown" class="dropdown" name="budget-repeat">
 			        	    <option value="0">One time budget</option>
 						    <option value="1">Daily</option>
 					 	    <option value="2">Weekly</option>
@@ -1241,17 +1241,17 @@
 				</div>
 				<div class="one-time-budget-div">
 					<div class="textbox_space budget-start-datepicker">
-						<label>Start date</label><input type="text" id="budget-start-datepicker" class="budget-datepicker textbox" name="budget-start-date">
+						<div class="modal-icons"><img src="images/startdate1.svg"></div><input type="text" placeholder="Start Date" id="budget-start-datepicker" class="budget-datepicker textbox" name="budget-start-date">
 					</div>
 					<div class="textbox_space budget-end-datepicker" style="display:none;">
-						<label>End date</label><input type="text" id="budget-end-datepicker" class="budget-datepicker textbox" name="budget-end-date">
+						<div class="modal-icons"><img src="images/enddate1.svg"></div><input type="text" placeholder="End Date" id="budget-end-datepicker" class="budget-datepicker textbox" name="budget-end-date">
 					</div>
 				</div>
 				<div class="textbox_space">
-					<label>Amount</label><input type="text" id="budget-amount" name="budget-amount" class="textbox">
+					<div class="modal-icons"><img src="images/amount2.svg"></div><input type="text" placeholder="Amount" id="budget-amount" name="budget-amount" class="textbox">
 				</div>
 				<div class="textbox_space">
-					<label>Description</label><input type="text" placeholder="optional" id="budget-description" name="budget-description" class="textbox">
+					<div class="modal-icons"><img src="images/description1.svg"></div><input type="text" placeholder="Description" id="budget-description" name="budget-description" class="textbox">
 				</div>
 				<input type="hidden" class="edit-bid" id="edit-bid">
 	        </div>

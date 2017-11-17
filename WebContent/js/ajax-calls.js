@@ -979,6 +979,7 @@
 						if(data != null)
 						{
 							$('#saved-tags-dropdown').html("");
+							$("#saved-tags-dropdown").append("<option value=''>Select Tag</option>");
 							if(tag_type == "income")
 							{
 								globalObject.income_tags_list = [];

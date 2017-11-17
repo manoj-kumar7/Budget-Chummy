@@ -6,6 +6,7 @@
 		    	      height:300,
 		    	      animationEnabled: true,
 		    	      animationDuration: 1000,
+		    	      backgroundColor: "#f1f1f1",
 		    	      toolTip:{
 		    	    	  content: "Tag: {tag}<br>Date: {date}",
 		    	    	  animationEnabled:true
@@ -26,6 +27,7 @@
 		    	      height:300,
 		    	      animationEnabled: true,
 		    	      animationDuration: 1000,
+		    	      backgroundColor: "#f1f1f1",
 		    	      toolTip:{
 		    	    	  content: "Tag: {tag}<br>Date: {date}",
 		    	    	  animationEnabled:true
@@ -39,50 +41,3 @@
 		    	     ]
 		    });
 		    
-			      
-		    // var budget_chart = function(){
-		    //      var data = google.visualization.arrayToDataTable([
-		    //            ['Date', 'Expense'],
-		    //            ['Sep 1', 1000],
-		    //            ['Sep 2', 1170],
-		    //            ['Sep 3', 660],
-		    //            ['Sep 4', 1030],
-		    //            ['Sep 1', 1000],
-		    //            ['Sep 2', 1170],
-		    //            ['Sep 3', 660],
-		    //            ['Sep 4', 1030],
-		    //            ['Sep 1', 1000],
-		    //            ['Sep 2', 1170],
-		    //            ['Sep 3', 660],
-		    //            ['Sep 4', 1030],
-		    //            ['Sep 1', 1000],
-		    //            ['Sep 2', 1170],
-		    //            ['Sep 3', 660],
-		    //            ['Sep 4', 1030],
-		    //            ['Sep 1', 1000],
-		    //            ['2', 1170],
-		    //            ['3', 660],
-		    //            ['4', 1030],
-		    //            ['1', 1000],
-		    //            ['2', 1170],
-		    //            ['3', 660],
-		    //            ['4', 1030],
-		    //            ['1', 1000],
-		    //            ['2', 1170],
-		    //            ['3', 660],
-		    //            ['4', 1030],
-		    //            ['1', 1000],
-		    //            ['2', 1170],
-		    //            ['3', 660],
-		    //            ['4', 1030],
-		    //          ]);
-
-		    //         var options = {
-		    //            chart: {
-		                 
-		    //            }
-		    //          };
-
-		    //          var chart = new google.charts.Bar(document.getElementById('budget-chart-space'));
-		    //          chart.draw(data, google.charts.Bar.convertOptions(options));
-		    // };
