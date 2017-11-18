@@ -6,27 +6,18 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.*;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.budgetchummy.api.util.APIConstants;
-import com.budgetchummy.api.util.Datehelper;
 import com.budgetchummy.api.util.PasswordUtil;
 import com.budgetchummy.api.util.emailUtil;
 import com.budgetchummy.api.util.messageDigestUtil;
 
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.TimeZone;
 import java.util.*;
 import java.security.GeneralSecurityException;
 
@@ -89,7 +80,7 @@ public class SignUpUtil {
 					activationNeeded = true;
 				}
 				String activation_code = messageDigestUtil.getMD5Hash(email);
-				st = con.prepareStatement("insert into users(first_name,last_name,email,password,created_date_time,verified,activation_code) values(?,?,?,?,?,?,?);");
+				st = con.prepareStatement("insert into users(first_name,last_name,email,password,created_date_time,verified,activation_code,google_signin) values(?,?,?,?,?,?,?,?);");
 				st.setString(1, first_name);
 				st.setString(2, last_name);
 				st.setString(3, email);
@@ -97,6 +88,7 @@ public class SignUpUtil {
 				st.setLong(5, added_date);
 				st.setBoolean(6, !activationNeeded);
 				st.setString(7, activation_code);
+				st.setBoolean(8, false);
 				int i = st.executeUpdate();
 
 				if(activationNeeded)
@@ -215,11 +207,12 @@ public class SignUpUtil {
 				else
 				{
 					String activation_code = messageDigestUtil.getMD5Hash(email);
-					st = con.prepareStatement("insert into users(first_name,email,created_date_time,verified) values(?,?,?,?);");
+					st = con.prepareStatement("insert into users(first_name,email,created_date_time,verified,google_signin) values(?,?,?,?,?);");
 					st.setString(1, name);
 					st.setString(2, email);
 					st.setLong(3, added_date);
 					st.setBoolean(4, true);
+					st.setBoolean(5, true);
 					int i = st.executeUpdate();
 
 					rs = null;

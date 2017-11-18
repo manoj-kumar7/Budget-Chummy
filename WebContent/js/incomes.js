@@ -433,7 +433,7 @@ var printIncomes = function(){
 		$('#chartContainer1').css("display","none");
 		$('.income-table-space').css("display","none");
 		$('#empty-income-data').css("display","block");
-		$('#empty-income-data').html("<img src='images/sad-face.svg'><div class='empty-data-text'>No income for this month</div>");
+		$('#empty-income-data').html("<img src='images/nodata2.svg'><div class='empty-data-text'>No incomes for this month</div>");
 	}
 	globalObject.income_data = [];
 	// globalObject.incomes_in_month = [];

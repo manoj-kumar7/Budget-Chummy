@@ -960,7 +960,7 @@
 			<div id="budget-chart-space" class="budget-chart-space chart-space" style="display:none;">
 		   	</div>
 		   	<div id="empty-budget-data" class="empty-data" style="display:none;">
-		   		<img src='images/sad-face.svg'>
+		   		<img src='images/nodata2.svg'>
 		   		<div class='empty-data-text'>No budgets for this month</div>
 		   	</div>
 		</div>
@@ -978,14 +978,14 @@
 					<div id="income-results-header" class="search-results-header">Incomes</div>
 					<div id="income_search_data"></div>
 					<div id="empty-search-income-data" class="empty-search-data" style="display:none;">
-						No income in this date
+						No incomes in this date
 					</div>
 				</div>
 				<div class="expense-results">
 					<div id="expense-results-header" class="search-results-header">Expenses</div>
 					<div id="expense_search_data"></div>
 					<div id="empty-search-expense-data" class="empty-search-data" style="display:none;">
-						No expense in this date
+						No expenses in this date
 					</div>
 				</div>				
 			</div>

@@ -57,6 +57,7 @@
 						if(jqXHR.status == 401)
 						{
 							showAjaxFailureMessage("Invalid email and/or password");
+							google_logout();
 						}
 						else if(jqXHR.status == 403)
 						{

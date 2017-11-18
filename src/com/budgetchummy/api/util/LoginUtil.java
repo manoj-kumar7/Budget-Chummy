@@ -4,7 +4,6 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 import com.budgetchummy.api.util.APIConstants;
@@ -145,8 +144,9 @@ public class LoginUtil {
 				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
 				PreparedStatement st=null;
-				st = con.prepareStatement("select user_id from users where email=?;");
+				st = con.prepareStatement("select user_id from users where email=? AND google_signin=?;");
 				st.setString(1, email);
+				st.setBoolean(2, true);
 				ResultSet rs=null;
 				rs = st.executeQuery();
 				while(rs.next())

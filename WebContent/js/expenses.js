@@ -433,7 +433,7 @@ var printExpenses = function(){
 		$('#chartContainer2').css("display","none");
 		$('.expense-table-space').css("display","none");
 		$('#empty-expense-data').css("display","block");
-		$('#empty-expense-data').html("<img src='images/sad-face.svg'><div class='empty-data-text'>No expense for this month</div>");
+		$('#empty-expense-data').html("<img src='images/nodata2.svg'><div class='empty-data-text'>No expenses for this month</div>");
 	}
 	globalObject.expense_data = [];
 	// globalObject.expenses_in_month = [];
