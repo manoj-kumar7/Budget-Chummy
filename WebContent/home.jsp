@@ -761,12 +761,12 @@
 						var repeat = expenses[i].repeat_period;
 						if(repeat && repeat != -1)
 						{
-							$('#expense-repeat').val(repeat);
+							$('#expense-repeat-dropdown').val(repeat);
 						}
 						var reminder = expenses[i].reminder_period;
 						if(reminder && reminder != -1)
 						{
-							$('#expense-reminder').val(reminder);
+							$('#expense-reminder-dropdown').val(reminder);
 						}
 						break;
 					}

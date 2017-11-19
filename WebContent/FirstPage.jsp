@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>BudgetChummy :)</title>
+<title>BudgetChummy</title>
 <link rel="stylesheet" href="styles/style.css" type="text/css">
 <script type="text/javascript" src="app/jquery-3.1.1.js"></script>
 <script src="https://apis.google.com/js/platform.js?onload=onGoogleLoad" async defer></script>

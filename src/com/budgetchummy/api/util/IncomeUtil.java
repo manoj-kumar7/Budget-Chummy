@@ -17,6 +17,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import com.budgetchummy.api.util.APIConstants;
+import com.budgetchummy.api.util.JobsUtil;
 
 public class IncomeUtil {
 	public static void getIncomes(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -160,11 +161,18 @@ public class IncomeUtil {
 				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
 				PreparedStatement st=null;
+				PreparedStatement st1=null;
+				PreparedStatement st2=null;
+				ResultSet rs = null;
 				Object user_attribute = session.getAttribute("user_id");
 				Object acc_attribute = session.getAttribute("account_id");
 				long userid = Long.parseLong(String.valueOf(user_attribute));
 				long accid = Long.parseLong(String.valueOf(acc_attribute));
 				String query=null;
+				
+				boolean reminderExists = false;
+				String timezone = "";
+				long target_time = -1;
 			    // DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			    // Date dateobj = new Date();
 			    // df.setTimeZone(TimeZone.getTimeZone("IST"));
@@ -198,6 +206,24 @@ public class IncomeUtil {
 					st.setFloat(11, latitude);
 					st.setFloat(12, longitude);
 					st.setLong(13, added_date);
+					if(income_reminder > 0)
+					{
+						reminderExists = true;
+						st1 = con.prepareStatement("select timezone from accounts where account_id=?;");
+						st1.setLong(1, accid);
+						rs = st1.executeQuery();
+						if(rs.next())
+						{
+							timezone = rs.getString("timezone");
+						}
+						rs = null;
+						String server_timezone = Datehelper.getServerTimeZone();
+						target_time = Datehelper.convertTimeZone(date, timezone, server_timezone);
+						if(income_reminder == 1)
+						{
+							target_time = Datehelper.subtractDays(target_time, 1);
+						}
+					}
 				}
 				else
 				{
@@ -211,7 +237,37 @@ public class IncomeUtil {
 					st.setLong(7, added_date);			
 				}
 				int i = st.executeUpdate();
-				st.close();
+				if(reminderExists)
+				{
+					st = con.prepareStatement("select lastval();");
+					rs = st.executeQuery();
+					if(rs.next())
+					{
+						long transaction_id = rs.getLong(1);
+						st = con.prepareStatement("insert into jobs(reminder_type,data_id,do_at) values(?,?,?);");
+						st.setString(1, "income");
+						st.setLong(2, transaction_id);
+						st.setLong(3, target_time);
+						int j = st.executeUpdate();
+					}
+					rs = null;				
+				}
+				if(rs != null)
+				{
+					rs.close();
+				}
+				if(st != null)
+				{
+					st.close();
+				}
+				if(st1 != null)
+				{
+					st1.close();
+				}
+				if(st2 != null)
+				{
+					st2.close();
+				}
 				con.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -234,6 +290,7 @@ public class IncomeUtil {
 			long date = Long.parseLong(request.getParameter("date"));
 			long tag_id = Long.parseLong(request.getParameter("tag_id"));
 			long transaction_id = Long.parseLong(request.getParameter("transaction_id"));
+			JobsUtil.deleteJob(transaction_id);
 			String transaction_type = "income";
 			String additional_info = request.getParameter("add_info");
 			
@@ -251,12 +308,18 @@ public class IncomeUtil {
 				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
 				PreparedStatement st=null;
+				PreparedStatement st1=null;
+				PreparedStatement st2=null;
+				ResultSet rs = null;
 				Object user_attribute = session.getAttribute("user_id");
 				Object acc_attribute = session.getAttribute("account_id");
 				long userid = Long.parseLong(String.valueOf(user_attribute));
 				long accid = Long.parseLong(String.valueOf(acc_attribute));
 				String query=null;
 
+				boolean reminderExists = false;
+				String timezone = "";
+				long target_time = -1;
 				if(additional_info.equals("true"))
 				{
 					String location = request.getParameter("location");
@@ -283,6 +346,24 @@ public class IncomeUtil {
 					st.setInt(8, income_repeat);
 					st.setInt(9, income_reminder);
 					st.setLong(10, transaction_id);
+					if(income_reminder > 0)
+					{
+						reminderExists = true;
+						st1 = con.prepareStatement("select timezone from accounts where account_id=?;");
+						st1.setLong(1, accid);
+						rs = st1.executeQuery();
+						if(rs.next())
+						{
+							timezone = rs.getString("timezone");
+						}
+						rs = null;
+						String server_timezone = Datehelper.getServerTimeZone();
+						target_time = Datehelper.convertTimeZone(date, timezone, server_timezone);
+						if(income_reminder == 1)
+						{
+							target_time = Datehelper.subtractDays(target_time, 1);
+						}
+					}
 				}
 				else
 				{
@@ -299,7 +380,30 @@ public class IncomeUtil {
 					st.setLong(10, transaction_id);		
 				}
 				int i = st.executeUpdate();
-				st.close();
+				if(reminderExists)
+				{
+					st = con.prepareStatement("insert into jobs(reminder_type,data_id,do_at) values(?,?,?);");
+					st.setString(1, "income");
+					st.setLong(2, transaction_id);
+					st.setLong(3, target_time);
+					int j = st.executeUpdate();			
+				}
+				if(rs != null)
+				{
+					rs.close();
+				}
+				if(st != null)
+				{
+					st.close();
+				}
+				if(st1 != null)
+				{
+					st1.close();
+				}
+				if(st2 != null)
+				{
+					st2.close();
+				}
 				con.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -318,6 +422,7 @@ public class IncomeUtil {
 		else
 		{
 			long transaction_id = Long.parseLong(request.getParameter("transaction_id"));
+			JobsUtil.deleteJob(transaction_id);
 			String transaction_type = "income";
 			
 			String url = APIConstants.POSTGRESQL_URL;

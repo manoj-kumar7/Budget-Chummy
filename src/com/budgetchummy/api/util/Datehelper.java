@@ -2,11 +2,52 @@ package com.budgetchummy.api.util;
 
 import java.text.ParseException;
 import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 import java.text.SimpleDateFormat;
 
 public class Datehelper {
+
+	public static String[] month_array = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
+	public static long convertTimeZone(long date, String fromTZ, String toTZ)
+	{
+		Calendar fromTime = Calendar.getInstance();
+	    fromTime.setTimeZone(TimeZone.getTimeZone(fromTZ));
+	    fromTime.setTimeInMillis(date);
+	    Calendar toTime = new GregorianCalendar(TimeZone.getTimeZone(toTZ));
+	    toTime.set(Calendar.DATE, fromTime.get(Calendar.DATE));
+	    toTime.set(Calendar.MONTH, fromTime.get(Calendar.MONTH));
+	    toTime.set(Calendar.YEAR, fromTime.get(Calendar.YEAR));
+	    toTime.set(Calendar.HOUR_OF_DAY, fromTime.get(Calendar.HOUR_OF_DAY));
+	    toTime.set(Calendar.MINUTE, fromTime.get(Calendar.MINUTE));
+	    toTime.set(Calendar.SECOND, fromTime.get(Calendar.SECOND));
+	    toTime.set(Calendar.MILLISECOND, fromTime.get(Calendar.MILLISECOND));
+	    return toTime.getTimeInMillis();
+	}
+	public static String getServerTimeZone()
+	{
+		TimeZone timeZone = TimeZone.getDefault();
+		return timeZone.getID();
+	}
+	public static long getServerTimeInEpoch()
+	{
+		return System.currentTimeMillis();
+	}
+	public static long subtractDays(long date, long no_of_days)
+	{
+		return date - (no_of_days * 86400000);
+	}
+	public static String epochToCustomFormat(long epoch)
+	{
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(epoch);
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH);
+		String monthString = month_array[month];
+		int date = cal.get(Calendar.DATE);
+		String customString = monthString + " " + date + ", " + year;
+		return customString;
+	}
+
 
 	public static long dateToEpoch(String date)
 	{
