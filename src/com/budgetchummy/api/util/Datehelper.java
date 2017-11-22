@@ -7,11 +7,12 @@ import java.text.SimpleDateFormat;
 
 public class Datehelper {
 
+	public static String utc = "UTC";
 	public static String[] month_array = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-	public static long convertTimeZone(long date, String fromTZ, String toTZ)
+	public static long convertTimeZone(long date, String toTZ)
 	{
 		Calendar fromTime = Calendar.getInstance();
-	    fromTime.setTimeZone(TimeZone.getTimeZone(fromTZ));
+	    fromTime.setTimeZone(TimeZone.getTimeZone(utc));
 	    fromTime.setTimeInMillis(date);
 	    Calendar toTime = new GregorianCalendar(TimeZone.getTimeZone(toTZ));
 	    toTime.set(Calendar.DATE, fromTime.get(Calendar.DATE));
@@ -22,11 +23,6 @@ public class Datehelper {
 	    toTime.set(Calendar.SECOND, fromTime.get(Calendar.SECOND));
 	    toTime.set(Calendar.MILLISECOND, fromTime.get(Calendar.MILLISECOND));
 	    return toTime.getTimeInMillis();
-	}
-	public static String getServerTimeZone()
-	{
-		TimeZone timeZone = TimeZone.getDefault();
-		return timeZone.getID();
 	}
 	public static long getServerTimeInEpoch()
 	{

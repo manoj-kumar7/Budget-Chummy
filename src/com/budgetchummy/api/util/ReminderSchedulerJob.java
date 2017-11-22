@@ -37,13 +37,6 @@ public class ReminderSchedulerJob implements Job{
 			emailUtil.sendMail(email, subject, message);
 		}
 		public void execute(JobExecutionContext arg0) throws JobExecutionException{
-//			System.out.println("Hello");
-//			System.out.println(System.currentTimeMillis());
-//			long date = System.currentTimeMillis();
-//			String fromTZ = "Asia/Calcutta";
-//			String toTZ = "America/New_York";
-//			System.out.println(Datehelper.convertTimeZone(date, fromTZ, toTZ));
-//			emailUtil.sendMail("manojskct@gmail.com", "Testing Scheduler", "Testing scheduler Message from BC");
 			String url = APIConstants.POSTGRESQL_URL;
 			String user = APIConstants.POSTGRESQL_USERNAME;
 			String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
@@ -68,7 +61,8 @@ public class ReminderSchedulerJob implements Job{
 				long job_id, data_id, do_at, account_id;
 				float amount;
 				String reminder_type, added_by, account_name, date, tag_name, description, first_name, email;
-
+				emailUtil.createSession();
+				emailUtil.createConnection();
 				while(rs.next())
 				{
 					job_id=rs.getLong("job_id");
@@ -105,6 +99,7 @@ public class ReminderSchedulerJob implements Job{
 						io.printStackTrace();
 					}
 				}
+				emailUtil.closeConnection();
 				if(rs != null)
 				{
 					rs.close();

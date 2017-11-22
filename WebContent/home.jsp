@@ -13,7 +13,7 @@
 		}
 		else
 		{
-			response.sendRedirect("/BudgetChummy/");
+			response.sendRedirect("/");
 			return;
 		}
 	}

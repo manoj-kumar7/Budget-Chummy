@@ -103,7 +103,10 @@ public class SignUpUtil {
 					String message = "<div class='email-box' style='width:70%;height:100%;background-color:#e2e2e2;margin:0 auto;'>"+email_welcome_html+
 									 email_content_html+
 									 email_button_html+ "</div>";
+					emailUtil.createSession();
+					emailUtil.createConnection();
 					emailUtil.sendMail(email, subject, message);
+					emailUtil.closeConnection();
 				}
 				rs = null;
 				st = con.prepareStatement("select user_id from users where email=?;");

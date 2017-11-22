@@ -226,8 +226,7 @@ public class ExpenseUtil {
 							timezone = rs.getString("timezone");
 						}
 						rs = null;
-						String server_timezone = Datehelper.getServerTimeZone();
-						target_time = Datehelper.convertTimeZone(date, timezone, server_timezone);
+						target_time = Datehelper.convertTimeZone(date, timezone);
 						if(expense_reminder == 1)
 						{
 							target_time = Datehelper.subtractDays(target_time, 1);
@@ -367,8 +366,7 @@ public class ExpenseUtil {
 							timezone = rs.getString("timezone");
 						}
 						rs = null;
-						String server_timezone = Datehelper.getServerTimeZone();
-						target_time = Datehelper.convertTimeZone(date, timezone, server_timezone);
+						target_time = Datehelper.convertTimeZone(date, timezone);
 						if(expense_reminder == 1)
 						{
 							target_time = Datehelper.subtractDays(target_time, 1);

@@ -265,8 +265,10 @@ public class UsersUtil {
 									 email_content_html+
 									 email_passcode_html+
 									 email_button_html+ "</div>";
-		                          
+		        emailUtil.createSession();
+				emailUtil.createConnection();
 				emailUtil.sendMail(to, subject, message);
+				emailUtil.closeConnection();
 			}
 		}
 		
