@@ -285,6 +285,9 @@ public class IncomeUtil {
 	//		String page_name = request.getParameter("page_name");
 			float amount = Float.parseFloat(request.getParameter("amount"));
 			long date = Long.parseLong(request.getParameter("date"));
+			int reminder_day = Integer.parseInt(request.getParameter("reminder_day"));
+			int reminder_month = Integer.parseInt(request.getParameter("reminder_month"));
+			int reminder_year = Integer.parseInt(request.getParameter("reminder_year"));
 			long tag_id = Long.parseLong(request.getParameter("tag_id"));
 			long transaction_id = Long.parseLong(request.getParameter("transaction_id"));
 			JobsUtil.deleteJob(transaction_id);
@@ -375,11 +378,24 @@ public class IncomeUtil {
 				int i = st.executeUpdate();
 				if(reminderExists)
 				{
+					long job_id = -1;
 					st = con.prepareStatement("insert into jobs(reminder_type,data_id,do_at) values(?,?,?);");
 					st.setString(1, "income");
 					st.setLong(2, transaction_id);
 					st.setLong(3, target_time);
-					int j = st.executeUpdate();			
+					int j = st.executeUpdate();
+					rs = null;	
+					st = con.prepareStatement("select lastval();");
+					rs = st.executeQuery();
+					if(rs.next())
+					{
+						job_id = rs.getLong(1);
+					}	
+					try {
+						ReminderScheduler.scheduleReminder(request, reminder_day, reminder_month, reminder_year, timezone, job_id);
+					} catch (SchedulerException e) {
+						e.printStackTrace();
+					}	
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
