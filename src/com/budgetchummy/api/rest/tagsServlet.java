@@ -55,11 +55,11 @@ public class tagsServlet extends HttpServlet {
 			} catch (ClassNotFoundException e) {
 				out.println("driver not found");
 			}
-			
+			Connection con = null;
+			PreparedStatement st=null;	
+			ResultSet rs = null;	
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null;
 				Object account_attribute = session.getAttribute("account_id");
 				long accid = Long.parseLong(String.valueOf(account_attribute));
 				String query=null,tag_name=null;
@@ -67,7 +67,7 @@ public class tagsServlet extends HttpServlet {
 				st = con.prepareStatement("select tag_id,tag_name from tags where account_id=? and tag_type=?;");
 				st.setLong(1, accid);
 				st.setString(2, tag_type);
-				ResultSet rs = st.executeQuery();
+				rs = st.executeQuery();
 				JSONArray ja = new JSONArray();
 				JSONObject jo = new JSONObject();
 				while(rs.next())
@@ -79,14 +79,24 @@ public class tagsServlet extends HttpServlet {
 					ja.add(jo.toJSONString());
 					jo.clear();
 				}
-				rs.close();
-				st.close();
-				con.close();
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
 				response.getWriter().print(ja.toString());
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				if(rs != null)
+				{
+					try{
+						rs.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
 			}
 		}
 		
@@ -116,11 +126,10 @@ public class tagsServlet extends HttpServlet {
 			} catch (ClassNotFoundException e) {
 				out.println("driver not found");
 			}
-			
+			Connection con = null;
+			PreparedStatement st=null;	
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null;
 				Object account_attribute = session.getAttribute("account_id");
 				long accid = Long.parseLong(String.valueOf(account_attribute));
 				String query=null;
@@ -129,12 +138,17 @@ public class tagsServlet extends HttpServlet {
 				st.setString(2, tag_name);
 				st.setString(3, tag_type);
 				int i = st.executeUpdate();
-				st.close();
-				con.close();
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
 			}
 		}
 	

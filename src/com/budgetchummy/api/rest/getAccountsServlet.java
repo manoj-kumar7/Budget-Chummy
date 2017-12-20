@@ -6,13 +6,8 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -58,11 +53,11 @@ public class getAccountsServlet extends HttpServlet {
 			} catch (ClassNotFoundException e) {
 				out.println("driver not found");
 			}
-			
+			Connection con = null;
+			PreparedStatement st=null;	
+			ResultSet rs = null;
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null,st1=null;
 				Object attribute = session.getAttribute("user_id");
 				long userid = Long.parseLong(String.valueOf(attribute));
 				long accid=-1;
@@ -74,7 +69,7 @@ public class getAccountsServlet extends HttpServlet {
 				String query=null;
 				st = con.prepareStatement("select verified from users where user_id=?");
 				st.setLong(1, userid);
-				ResultSet rs = st.executeQuery();
+				rs = st.executeQuery();
 				if(rs.next())
 				{
 					verified = rs.getBoolean("verified");
@@ -82,26 +77,20 @@ public class getAccountsServlet extends HttpServlet {
 				}
 				if(verified)
 				{
-					st = con.prepareStatement("select account_id from adduser where user_id=?;");
+					st = con.prepareStatement("select accounts.account_name,adduser.account_id from adduser,accounts where user_id=? AND accounts.account_id=adduser.account_id;");
 					st.setLong(1, userid);
 					rs = st.executeQuery();
-					ResultSet rs1 = null;
 					JSONArray ja = new JSONArray();
 					JSONObject jo = new JSONObject();
 					long acc_id = 0;
+					String acc_name;
 					while(rs.next())
 					{
 						acc_id = rs.getInt("account_id");
+						acc_name = rs.getString("account_name");
 						jo.put("account_id", acc_id);
-						st1 = con.prepareStatement("select account_name from accounts where account_id=?;");
-						st1.setLong(1, acc_id);
-						rs1 = st1.executeQuery();
-						while(rs1.next())
-						{
-							String acc_name = rs1.getString("account_name");
-							jo.put("account_name",acc_name);
-							ja.add(jo.toJSONString());
-						}
+						jo.put("account_name",acc_name);
+						ja.add(jo.toJSONString());
 					}
 					jo.clear();
 					if(page.equals("home"))
@@ -112,25 +101,26 @@ public class getAccountsServlet extends HttpServlet {
 					response.setContentType("application/json");
 					response.setCharacterEncoding("UTF-8");
 					response.getWriter().print(ja.toString());
-					if(rs1!=null)
-					{
-						rs1.close();
-						st1.close();
-					}
 				}
 				else
 				{
 					response.setStatus(403);
 				}
-				if(rs != null)
-				{
-					rs.close();
-					st.close();
-				}
-
-				con.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				if(rs != null)
+				{
+					try{
+						rs.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
 			}
 		}
 		

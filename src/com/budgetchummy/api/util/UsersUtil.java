@@ -39,12 +39,11 @@ public class UsersUtil {
 			} catch (ClassNotFoundException e) {
 				out.println("driver not found");
 			}
-			
+			Connection con = null;
+			PreparedStatement st=null,st1=null;
+			ResultSet rs = null,rs1=null;		
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null,st1=null;
-				ResultSet rs = null,rs1=null;
 				String query=null;
 				String account_name=null,created_by=null,created_date_time=null;
 				String role=null,first_name=null,email=null;
@@ -53,23 +52,16 @@ public class UsersUtil {
 				accid = Long.parseLong(String.valueOf(acc_attribute));
 				JSONArray ja = new JSONArray();
 				JSONObject jo = new JSONObject();
-				st = con.prepareStatement("select account_name,created_by,no_of_members,created_date_time from accounts where account_id=?;");
+				st = con.prepareStatement("select account_name,created_by,users.first_name, no_of_members,accounts.created_date_time from users,accounts where users.user_id=accounts.created_by AND account_id=?;");
 				st.setLong(1, accid);
 				rs = st.executeQuery();
 				while(rs.next())
 				{
 					account_name = rs.getString("account_name");
 					created_by_id = rs.getLong("created_by");
+					created_by = rs.getString("first_name");
 					no_of_members = rs.getLong("no_of_members");
 					created_date_time = Datehelper.epochToDate(rs.getLong("created_date_time"));
-				}
-
-				st = con.prepareStatement("select first_name from users where user_id=?;");
-				st.setLong(1, created_by_id);
-				rs = st.executeQuery();
-				while(rs.next())
-				{
-					created_by = rs.getString("first_name");
 				}
 				jo.put("account_name",account_name);
 				jo.put("no_of_members",no_of_members);
@@ -78,43 +70,39 @@ public class UsersUtil {
 				ja.add(jo.toJSONString());
 				jo.clear();
 				
-				st = con.prepareStatement("select user_id,role from adduser where account_id=?;");
+				st = con.prepareStatement("select adduser.user_id,role,users.first_name,users.email from adduser,users where account_id=? AND users.user_id=adduser.user_id;");
 				st.setLong(1, accid);
 				rs = st.executeQuery();
 				while(rs.next())
 				{
 					user_id = rs.getInt("user_id");
 					role = rs.getString("role");
-					st1 = con.prepareStatement("select first_name,email from users where user_id=?;");
-					st1.setLong(1, user_id);
-					rs1 = st1.executeQuery();
-					while(rs1.next())
-					{
-						first_name = rs1.getString("first_name");
-						email = rs1.getString("email");
-					}
+					first_name = rs.getString("first_name");
+					email = rs.getString("email");
 					jo.put("user_id", user_id);
 					jo.put("first_name",first_name);
 					jo.put("email",email);
 					jo.put("role",role);
 					ja.add(jo.toJSONString());
 				}
-				if(rs != null)
-				{
-					rs.close();
-					st.close();
-				}
-				if(rs1!=null)
-				{
-					rs1.close();
-					st1.close();
-				}
-				con.close();
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
 				response.getWriter().print(ja.toString());
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				if(rs != null)
+				{
+					try{
+						rs.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
 			}	
 		}
 	}
@@ -156,12 +144,11 @@ public class UsersUtil {
 			} catch (ClassNotFoundException e) {
 				out.println("driver not found");
 			}
-			
+			Connection con = null;
+			PreparedStatement st=null,st1=null;
+			ResultSet rs = null,rs1=null;		
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null,st1=null;
-				ResultSet rs = null,rs1=null;
 				Object user_attribute = http_session.getAttribute("user_id");
 				Object acc_attribute = http_session.getAttribute("account_id");
 				userid = Long.parseLong(String.valueOf(user_attribute));
@@ -230,23 +217,32 @@ public class UsersUtil {
 							first_name = rs1.getString("first_name");
 						}
 					}
-				}
-				
-
-				if(rs != null)
-				{
-					rs.close();
-					st.close();
-				}
-				if(rs1!=null)
-				{
-					rs1.close();
-					st1.close();
-				}
-				con.close();	
+				}	
 			}catch (SQLException e) {
 				e.printStackTrace();
-			}	
+			} finally {
+				if(rs != null)
+				{
+					try{
+						rs.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				if(rs1 != null)
+				{
+					try{
+						rs1.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					st1.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
+			}
 
 			if(!invitationAlreadySent && isAdmin)
 			{
@@ -265,10 +261,10 @@ public class UsersUtil {
 									 email_content_html+
 									 email_passcode_html+
 									 email_button_html+ "</div>";
-		        emailUtil.createSession();
-				emailUtil.createConnection();
+		  //       emailUtil.createSession();
+				// emailUtil.createConnection();
 				emailUtil.sendMail(to, subject, message);
-				emailUtil.closeConnection();
+				// emailUtil.closeConnection();
 			}
 		}
 		
@@ -297,12 +293,11 @@ public class UsersUtil {
 		} catch (ClassNotFoundException e) {
 			out.println("driver not found");
 		}
-		
+		Connection con = null;
+		PreparedStatement st=null,st1=null;
+		ResultSet rs=null;		
 		try {
-			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			PreparedStatement st=null,st1=null;
-			ResultSet rs=null;
 			st = con.prepareStatement("select email from users where user_id=?;");
 			st.setLong(1, userid);
 			rs = st.executeQuery();
@@ -355,19 +350,24 @@ public class UsersUtil {
 					response.setStatus(401);
 				}				
 			}
-			
-			if(rs != null)
-			{
-				rs.close();
-				st.close();
-			}
-			if(st1!=null)
-			{
-				st1.close();
-			}
-			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			if(rs != null)
+			{
+				try{
+					rs.close();
+				}catch (SQLException e) { /* ignored */}
+			}
+			try{
+				st.close();
+			}catch (SQLException e) { /* ignored */}
+			try{
+				st1.close();
+			}catch (SQLException e) { /* ignored */}
+			try{
+				con.close();
+			}catch (SQLException e) { /* ignored */}
 		}
 		
 	}
@@ -400,13 +400,11 @@ public class UsersUtil {
 			} catch (ClassNotFoundException e) {
 				out.println("driver not found");
 			}
-			
+			Connection con = null;
+			PreparedStatement st=null,st1=null;
+			ResultSet rs=null;
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null,st1=null;
-				ResultSet rs=null;
-
 				st = con.prepareStatement("select role from adduser where user_id=? AND account_id=?;");
 				st.setLong(1, userid);
 				st.setLong(2, accid);
@@ -465,19 +463,24 @@ public class UsersUtil {
 						session.removeAttribute("account_id");
 					}
 				}
-				
-				if(rs != null)
-				{
-					rs.close();
-					st.close();
-				}
-				if(st1!=null)
-				{
-					st1.close();
-				}
-				con.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				if(rs != null)
+				{
+					try{
+						rs.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					st1.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
 			}
 		}
 		

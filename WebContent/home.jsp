@@ -121,16 +121,24 @@
 		
 		document.getElementById("selected_month").innerHTML = globalObject.month_array[globalObject.month-1]+", "+globalObject.year;
 		  
+		var initializeIncomeExpenseDatePicker = function(){
+			$(document).on('focus',".generic-datepicker", function(){
+			    $('.generic-datepicker').datepicker({dateFormat:"yy/mm/dd",changeMonth: true,changeYear: true,yearRange: '1970:9999'});
+		  	});
+		}
+		var initializeBudgetDatePicker = function(){
+			$(document).on('focus',".budget-datepicker", function(){
+			    $('.budget-datepicker').datepicker({dateFormat:"yy/mm/dd",changeMonth: true,changeYear: true,yearRange: '1970:9999'});
+		  	});
+		}
+		var destroyIncomeExpenseDatePicker = function(){
+			$('.generic-datepicker').datepicker("destroy");
+		}
+		var destroyBudgetDatePicker = function(){
+			$('.budget-datepicker').datepicker("destroy");
+		}
+		initializeBudgetDatePicker();
 		  
-		  $(document).on('focus',"#income-datepicker", function(){
-			    $(this).datepicker({dateFormat:"yy/mm/dd"});
-		  });
-		  $(document).on('focus',"#expense-datepicker", function(){
-			    $(this).datepicker({dateFormat:"yy/mm/dd"});
-		  });
-		  $(document).on('focus',".budget-datepicker", function(){
-			    $(this).datepicker({dateFormat:"yy/mm/dd"});
-		  });	
 		  $(document).on('click','.plus',function(){
 			  $('.generic-modal').modal('show');
 			  if(globalObject.current_page == "income")
@@ -562,6 +570,8 @@
 				  $('.generic-amount').attr("id","income-amount");
 				  $('.generic-datepicker').attr("name","income-date");
 				  $('.generic-datepicker').attr("id","income-datepicker");
+				  destroyIncomeExpenseDatePicker();
+				  initializeIncomeExpenseDatePicker();
 				  $('.generic-show-more').removeClass("expense-show-more");
 				  $('.generic-show-more').addClass("income-show-more");
 				  $('.generic-additional-info-div').removeClass("expense-additional-info-div");
@@ -620,6 +630,8 @@
 				  $('.generic-amount').attr("id","expense-amount");
 				  $('.generic-datepicker').attr("name","expense-date");
 				  $('.generic-datepicker').attr("id","expense-datepicker");
+				  destroyIncomeExpenseDatePicker();
+				  initializeIncomeExpenseDatePicker();
 				  $('.generic-show-more').removeClass("income-show-more");
 				  $('.generic-show-more').addClass("expense-show-more");
 				  $('.generic-additional-info-div').removeClass("income-additional-info-div");

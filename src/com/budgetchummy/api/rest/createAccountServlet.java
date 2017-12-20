@@ -7,12 +7,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.budgetchummy.api.util.APIConstants;
-import com.budgetchummy.api.util.Datehelper;
 
 
 @WebServlet(urlPatterns = {"/api/v1/createAccount", "/BudgetChummy/api/v1/createAccount"})
@@ -67,14 +61,12 @@ public class createAccountServlet extends HttpServlet {
 			} catch (ClassNotFoundException e) {
 				out.println("driver not found");
 			}
-			
+			Connection con = null;
+			PreparedStatement st=null;
+			ResultSet rs = null;
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null;
-				ResultSet rs = null;
 				String query=null;
-
 			    // DateFormat df = new SimpleDateFormat("yyyy/MM/dd");
 			    // Date dateobj = new Date();
 			    // df.setTimeZone(TimeZone.getTimeZone("IST"));
@@ -100,12 +92,22 @@ public class createAccountServlet extends HttpServlet {
 					st.setString(3, "admin");
 					int j = st.executeUpdate();
 				}
-				rs.close();
-				st.close();
-				con.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}	
+			} finally {
+				if(rs != null)
+				{
+					try{
+						rs.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
+			}
 			session.setAttribute("account_id",accountid);
 	//		String homeurl = new String("home");
 	//		response.setStatus(response.SC_MOVED_TEMPORARILY);

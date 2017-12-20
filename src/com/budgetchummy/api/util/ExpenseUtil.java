@@ -11,9 +11,11 @@ import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.quartz.SchedulerException;
 
 import com.budgetchummy.api.util.APIConstants;
 import com.budgetchummy.api.util.ExpenseUtil;
+import com.budgetchummy.api.util.ReminderScheduler;
 
 public class ExpenseUtil {
 	public static void getExpenses(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
@@ -38,29 +40,18 @@ public class ExpenseUtil {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-			
+			Connection con = null;
+			PreparedStatement st=null;	
+			ResultSet rs=null;		
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null,st1=null,st2=null;
 				Object acc_attribute = session.getAttribute("account_id");
 				accid = Long.parseLong(String.valueOf(acc_attribute));
 				String query="";
-				if(page.equals("expense"))
-				{
-					st = con.prepareStatement("select transaction_id,user_id,date,amount,tag_id,description,location,latitude,longitude,added_date_time,repeat_period,reminder_period from transactions where  extract(year from to_timestamp(floor(date/1000)))<=? AND transaction_type=? AND account_id=?;");
-					st.setInt(1, year);
-					st.setString(2, "expense");
-					st.setLong(3, accid);			
-				}
-				else if(page.equals("budget"))
-				{
-					st = con.prepareStatement("select transaction_id,user_id,date,amount,tag_id,description,location,latitude,longitude,added_date_time,repeat_period,reminder_period from transactions where  extract(year from to_timestamp(floor(date/1000)))<=? AND transaction_type=? AND account_id=?;");
-					st.setInt(1, year);
-					st.setString(2, "expense");
-					st.setLong(3, accid);				
-				}
-				ResultSet rs=null,rs1=null,rs2=null;
+				st = con.prepareStatement("select transaction_id,transactions.user_id,users.first_name,date,amount,transactions.tag_id,tags.tag_name,description,location,latitude,longitude,added_date_time,repeat_period,reminder_period from users,tags,transactions where extract(year from to_timestamp(floor(date/1000)))<=? AND transaction_type=? AND transactions.account_id=? AND users.user_id=transactions.user_id AND tags.tag_id=transactions.tag_id;");
+				st.setInt(1, year);
+				st.setString(2, "expense");
+				st.setLong(3, accid);				
 				rs = st.executeQuery();
 				String description=null,tag_name=null,location=null,first_name=null;
 				float amount=-1;
@@ -70,23 +61,9 @@ public class ExpenseUtil {
 				JSONObject jo = new JSONObject();
 				while(rs.next())
 				{
-					user_id=rs.getLong("user_id");
-					st1 = con.prepareStatement("select first_name from users where user_id=?;");
-					st1.setLong(1, user_id);
-					rs1=st1.executeQuery();
-					while(rs1.next())
-					{
-						first_name = rs1.getString("first_name");
-					}
-
+					first_name = rs.getString("first_name");
 					tag_id=rs.getLong("tag_id");
-					st2 = con.prepareStatement("select tag_name from tags where tag_id=?;");
-					st2.setLong(1, tag_id);
-					rs2=st2.executeQuery();
-					while(rs2.next())
-					{
-						tag_name = rs2.getString("tag_name");
-					}
+					tag_name = rs.getString("tag_name");
 					transaction_id=rs.getLong("transaction_id");
 					date=rs.getLong("date");
 					amount=rs.getFloat("amount");
@@ -112,28 +89,25 @@ public class ExpenseUtil {
 					ja.add(jo.toJSONString());
 					jo.clear();
 				}
-				if(rs != null)
-				{
-					rs.close();
-					st.close();
-				}
-				if(rs1!=null)
-				{
-					rs1.close();
-					st1.close();
-				}
-				if(rs2!=null)
-				{
-					rs2.close();
-					st2.close();
-				}
-				con.close();
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
 				response.getWriter().print(ja.toString());
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}		
+			} finally {
+				if(rs != null)
+				{
+					try{
+						rs.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
+			}	
 		}
 	}
 
@@ -150,6 +124,9 @@ public class ExpenseUtil {
 	//		String page_name = request.getParameter("page_name");
 			float amount = Float.parseFloat(request.getParameter("amount"));
 			long date = Long.parseLong(request.getParameter("date"));
+			int reminder_day = Integer.parseInt(request.getParameter("reminder_day"));
+			int reminder_month = Integer.parseInt(request.getParameter("reminder_month"));
+			int reminder_year = Integer.parseInt(request.getParameter("reminder_year"));
 			long tag_id = Long.parseLong(request.getParameter("tag_id"));
 			long added_date= Long.parseLong(request.getParameter("created_date_time"));
 			String transaction_type = "expense";
@@ -165,14 +142,11 @@ public class ExpenseUtil {
 			} catch (ClassNotFoundException e) {
 				out.println("driver not found");
 			}
-			
+			Connection con = null;
+			PreparedStatement st=null, st1=null;
+			ResultSet rs = null;		
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null;
-				PreparedStatement st1=null;
-				PreparedStatement st2=null;
-				ResultSet rs = null;
 				Object user_attribute = session.getAttribute("user_id");
 				Object acc_attribute = session.getAttribute("account_id");
 				long userid = Long.parseLong(String.valueOf(user_attribute));
@@ -247,6 +221,7 @@ public class ExpenseUtil {
 				int i = st.executeUpdate();
 				if(reminderExists)
 				{
+					long job_id = -1;
 					st = con.prepareStatement("select lastval();");
 					rs = st.executeQuery();
 					if(rs.next())
@@ -257,28 +232,41 @@ public class ExpenseUtil {
 						st.setLong(2, transaction_id);
 						st.setLong(3, target_time);
 						int j = st.executeUpdate();
+						rs = null;
+						st = con.prepareStatement("select lastval();");
+						rs = st.executeQuery();
+						if(rs.next())
+						{
+							job_id = rs.getLong(1);
+						}
+					}	
+					try {
+						ReminderScheduler.scheduleReminder(request, reminder_day, reminder_month, reminder_year, timezone, job_id);
+					} catch (SchedulerException e) {
+						e.printStackTrace();
 					}
-					rs = null;				
 				}
-				if(rs != null)
-				{
-					rs.close();
-				}
-				if(st != null)
-				{
-					st.close();
-				}
-				if(st1 != null)
-				{
-					st1.close();
-				}
-				if(st2 != null)
-				{
-					st2.close();
-				}
-				con.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				if(rs != null)
+				{
+					try{
+						rs.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				if(st1 != null)
+				{
+					try{
+						st1.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
 			}
 	//		response.sendRedirect("home?page='"+page_name+"'");
 		}
@@ -312,14 +300,11 @@ public class ExpenseUtil {
 			} catch (ClassNotFoundException e) {
 				out.println("driver not found");
 			}
-			
+			Connection con = null;
+			PreparedStatement st=null, st1=null;
+			ResultSet rs = null;			
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null;
-				PreparedStatement st1=null;
-				PreparedStatement st2=null;
-				ResultSet rs = null;
 				Object user_attribute = session.getAttribute("user_id");
 				Object acc_attribute = session.getAttribute("account_id");
 				long userid = Long.parseLong(String.valueOf(user_attribute));
@@ -396,25 +381,27 @@ public class ExpenseUtil {
 					st.setLong(3, target_time);
 					int j = st.executeUpdate();			
 				}
-				if(rs != null)
-				{
-					rs.close();
-				}
-				if(st != null)
-				{
-					st.close();
-				}
-				if(st1 != null)
-				{
-					st1.close();
-				}
-				if(st2 != null)
-				{
-					st2.close();
-				}
-				con.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				if(rs != null)
+				{
+					try{
+						rs.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				if(st1 != null)
+				{
+					try{
+						st1.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
 			}
 		}
 	}
@@ -442,11 +429,10 @@ public class ExpenseUtil {
 			} catch (ClassNotFoundException e) {
 				out.println("driver not found");
 			}
-			
+			Connection con = null;
+			PreparedStatement st=null;			
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null;
 				Object user_attribute = session.getAttribute("user_id");
 				Object acc_attribute = session.getAttribute("account_id");
 				long userid = Long.parseLong(String.valueOf(user_attribute));
@@ -455,10 +441,15 @@ public class ExpenseUtil {
 				st = con.prepareStatement("delete from transactions where transaction_id=?");
 				st.setLong(1, transaction_id);		
 				int i = st.executeUpdate();
-				st.close();
-				con.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
 			}
 		}
 	}

@@ -300,6 +300,10 @@
 		 	{
 				var amount = $('.generic-amount').val();
 				var date = $('.generic-datepicker').val();
+				var reminder_date_arr = getReminderDate(date, $('.generic-reminder-dropdown').val());
+				var reminder_day = reminder_date_arr[2];
+				var reminder_month = reminder_date_arr[1];
+				var reminder_year = reminder_date_arr[0];
 				var tag_id = $('.saved-tags-dropdown').val();
 				var add_info = $('.generic-additional-info').val();
 				var location = $('.generic-location').val();
@@ -322,7 +326,7 @@
 				$.ajax({
 					type:"POST",
 					url:"/BudgetChummy/api/v1/income",
-					data:{amount:amount, date:date, tag_id:tag_id, add_info:add_info, location: location, location_lat:lat, location_lon:lon, description:description, repeat:repeat, reminder:reminder, created_date_time:created_date_time},
+					data:{amount:amount, date:date, reminder_day:reminder_day, reminder_month:reminder_month, reminder_year:reminder_year, tag_id:tag_id, add_info:add_info, location: location, location_lat:lat, location_lon:lon, description:description, repeat:repeat, reminder:reminder, created_date_time:created_date_time},
 					success:function(data){
 						NProgress.done();
 						$('.generic-save').removeAttr("disabled")
@@ -345,6 +349,10 @@
 		 	{
 				var amount = $('.generic-amount').val();
 				var date = $('.generic-datepicker').val();
+				var reminder_date_arr = getReminderDate(date, $('.generic-reminder-dropdown').val());
+				var reminder_day = reminder_date_arr[2];
+				var reminder_month = reminder_date_arr[1];
+				var reminder_year = reminder_date_arr[0];
 				var tag_id = $('.saved-tags-dropdown').val();
 				var add_info = $('.generic-additional-info').val();
 				var location = $('.generic-location').val();
@@ -367,7 +375,7 @@
 				$.ajax({
 					type:"POST",
 					url:"/BudgetChummy/api/v1/expense",
-					data:{amount:amount, date:date, tag_id:tag_id, add_info:add_info, location: location, location_lat:lat, location_lon:lon, description:description, repeat:repeat, reminder:reminder, created_date_time:created_date_time},
+					data:{amount:amount, date:date, reminder_day:reminder_day, reminder_month:reminder_month, reminder_year:reminder_year, tag_id:tag_id, add_info:add_info, location: location, location_lat:lat, location_lon:lon, description:description, repeat:repeat, reminder:reminder, created_date_time:created_date_time},
 					success:function(data){
 						NProgress.done();
 						$('.generic-save').removeAttr("disabled")

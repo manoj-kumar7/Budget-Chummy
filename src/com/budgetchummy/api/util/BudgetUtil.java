@@ -43,13 +43,11 @@ public class BudgetUtil {
 				out.println("driver not found");
 			}
 			
+			Connection con = null;	
+			PreparedStatement st=null;
+			ResultSet rs = null;
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null, st1=null, st2=null;
-				ResultSet rs = null, rs1 = null, rs2 = null;
-				
-				
 				Object user_attribute = session.getAttribute("user_id");
 				Object acc_attribute = session.getAttribute("account_id");
 				long userid = Long.parseLong(String.valueOf(user_attribute));
@@ -64,36 +62,31 @@ public class BudgetUtil {
 					tags.put(rs.getLong("tag_id"), rs.getString("tag_name"));
 				}
 
-				st1 = con.prepareStatement("select budget_id, amount, repeat_period, tag_id, description, added_by, budget_type, start_date, end_date from budget where (extract(year from to_timestamp(floor(start_date/1000)))<? OR (extract(year from to_timestamp(floor(start_date/1000)))=? AND extract(month from to_timestamp(floor(start_date/1000)))<=?)) AND account_id=?;");
-				st1.setInt(1, year);
-				st1.setInt(2, year);
-				st1.setInt(3, month);
-				st1.setLong(4, accid);
-				rs1 = st1.executeQuery();
+				rs = null;
+				st = con.prepareStatement("select budget_id, amount, repeat_period, tag_id, description, added_by, users.first_name, budget_type, start_date, end_date from users, budget where (extract(year from to_timestamp(floor(start_date/1000)))<? OR (extract(year from to_timestamp(floor(start_date/1000)))=? AND extract(month from to_timestamp(floor(start_date/1000)))<=?)) AND account_id=? AND users.user_id=budget.added_by;");
+				st.setInt(1, year);
+				st.setInt(2, year);
+				st.setInt(3, month);
+				st.setLong(4, accid);
+				rs = st.executeQuery();
 				JSONArray ja = new JSONArray();
 				JSONObject jo = new JSONObject();
 				String description, tag_name, added_by_name="";
 				long added_by, start_date, end_date, budget_id=-1;
 				float amount;
 				int repeat_period, budget_type;
-				while(rs1.next())
+				while(rs.next())
 				{
-					budget_id=rs1.getLong("budget_id");
-					start_date=rs1.getLong("start_date");
-					end_date=rs1.getLong("end_date");
-					amount=rs1.getFloat("amount");
-					description=rs1.getString("description");
-					tag_name=tags.get(rs1.getLong("tag_id"));
-					added_by=rs1.getLong("added_by");
-					repeat_period=rs1.getInt("repeat_period");
-					budget_type=rs1.getInt("budget_type");
-					st2 = con.prepareStatement("select first_name from users where user_id=?;");
-					st2.setLong(1, added_by);
-					rs2=st2.executeQuery();
-					while(rs2.next())
-					{
-						added_by_name = rs2.getString("first_name");
-					}
+					budget_id=rs.getLong("budget_id");
+					start_date=rs.getLong("start_date");
+					end_date=rs.getLong("end_date");
+					amount=rs.getFloat("amount");
+					description=rs.getString("description");
+					tag_name=tags.get(rs.getLong("tag_id"));
+					added_by=rs.getLong("added_by");
+					added_by_name = rs.getString("first_name");
+					repeat_period=rs.getInt("repeat_period");
+					budget_type=rs.getInt("budget_type");
 					jo.put("budget_id", budget_id);
 					jo.put("start_date", start_date);
 					jo.put("end_date", end_date);
@@ -106,27 +99,24 @@ public class BudgetUtil {
 					ja.add(jo.toJSONString());
 					jo.clear();
 				}
-				if(rs != null)
-				{
-					rs.close();
-					st.close();
-				}
-				if(rs1!=null)
-				{
-					rs1.close();
-					st1.close();
-				}
-				if(rs2!=null)
-				{
-					rs2.close();
-					st2.close();
-				}
-				con.close();
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
 				response.getWriter().print(ja.toString());
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				if(rs != null)
+				{
+					try{
+						rs.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
 			}
 		}
 	}
@@ -170,11 +160,10 @@ public class BudgetUtil {
 			} catch (ClassNotFoundException e) {
 				out.println("driver not found");
 			}
-			
+			Connection con = null;
+			PreparedStatement st=null;			
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null;
 				Object user_attribute = session.getAttribute("user_id");
 				Object acc_attribute = session.getAttribute("account_id");
 				long userid = Long.parseLong(String.valueOf(user_attribute));
@@ -194,6 +183,13 @@ public class BudgetUtil {
 				con.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
 			}
 	//		response.sendRedirect("home?page='"+page_name+"'");
 		}
@@ -238,11 +234,11 @@ public class BudgetUtil {
 			} catch (ClassNotFoundException e) {
 				out.println("driver not found");
 			}
-			
+
+			Connection con = null;
+			PreparedStatement st=null;			
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null;
 				Object user_attribute = session.getAttribute("user_id");
 				Object acc_attribute = session.getAttribute("account_id");
 				long userid = Long.parseLong(String.valueOf(user_attribute));
@@ -261,6 +257,13 @@ public class BudgetUtil {
 				con.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally{
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
 			}
 	//		response.sendRedirect("home?page='"+page_name+"'");
 		}
@@ -288,10 +291,11 @@ public class BudgetUtil {
 				out.println("driver not found");
 			}
 			
+			Connection con = null;
+			PreparedStatement st=null;
 			try {
-				Connection con = null;
+				
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null;
 				Object user_attribute = session.getAttribute("user_id");
 				Object acc_attribute = session.getAttribute("account_id");
 				long userid = Long.parseLong(String.valueOf(user_attribute));
@@ -304,6 +308,13 @@ public class BudgetUtil {
 				con.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally{
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
 			}
 		}
 	}

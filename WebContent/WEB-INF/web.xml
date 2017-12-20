@@ -82,9 +82,21 @@
     <url-pattern>/error</url-pattern>
   </servlet-mapping>
   
- 	 <listener>
+ 	 <!--listener>
 	   <listener-class>com.budgetchummy.listener.SchedulerListener</listener-class>
-	</listener>
+	</listener-->
+	
+	<servlet>
+	  <servlet-name>QuartzInitializer</servlet-name>
+	  <servlet-class>org.quartz.ee.servlet.QuartzInitializerServlet</servlet-class>
+	  <init-param>
+
+	    <param-name>shutdown-on-unload</param-name>
+	    <param-value>true</param-value>
+	  </init-param>
+	  <load-on-startup>2</load-on-startup>
+
+	</servlet>
 
   <session-config>
     <session-timeout>30</session-timeout>

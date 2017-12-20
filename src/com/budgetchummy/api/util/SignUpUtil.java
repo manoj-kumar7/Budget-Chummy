@@ -53,14 +53,12 @@ public class SignUpUtil {
 		} catch (ClassNotFoundException e) {
 			out.println("driver not found");
 		}
-		
+		Connection con = null;
+		PreparedStatement st=null;
+		ResultSet rs = null;		
 		try {
-			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			PreparedStatement st=null;
-			ResultSet rs = null;
 			String query=null;
-
 		    // DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		    // Date dateobj = new Date();
 		    // df.setTimeZone(TimeZone.getTimeZone("IST"));
@@ -103,10 +101,10 @@ public class SignUpUtil {
 					String message = "<div class='email-box' style='width:70%;height:100%;background-color:#e2e2e2;margin:0 auto;'>"+email_welcome_html+
 									 email_content_html+
 									 email_button_html+ "</div>";
-					emailUtil.createSession();
-					emailUtil.createConnection();
+					// emailUtil.createSession();
+					// emailUtil.createConnection();
 					emailUtil.sendMail(email, subject, message);
-					emailUtil.closeConnection();
+					// emailUtil.closeConnection();
 				}
 				rs = null;
 				st = con.prepareStatement("select user_id from users where email=?;");
@@ -121,12 +119,21 @@ public class SignUpUtil {
 				session.setAttribute("user_id",userid);
 
 			}
-
-			rs.close();
-			st.close();
-			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			if(rs != null)
+			{
+				try{
+					rs.close();
+				}catch (SQLException e) { /* ignored */}
+			}
+			try{
+				st.close();
+			}catch (SQLException e) { /* ignored */}
+			try{
+				con.close();
+			}catch (SQLException e) { /* ignored */}
 		}
 	}
 
@@ -188,14 +195,12 @@ public class SignUpUtil {
 			} catch (ClassNotFoundException e) {
 				out.println("driver not found");
 			}
-			
+			Connection con = null;
+			PreparedStatement st=null;
+			ResultSet rs = null;			
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null;
-				ResultSet rs = null;
 				String query=null;
-
 			    // DateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 			    // Date dateobj = new Date();
 			    // df.setTimeZone(TimeZone.getTimeZone("IST"));
@@ -231,12 +236,21 @@ public class SignUpUtil {
 					session.setAttribute("user_id",userid);
 
 				}
-
-				rs.close();
-				st.close();
-				con.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				if(rs != null)
+				{
+					try{
+						rs.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
 			}
 		}
 		else

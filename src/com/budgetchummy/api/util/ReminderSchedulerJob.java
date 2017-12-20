@@ -41,7 +41,9 @@ public class ReminderSchedulerJob implements Job{
 			String user = APIConstants.POSTGRESQL_USERNAME;
 			String mysql_password = APIConstants.POSTGRESQL_PASSWORD;
 
-			long system_time = Datehelper.getServerTimeInEpoch();
+			// long system_time = Datehelper.getServerTimeInEpoch();
+			JobDataMap dataMap = arg0.getJobDetail().getJobDataMap();
+			long job_id = dataMap.getLong("job_id");		
 
 			try {
 				Class.forName("org.postgresql.Driver");
@@ -49,20 +51,21 @@ public class ReminderSchedulerJob implements Job{
 				e.printStackTrace();
 			}
 
+			Connection con = null;
+			PreparedStatement st=null;
+			ResultSet rs=null, rs1=null, rs2=null;
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null;
-				st = con.prepareStatement("select job_id,reminder_type,data_id,do_at from jobs where do_at<=?");
-				st.setLong(1, system_time);
-				ResultSet rs=null, rs1=null, rs2=null;
+				st = con.prepareStatement("select job_id,reminder_type,data_id,do_at from jobs where job_id=?");
+				st.setLong(1, job_id);
+				
 				rs = st.executeQuery();
 
-				long job_id, data_id, do_at, account_id;
+				long data_id, do_at, account_id;
 				float amount;
 				String reminder_type, added_by, account_name, date, tag_name, description, first_name, email;
-				emailUtil.createSession();
-				emailUtil.createConnection();
+				// emailUtil.createSession();
+				// emailUtil.createConnection();
 				while(rs.next())
 				{
 					job_id=rs.getLong("job_id");
@@ -99,23 +102,41 @@ public class ReminderSchedulerJob implements Job{
 						io.printStackTrace();
 					}
 				}
-				emailUtil.closeConnection();
+				// emailUtil.closeConnection();
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally{
 				if(rs != null)
 				{
-					rs.close();
+					try{
+						rs.close();
+					}catch (SQLException e) { /* ignored */}
+					
 				}
 				if(rs1 != null)
 				{
-					rs1.close();
+					try{
+						rs1.close();
+					}catch (SQLException e) { /* ignored */}
 				}
 				if(rs2 != null)
 				{
-					rs2.close();
+					try{
+						rs2.close();
+					}catch (SQLException e) { /* ignored */}
 				}
-				st.close();
-				con.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
 			}
 		}
+		
+		// public void execute(JobExecutionContext arg0) throws JobExecutionException{
+		// 	System.out.println("Mail sent");
+		// 	emailUtil.sendMail("manojskct@gmail.com", "Test subject", "Test message");
+		// }
 }

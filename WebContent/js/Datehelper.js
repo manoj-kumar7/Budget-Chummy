@@ -30,6 +30,18 @@ var getDateFromEpoch = function(epoch){
 	return [y, m, d];
 }
 
+var getReminderDate = function(date, reminder_type){
+	var d = new Date(date);
+	if(reminder_type == 1)
+	{
+		d.setDate(d.getDate() - 1);
+	}
+	var day = d.getDate();
+	var m = d.getMonth();
+	var y = d.getFullYear();
+	return [y, m, day];
+}
+
 var formCustomDateFormat = function(dates){
 	var y = dates[0];
 	var m = dates[1];

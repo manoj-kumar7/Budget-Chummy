@@ -52,13 +52,11 @@ public class accountActivationServlet extends HttpServlet {
 			} catch (ClassNotFoundException e) {
 				out.println("driver not found");
 			}
-			
+			Connection con = null;
+			PreparedStatement st=null;
+			ResultSet rs = null;
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null;
-				ResultSet rs = null;
-
 				st = con.prepareStatement("select user_id, verified from users where activation_code=? AND email=?;");
 				st.setString(1, code);
 				st.setString(2, email);
@@ -87,18 +85,23 @@ public class accountActivationServlet extends HttpServlet {
 					st = con.prepareStatement("update users set verified=true where user_id=?");
 					st.setLong(1, user_id);
 					int i = st.executeUpdate();
-				}
-
-				
-				if(rs != null)
-				{
-					rs.close();
-					st.close();
-				}
-				con.close();	
+				}	
 			}catch (SQLException e) {
 				e.printStackTrace();
-			}	
+			} finally {
+				if(rs != null)
+				{
+					try{
+						rs.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
+			}
 
 	}
 

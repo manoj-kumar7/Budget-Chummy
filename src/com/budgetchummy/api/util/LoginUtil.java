@@ -37,14 +37,13 @@ public class LoginUtil {
 		} catch (ClassNotFoundException e) {
 			out.println("driver not found");
 		}
-		
+		Connection con = null;
+		PreparedStatement st=null;	
+		ResultSet rs=null;	
 		try {
-			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			PreparedStatement st=null;
 			st = con.prepareStatement("select password,user_id,verified from users where email=?;");
 			st.setString(1, email);
-			ResultSet rs=null;
 			rs = st.executeQuery();
 			String password=null;
 			while(rs.next())
@@ -65,11 +64,21 @@ public class LoginUtil {
 					valid = PasswordUtil.verifyPassword(pword, password);
 				}
 			}	
-			rs.close();
-			st.close();
-			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			if(rs != null)
+			{
+				try{
+					rs.close();
+				}catch (SQLException e) { /* ignored */}
+			}
+			try{
+				st.close();
+			}catch (SQLException e) { /* ignored */}
+			try{
+				con.close();
+			}catch (SQLException e) { /* ignored */}
 		}
 		if(valid == true)
 		{
@@ -140,25 +149,35 @@ public class LoginUtil {
 
 		if(emailVerified)
 		{
+			Connection con = null;
+			PreparedStatement st=null;
+			ResultSet rs=null;
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null;
 				st = con.prepareStatement("select user_id from users where email=? AND google_signin=?;");
 				st.setString(1, email);
 				st.setBoolean(2, true);
-				ResultSet rs=null;
 				rs = st.executeQuery();
 				while(rs.next())
 				{
 					userid = rs.getLong("user_id");
 					valid = true;
 				}	
-				rs.close();
-				st.close();
-				con.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
+			} finally {
+				if(rs != null)
+				{
+					try{
+						rs.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
 			}
 			if(valid)
 			{

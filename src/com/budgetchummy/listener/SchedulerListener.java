@@ -19,14 +19,14 @@ public class SchedulerListener implements ServletContextListener {
     }
 
     public void contextInitialized(ServletContextEvent arg0){ 
-        try
-        {
-        	ReminderScheduler.scheduleReminder();
-        }
-    	catch(SchedulerException se)
-        {
-    		se.printStackTrace();
-        }
+//        try
+//        {
+//        	ReminderScheduler.scheduleReminder();
+//        }
+//    	catch(SchedulerException se)
+//        {
+//    		se.printStackTrace();
+//        }
     }
 	
 }

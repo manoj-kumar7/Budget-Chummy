@@ -59,12 +59,11 @@ public class searchServlet extends HttpServlet {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-			
+			Connection con = null;
+			PreparedStatement st=null, st1=null;
+			ResultSet rs=null;	
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null, st1=null;
-				ResultSet rs=null;
 				Object user_attribute = session.getAttribute("user_id");
 				Object acc_attribute = session.getAttribute("account_id");
 				userid = Long.parseLong(String.valueOf(user_attribute));
@@ -158,16 +157,6 @@ public class searchServlet extends HttpServlet {
 					expense_arr.add(expense_obj.toJSONString());
 					expense_obj.clear();
 				}
-				if(rs != null)
-				{
-					rs.close();
-					st.close();
-				}
-				if(st1!=null)
-				{
-					st1.close();
-				}
-				con.close();
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
 				JSONObject final_obj = new JSONObject();
@@ -176,7 +165,23 @@ public class searchServlet extends HttpServlet {
 				response.getWriter().print(final_obj.toString());
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}		
+			} finally {
+				if(rs != null)
+				{
+					try{
+						rs.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					st1.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
+			}	
 		}
 	
 	}

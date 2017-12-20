@@ -20,18 +20,22 @@ public class JobsUtil {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+		Connection con = null;
+		PreparedStatement st=null;	
 		try {
-			Connection con = null;
 			con = DriverManager.getConnection(url,user,mysql_password);
-			PreparedStatement st=null;
 			st = con.prepareStatement("delete from jobs where data_id=?");
 			st.setLong(1, transaction_id);		
 			int i = st.executeUpdate();
-			st.close();
-			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try{
+				st.close();
+			}catch (SQLException e) { /* ignored */}
+			try{
+				con.close();
+			}catch (SQLException e) { /* ignored */}
 		}
 	}
 }

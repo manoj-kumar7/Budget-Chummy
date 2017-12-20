@@ -54,12 +54,11 @@ public class invitationsServlet extends HttpServlet {
 			} catch (ClassNotFoundException e) {
 				out.println("driver not found");
 			}
-			
+			Connection con = null;
+			PreparedStatement st=null;
+			ResultSet rs = null;
 			try {
-				Connection con = null;
 				con = DriverManager.getConnection(url,user,mysql_password);
-				PreparedStatement st=null;
-				ResultSet rs = null;
 				String query=null;
 				String sent_to=null,passcode=null;
 				Object acc_attribute = session.getAttribute("account_id");
@@ -79,19 +78,25 @@ public class invitationsServlet extends HttpServlet {
 					ja.add(jo.toJSONString());
 					jo.clear();
 				}
-				
-				if(rs != null)
-				{
-					rs.close();
-					st.close();
-				}
-				con.close();
 				response.setContentType("application/json");
 				response.setCharacterEncoding("UTF-8");
 				response.getWriter().print(ja.toString());
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}	
+			} finally {
+				if(rs != null)
+				{
+					try{
+						rs.close();
+					}catch (SQLException e) { /* ignored */}
+				}
+				try{
+					st.close();
+				}catch (SQLException e) { /* ignored */}
+				try{
+					con.close();
+				}catch (SQLException e) { /* ignored */}
+			}
 		}
 	}
 
