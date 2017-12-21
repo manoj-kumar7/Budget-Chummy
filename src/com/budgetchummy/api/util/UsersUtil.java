@@ -234,10 +234,16 @@ public class UsersUtil {
 					}catch (SQLException e) { /* ignored */}
 				}
 				try{
-					st.close();
+					if(st != null)
+					{
+						st.close();
+					}
 				}catch (SQLException e) { /* ignored */}
 				try{
-					st1.close();
+					if(st1 != null)
+					{
+						st1.close();
+					}
 				}catch (SQLException e) { /* ignored */}
 				try{
 					con.close();
@@ -360,10 +366,16 @@ public class UsersUtil {
 				}catch (SQLException e) { /* ignored */}
 			}
 			try{
-				st.close();
+				if(st != null)
+				{
+					st.close();
+				}
 			}catch (SQLException e) { /* ignored */}
 			try{
-				st1.close();
+				if(st1 != null)
+				{
+					st1.close();
+				}
 			}catch (SQLException e) { /* ignored */}
 			try{
 				con.close();
@@ -473,10 +485,16 @@ public class UsersUtil {
 					}catch (SQLException e) { /* ignored */}
 				}
 				try{
-					st.close();
+					if(st != null)
+					{
+						st.close();
+					}
 				}catch (SQLException e) { /* ignored */}
 				try{
-					st1.close();
+					if(st1 != null)
+					{
+						st1.close();
+					}
 				}catch (SQLException e) { /* ignored */}
 				try{
 					con.close();

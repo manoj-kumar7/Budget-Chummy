@@ -17,10 +17,10 @@ public interface APIConstants {
 		public static final String EMAIL_PASSWORD = System.getProperty("BUSINESS_EMAIL_PASSWORD");
 		public static final String rootURL = "http://budgetchummy.com/";
 	
-		// public static final String POSTGRESQL_URL = "jdbc:postgresql://localhost:5432/budgetchummy";
-		// public static final String POSTGRESQL_USERNAME = "manojbc";
-		// public static final String POSTGRESQL_PASSWORD = "manojbc";
-		// public static final String EMAIL = "manoj@budgetchummy.com";
-		// public static final String EMAIL_PASSWORD = "Manoj@BC1";
-		// public static final String rootURL = "http://localhost:8080/BudgetChummy/";
+//		public static final String POSTGRESQL_URL = "jdbc:postgresql://localhost:5432/budgetchummy";
+//		public static final String POSTGRESQL_USERNAME = "manojbc";
+//		public static final String POSTGRESQL_PASSWORD = "manojbc";
+//		public static final String EMAIL = "manoj@budgetchummy.com";
+//		public static final String EMAIL_PASSWORD = "Manoj@BC1";
+//		public static final String rootURL = "http://localhost:8080/BudgetChummy/";
 }
